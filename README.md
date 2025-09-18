@@ -1,3 +1,3 @@
-# Homelab with RPI5's
+# Homelab with some Raspberry Pi 5
 
-This is kinda nice.
+This will include a full tutorial to create a working home cloud based on Kubernetes and Ceph.
