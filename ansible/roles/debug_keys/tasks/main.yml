@@ -1,0 +1,6 @@
+- name: show keys
+  debug:
+    msg:
+      - "Target host {{ host_dbg }} with user {{ usr }}"
+      - "KeepaliveD type: {{ hostinfos[host_dbg].keepalived_type }}"
+      - "Target key:  {{ vault.ssh_keys_private[host_dbg] }}"

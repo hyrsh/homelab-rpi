@@ -1,0 +1,28 @@
+hostinfos:
+  hl_k3s_01:
+    keepalived_type: "kd-k3s-rancher"
+  hl_k3s_02:
+    keepalived_type: "kd-k3s-rancher"
+  hl_k3s_03:
+    keepalived_type: "kd-k3s-rancher"
+  hl_lb_01:
+    keepalived_type: "kd-lb-haproxy"
+  hl_lb_02:
+    keepalived_type: "kd-lb-haproxy"
+  hl_k8s_01:
+  hl_k8s_02:
+  hl_k8s_03:
+  hl_k8s_04:
+  hl_k8s_05:
+  hl_k8s_06:
+  hl_k8s_07:
+  hl_k8s_08:
+  hl_k8s_09:
+  hl_k8s_10:
+  hl_ceph_01:
+    keepalived_type: "kd-ceph-manager"
+  hl_ceph_02:
+  hl_ceph_03:
+  hl_ceph_04:
+  hl_ceph_05:
+    keepalived_type: "kd-ceph-manager"

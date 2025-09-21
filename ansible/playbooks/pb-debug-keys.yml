@@ -1,0 +1,8 @@
+- hosts: localhost
+  vars_files:
+    - "vault/av_homelab"
+  vars:
+    usr: ansible
+    host_dbg: hl_k3s_01
+  roles:
+    - debug_keys
