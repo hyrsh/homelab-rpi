@@ -1,0 +1,59 @@
+site_name: 'Homelab RPI'
+#accent colors
+#amber,blue,cyan,deep-orange,deep-purple,green,indigo,light-blue,light-green,lime,orange,pink,purple,red,teal,yellow
+#primary colors
+#amber,black,blue,blue-grey,brown,cyan,deep-orange,deep-purple,green,grey,indigo,light-blue,light-green,lime,orange,pink,purple,red,teal,white,yellow
+theme:
+  name: 'material'
+  logo: 00_assets/rpi_logo_64.png
+  favicon: images/rpi_logo_32.png
+  palette:
+    - scheme: slate
+      primary: black
+      accent: lime
+      media: "(prefers-color-scheme: dark)"
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to another dark mode
+    - scheme: slate
+      primary: blue
+      accent: amber
+      media: "(prefers-color-scheme: dark)"
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+nav:
+  - General: index.md
+  - Design: 01_design/lp_design.md
+  - Raspberry Pi: 02_raspberry/lp_raspberry.md
+  - Kubernetes: 03_kubernetes/lp_kubernetes.md
+  - Ceph: 04_ceph/lp_ceph.md
+  - Material: 05_material/lp_material.md
+
+  #- UtilityGuide:
+  #  - Smoke-JumpThrows:
+  #    - de_dust2: 01_de_dust2/sjt_de_dust2.md
+  #    - de_ancient: 02_de_ancient/sjt_de_ancient.md
+  #    - de_nuke: 03_de_nuke/sjt_de_nuke.md
+  #    - de_overpass: 04_de_overpass/sjt_de_overpass.md
+  #    - de_inferno: 05_de_inferno/sjt_de_inferno.md
+  #  - Smoke-ClickThrows:
+  #    - de_dust2: 01_de_dust2/sct_de_dust2.md
+  #    - de_inferno: 05_de_inferno/sct_de_inferno.md
+  #  - Smoke-ComplexThrows:
+  #    - de_ancient: 02_de_ancient/cjt_de_ancient.md
+  #- Default-MapControl:
+  #  - Counter-Terrorists:
+  #    - de_dust2: 01_de_dust2/dmc_ct_de_dust2.md
+  #    - de_ancient: 02_de_ancient/dmc_ct_de_ancient.md
+  #    - de_nuke: 03_de_nuke/dmc_ct_de_nuke.md
+  #    - de_overpass: 04_de_overpass/dmc_ct_de_overpass.md
+  #    - de_inferno: 05_de_inferno/dmc_ct_de_inferno.md
+  #  - Terrorists:
+  #    - de_dust2: 01_de_dust2/dmc_t_de_dust2.md
+  #    - de_ancient: 02_de_ancient/dmc_t_de_ancient.md
+  #    - de_nuke: 03_de_nuke/dmc_t_de_nuke.md
+  #    - de_overpass: 04_de_overpass/dmc_t_de_overpass.md
+  #    - de_inferno: 05_de_inferno/dmc_t_de_inferno.md
+  #- Strats: construction_strats.md
+  #- FirstRounds: construction_fr.md
