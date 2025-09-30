@@ -2,7 +2,7 @@
 
 To enable a slightly fault tolerant system we need to take care of redundancy. Of course in a simple home enrivonment we cannot go enterprise-grade with separate power lines, battery packs and so on but the setup will tolerate some hardware failures.
 
-> Production note:
+> ⚠️ Production note:
 
 > - We also would have to separate the hosts in different availability zones, provide separate power lines on different circuits, make sure that power failures are softened with PSUs, cooling is redundant, network connectivity is redundant (incl. power supply) and access is restricted
 
@@ -27,7 +27,7 @@ The system has focus on a few specific areas:
 - making sure that a switch failure does not bring down the system
     - we distribute our network connections across multiple switches
 - making sure that a RPI failure does not bring down the system
-    - every domain (storage, routung, management and workloads) is redundant
+    - every domain (storage, routing, management and workloads) is redundant
 - it is accessible from a public network (the internet)
     - I use a VPS from a CSP in Switzerland
 - it is accessible from a local network (my home network)

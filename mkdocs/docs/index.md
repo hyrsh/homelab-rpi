@@ -1,6 +1,6 @@
 # Homelab with RPI 5
 
-This is a guide to create a homelab using Raspberry Pi 5 SBC's to run a stable Kubernetes cluster with Ceph storage.
+This is a beginner guide to create a homelab using Raspberry Pi 5 SBC's to run a stable Kubernetes cluster with Ceph storage.
 
 Everything will be publicly usable for everyone. Since the topic of Kubernetes kind of exploded since 2016 I wanted to provide a general approach to handle bare-metal installations.
 
@@ -10,9 +10,19 @@ I decided to use RPI's because they are very quiet, do not need much power and s
 
 All installation routines will be done with [Ansible](https://docs.ansible.com/ansible/latest/index.html) but there are still some manual tasks to perform.
 
+
+
+Thanks to the shops that everything was in stock:
+
+- [ThePiShop](https://www.pi-shop.ch/) (RPIs & PoE HATs)
+- [ThePiHut](https://thepihut.com/) (Heatsinks)
+- [Motedis](https://www.motedis.ch/en) (precise cut aluminium rails)
+- [Börlin AG (acrylglas24.ch)](https://acrylglas24.ch/) (precise cut plexiglas sheets)
+- [Galaxus](https://www.galaxus.ch/) (all of the rest)
+
 <hr>
 
-#### It will cover
+#### General idea
 
 - Bootstrapping the RPI's to handle them from a central workstation
     - Shameless plug for [Tuxedo](https://www.tuxedocomputers.com/de) laptops :)
@@ -26,7 +36,7 @@ All installation routines will be done with [Ansible](https://docs.ansible.com/a
 
 <hr>
 
-#### The result (in this example) will end in
+#### The result (in this example)
 
 - A [Kubernetes](https://kubernetes.io/) cluster with
     - 3x [master nodes](https://kubernetes.io/docs/concepts/overview/components/#control-plane-components)
@@ -51,7 +61,7 @@ All installation routines will be done with [Ansible](https://docs.ansible.com/a
 
 <hr>
 
-#### Technologies we will use
+#### Technologies
 
 |Name|Type|Description|
 |-|-|-|
