@@ -1,12 +1,14 @@
 # Homelab with RPI 5
 
-This is a guide to create a homelab using Raspberry Pi 5 SBC's.
+This is a guide to create a homelab using Raspberry Pi 5 SBC's to run a stable Kubernetes cluster with Ceph storage.
 
 Everything will be publicly usable for everyone. Since the topic of Kubernetes kind of exploded since 2016 I wanted to provide a general approach to handle bare-metal installations.
 
 This homelab can easily be extended to a full production-grade setup and I will mention the missing parts that we do not need in a home environment.
 
 I decided to use RPI's because they are very quiet, do not need much power and still can carry basic applications.
+
+All installation routines will be done with [Ansible](https://docs.ansible.com/ansible/latest/index.html) but there are still some manual tasks to perform.
 
 <hr>
 
@@ -15,8 +17,8 @@ I decided to use RPI's because they are very quiet, do not need much power and s
 - Bootstrapping the RPI's to handle them from a central workstation
     - Shameless plug for [Tuxedo](https://www.tuxedocomputers.com/de) laptops :)
 - Bootstrapping Kubernetes with [k3s](https://k3s.io/)
-- Installing HA VPN nodes for public internet access to your cluster services
-- Bootstrapping a Ceph cluster to use with the Kubernetes cluster for storage
+- Installing HA VPN nodes for public internet access of your cluster services
+- Bootstrapping a Ceph cluster to use with Kubernetes for storage
 - Deploying several services using Helm (inkl. setup)
 - Using and structuring Ansible Playbooks to handle everything in a declarative manner
 - Explanations of why and how I decided to do things the way I did
@@ -46,3 +48,24 @@ I decided to use RPI's because they are very quiet, do not need much power and s
     - VPN setup with [WireGuard](https://www.wireguard.com/)
     - [HAProxy](https://www.haproxy.org/) setup
     - [KeepaliveD](https://keepalived.org/) setup for vIP switching via VRRP
+
+<hr>
+
+#### Technologies we will use
+
+|Name|Type|Description|
+|-|-|-|
+|Raspberry Pi OS Lite (64bit)|Linux OS (ARM) without GUI|Debian 13 for Raspberry Pi's|
+|Ansible|Configuration Management|Declarative configuration for our hosts|
+|SSH|Remote Connection|Used to connect to our hosts|
+|Bash|Linux Shell|Used to create scripts|
+|Kubernetes|Container Orchestrator|Used to create a cluster across hosts|
+|Ceph|Software Defined Storage|Used to provide dynamic storage for our Kubernetes cluster|
+|HAProxy|Loadbalancer|Used to route incoming traffic to our Kubernetes cluster|
+|WireGuard|Virtual Private Network|Used to connect our VPS to our local network|
+|KeepaliveD|VRRP Daemon|Used to enable fault tolerance of services across hosts|
+|NGINX|Webserver|Used as Ingress Controller in our Kubernetes cluster|
+|Harbor|Container Registry|Used to store container images and helm charts|
+|MKDocs|Documentation Software|Used to host MarkDown files in a WebUI|
+|Grafana|Monitoring, Visualization|Used to visualize metrics in a WebUI|
+|Prometheus|Monitoring, Scraping|Used to gather metrics of all of our components|
