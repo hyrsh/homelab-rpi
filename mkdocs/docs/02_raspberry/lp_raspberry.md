@@ -28,7 +28,7 @@ To use the RPI we must take care of three things:
 
 <hr>
 
-#### The Linux OS
+## The Linux OS
 
 Since we do not need a GUI I chose the lite version of the official RPI Linux OS called "Raspberry Pi OS Lite (64bit)" and flashed it onto the microSD cards of all my RPIs.
 
@@ -66,7 +66,7 @@ ssh -i /opt/mykeys/myuser.private myuser@myhost
 
 <hr>
 
-#### Automation
+## Automation
 
 The distribution of a central SSH key to get administrative access to all of the hosts poses a security risk but is necessary at first.
 

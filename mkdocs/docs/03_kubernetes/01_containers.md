@@ -44,4 +44,4 @@ REPOSITORY     TAG    IMAGE ID       CREATED         SIZE
 myimage        1.0    59c8f13c04cd   10 seconds ago  5MB
 ```
 
-This image can now be uploaded to your personal DockerHub account or an alternative registry (e.g. Harbor, Artifactory, ACR, ECR, GCR). From there anyone running Docker can use that image to run your binary on their host.
+This image can now be uploaded to your personal DockerHub account or an alternative registry (e.g. Harbor, Artifactory, ACR, ECR, GCR). From there anyone running Docker can use that image to run your image on their host.

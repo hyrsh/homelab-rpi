@@ -1,6 +1,18 @@
 # Kubernetes overview
 
-This is a simple overview of Kubernetes. It is stongly recommended to make yourself familiar with [containers](01_containers.md).
+This is a simple overview of Kubernetes (or short k8s). It is stongly recommended to make yourself familiar with [containers](01_containers.md).
+
+Kubernetes is an orchestrator engine for containers. With its clever design and ability so scale horizontally across multiple hosts it does create a basic infrastructure level with a new standard of how we deploy applications.
+
+It does run ontop of a Linux OS (I ignore Windows on purpose) as services that reside in userspace.
+
+The deployment of an application is described in a standardized manner in form of a YAML or JSON file. This YAML file contains all information the cluster must know to run it.
+
+When Kubernetes gets such a YAML/JSON file it can choose where to run that application. This form of scheduling works only across member nodes of the cluster (worker nodes) that are authenticated and authorized to recieve orders.
+
+All YAML/JSON files are sent to the Kube-Apiserver which is a central component of Kubernetes.
+
+<hr>
 
 ## Architecture
 
@@ -76,3 +88,33 @@ Its authentication is done via a [kubeconfig](https://kubernetes.io/docs/concept
 
 > Only cluster administrators should be allowed to directly talk to the Kubernetes API. Everyone else should passively interact with the clusters using tools like [ArgoCD](https://argo-cd.readthedocs.io/en/stable/), [Flux](https://fluxcd.io/).
 
+With kubectl we can interact with a Kubernetes cluster and not only get information but put new information in.
+
+<hr>
+
+## Kubernetes primitives
+
+In a vanilla Kubernetes installation we have native API objects that are embedded in the Kubernetes API server. These native objects are called "primitives".
+
+Here are the most basic ones and a simple description of what they do:
+
+|Name|Description|Usage|
+|-|-|-|
+|Pod|The smallest runtime object that holds information of the container and its image|Used for single or batch jobs that have a finite operation time|
+|Deployment|Manages one or more pods and adds functionalities like auto-restart and horizontal scaling|Standard runtime primitive that should always be used|
+|DaemonSet|Manages pods and automatically scales them with 1x pod per active worker node|Should only be used if a service must run on every node|
+|StatefulSet|Manages pods and relies on a specific naming convention and restart behaviour|Used for legacy applications that rely on static connection strings|
+|ConfigMap|Stores structured data|Used to configure applications|
+|Secret|Stores structured data base64 encoded|Used to store credentials for applications to consume (can be explicitly handled with RBAC)|
+|Service|Static vIP connection to one or more pods|Used to establish a stable link for addressing a running pod|
+|EndPoint|Part of the Service primitive|Stores information about pod endpoints (IP + port)|
+|Namespace|Logical area that holds primitives|Used to separate primitives and permissions|
+|Role|RBAC description of what one can do with the Kubernetes API (bound to namespace)|Used to describe permissions or permission sets|
+|RoleBinding|Binding of a user to a Role primitive (bound to namespace)|Used to map users to authorization when interacting with the Kubernetes API|
+|ClusterRole|RBAC description of what one can do with the Kubernetes API (cluster wide)|Used to describe permissions or permission sets|
+|ClusterRoleBinding|Binding of a user to a Role primitive (cluster wide)|Used to map users to authorization when interacting with the Kubernetes API|
+|PV|Description of a storage endpoint (e.g. NFS, Ceph)|Used to connect Kubernetes to external storage|
+|PVC|Object to be consumed by a pod to mount storage|Used to bind existing or dynamic PV objects to a pod|
+|ServiceAccount|User account in Kubernetes|Used to authenticate and authorize against the Kubernetes API server|
+
+> Primitives are normally bound to a namespace with a few exceptions. Namespaces are areas we use to group our applications and settings to maintain control and an overview.
