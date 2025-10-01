@@ -14,13 +14,13 @@ Due to its small dimensions it is the perfect hardware to realize smaller projec
 
 To use the RPI we must take care of three things:
 
-- power supply
+- **Power supply**
     - here I use [PoE HATs](https://www.waveshare.com/catalog/product/view/id/6434/s/poe-hat-g/category/37/) to directly supply power from a network switch
     - it does connect via the GPIO pins on the RPI
-- local storage for the OS
+- **Local storage** (for the OS, [*more infos*](ext_info/ext_local_storage.md))
     - a simple microSD card is sufficient
     - I used a 128GB card with the U3 and A2 [performance indicators](https://www.kingston.com/en/blog/personal-storage/memory-card-speed-classes)
-- access
+- **Access**
     - a SSH connection from another Linux machine is sufficient
     - we do not use a graphical user interface (GUI) since it unnecessarily eats up memory we have a better use for
 

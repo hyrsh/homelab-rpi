@@ -26,8 +26,11 @@ nav:
   - General: index.md
   - Design: 01_design/lp_design.md
   - Raspberry Pi: 02_raspberry/lp_raspberry.md
-  - Kubernetes: 03_kubernetes/lp_kubernetes.md
-  - Ceph: 04_ceph/lp_ceph.md
+  - Kubernetes:
+      - Overview: 03_kubernetes/00_overview.md
+      - Containers: 03_kubernetes/01_containers.md
+  - Ceph:
+      - Overview: 04_ceph/01_overview.md
   - Material: 05_material/lp_material.md
 
   #- UtilityGuide:
