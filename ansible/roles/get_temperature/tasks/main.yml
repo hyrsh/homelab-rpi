@@ -1,0 +1,9 @@
+- name: get temp
+  shell: vcgencmd measure_temp
+  args:
+    executable: /bin/bash
+  register: temperature
+
+- name: show temp
+  debug:
+    msg: "{{ ansible_host }} -> {{ temperature.stdout }}"

@@ -1,0 +1,9 @@
+- hosts: hl_ceph
+  become: yes
+  become_method: sudo
+  remote_user: ansible-admin
+  vars:
+    ansible_ssh_private_key_file: /datadisk/05_credentials/ssh-keys/admin.private
+  roles:
+    - get_devices
+    - get_temperature

@@ -1,0 +1,9 @@
+- name: get devices
+  shell: lsblk
+  args:
+    executable: /bin/bash
+  register: devices
+
+- name: show devices
+  debug:
+    msg: "{{ devices.stdout.split('\n') }}"

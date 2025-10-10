@@ -77,3 +77,20 @@ To fix that we write an [Ansible role](https://docs.ansible.com/ansible/latest/p
 After that all your hosts can be left untouched and are ready to be configured using Ansible.
 
 > There is one exception since we have to work with hardware (SSDs for Ceph) and have to be <span style="color:red"><em>really careful</em></span> what we are doing. The wiping of the filesystem and setting of the GPT partition for each SSD will not be automated with Ansible to avoid a cataclysmic outcome in case of a human error
+
+<hr>
+
+## General Information
+
+Here are some notes I keep if something draws my attention.
+
+- Raspberry Pi's and PoE problem with USB SSDs
+    - I had to unplug both SSDs for the Ceph nodes and plug them in one after another with about 15sec in between (otherwise dmesg would throw errors with "over-current changes")
+
+|Cooling|Fan direction|hl-ceph-01|hl-ceph-02|hl-ceph-03|hl-ceph-04|hl-ceph-05|Fan direction|
+|-|-|-|-|-|-|-|-|
+|Off|<- Out|60°C|58°C|58°C|59°C|60°C|<- In|
+|On|<- Out|45°C|45°C|45°C|45°C|35°C|<- In|
+
+
+<hr>
