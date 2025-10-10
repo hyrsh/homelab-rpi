@@ -87,6 +87,14 @@ Here are some notes I keep if something draws my attention.
 - Raspberry Pi's and PoE problem with USB SSDs
     - I had to unplug both SSDs for the Ceph nodes and plug them in one after another with about 15sec in between (otherwise dmesg would throw errors with "over-current changes")
 
+<hr>
+
+## Cooling Information
+
+I built a box out of aluminium and plexiglas with some 120mm fans (6x in total) and here are the idle stats per host group on the lanes.
+
+`Lane 4 (ceph group)`
+
 |Cooling|Fan direction|hl-ceph-01|hl-ceph-02|hl-ceph-03|hl-ceph-04|hl-ceph-05|Fan direction|
 |-|-|-|-|-|-|-|-|
 |Off|<- Out|60°C|58°C|58°C|59°C|60°C|<- In|
