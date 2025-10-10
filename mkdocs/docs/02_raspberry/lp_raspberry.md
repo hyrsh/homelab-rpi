@@ -84,21 +84,21 @@ After that all your hosts can be left untouched and are ready to be configured u
 
 Here are some notes I keep if something draws my attention.
 
-- Raspberry Pi's and PoE problem with USB SSDs
-    - I had to unplug both SSDs for the Ceph nodes and plug them in one after another with about 15sec in between (otherwise dmesg would throw errors with "over-current changes")
+- Raspberry Pi's and PoE problem with USB v3.1 SSDs
+    - The current of USB ports are limited by default to 600mA but for my 2TB SSDs (Samsung T7) I needed a bit more (about +200mA)
+    - In the default configuration the SSDs would not be able to connect correctly and "dmesg" would throw errors about "over-current"
+    - To fix this I added the line `usb_max_current_enable=1` in /boot/firmware/config.txt under the "[all]" section and rebooted
+    - I did this to all devices by hand since I do not want Ansible to mess with firmware configuration
 
 <hr>
 
 ## Cooling Information
 
-I built a box out of aluminium and plexiglas with some 120mm fans (6x in total) and here are the idle stats per host group on the lanes.
+I built a box out of aluminium and plexiglas with some 120mm fans (6x in total) and the idle stats are about 60°C without cooling and lowest at about 32°C when the fans are running.
 
-`Lane 4 (ceph group)`
+Depending on the geometry and spatial placing of the RPIs it is not ideal since the air stream does not reach all devices equally. The temperature climbs from right to left since the last devices are not getting cold enough air because it is pre-heated from all previous devices.
 
-|Cooling|Fan direction|hl-ceph-01|hl-ceph-02|hl-ceph-03|hl-ceph-04|hl-ceph-05|Fan direction|
-|-|-|-|-|-|-|-|-|
-|Off|<- Out|60°C|58°C|58°C|59°C|60°C|<- In|
-|On|<- Out|45°C|45°C|45°C|45°C|35°C|<- In|
+It is enough for a homelab :)
 
 
 <hr>
