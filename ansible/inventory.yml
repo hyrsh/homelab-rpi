@@ -1,23 +1,23 @@
-[hl_k3s]
-hl-k3s-01
-hl-k3s-02
-hl-k3s-03
+[hl_master]
+hl-master-01
+hl-master-02
+hl-master-03
 
 [hl_lb]
 hl-lb-01
 hl-lb-02
 
-[hl_k8s]
-hl-k8s-01
-hl-k8s-02
-hl-k8s-03
-hl-k8s-04
-hl-k8s-05
-hl-k8s-06
-hl-k8s-07
-hl-k8s-08
-hl-k8s-09
-hl-k8s-10
+[hl_worker]
+hl-worker-01
+hl-worker-02
+hl-worker-03
+hl-worker-04
+hl-worker-05
+hl-worker-06
+hl-worker-07
+hl-worker-08
+hl-worker-09
+hl-worker-10
 
 [hl_ceph]
 hl-ceph-01
