@@ -25,7 +25,9 @@ theme:
 nav:
   - General: index.md
   - Design: 01_design/lp_design.md
+  - Ansible: 08_ansible/lp_ansible.md
   - Raspberry Pi: 02_raspberry/lp_raspberry.md
+  - HAProxy & VPN: 07_hprx_vpn/lp_hprx_vpn.md
   - Kubernetes:
       - Containers: 03_kubernetes/01_containers.md
       - Overview: 03_kubernetes/00_overview.md
