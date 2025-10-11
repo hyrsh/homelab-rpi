@@ -32,6 +32,7 @@ nav:
   - Ceph:
       - Overview: 04_ceph/01_overview.md
   - Material: 05_material/lp_material.md
+  - TheBox: 06_thebox/lp_thebox.md
 
   #- UtilityGuide:
   #  - Smoke-JumpThrows:

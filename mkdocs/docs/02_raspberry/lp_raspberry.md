@@ -88,13 +88,22 @@ Here are some notes I keep if something draws my attention.
     - The current of USB ports are limited by default to 600mA but for my 2TB SSDs (Samsung T7) I needed a bit more (about +200mA)
     - In the default configuration the SSDs would not be able to connect correctly and "dmesg" would throw errors about "over-current"
     - To fix this I added the line `usb_max_current_enable=1` in /boot/firmware/config.txt under the "[all]" section and rebooted
-    - I did this to all devices by hand since I do not want Ansible to mess with firmware configuration
+    - I did this to all Ceph node devices by hand since I do not want Ansible to mess with firmware configuration
 
 <hr>
 
 ## Cooling Information
 
-I built a box out of aluminium and plexiglas with some 120mm fans (6x in total) and the idle stats are about 60°C without cooling and lowest at about 32°C when the fans are running.
+I built a box out of aluminium and plexiglas with some 120mm fans (6x in total) to get a steady air stream going from right to left and passing through all RPIs and SSDs.
+
+Temperatures in idle (no workload running only the bare OS):
+
+- Fans turned off:
+    - highest temp. 60°C
+    - lowest temp. 56°C
+- Fans turned on:
+    - highest temp. 47°C
+    - lowest temp. 32°C
 
 Depending on the geometry and spatial placing of the RPIs it is not ideal since the air stream does not reach all devices equally. The temperature climbs from right to left since the last devices are not getting cold enough air because it is pre-heated from all previous devices.
 

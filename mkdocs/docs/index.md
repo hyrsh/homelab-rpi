@@ -17,8 +17,10 @@ Thanks to the shops that everything was in stock:
 - [ThePiShop](https://www.pi-shop.ch/) (RPIs & PoE HATs)
 - [ThePiHut](https://thepihut.com/) (Heatsinks)
 - [Motedis](https://www.motedis.ch/en) (precise cut aluminium rails)
-- [Börlin AG (acrylglas24.ch)](https://acrylglas24.ch/) (precise cut plexiglas sheets)
+- [Börlin AG (acrylglas24.ch)](https://acrylglas24.ch/) (precise cut plexiglass sheets)
 - [Galaxus](https://www.galaxus.ch/) (all of the rest)
+
+I listed most of it in the [material page](05_material/lp_material.md) (if things are missing you will figure it out). The result is all of the RPIs packed in a [box](06_thebox/lp_thebox.md).
 
 <hr>
 
