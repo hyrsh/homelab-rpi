@@ -1,0 +1,24 @@
+- name: create ansible group
+  ansible.builtin.group:
+    name: ansible
+    gid: 2000
+
+- name: create ansible user
+  ansible.builtin.user:
+    name: ansible
+    comment: "Ansible configuration user"
+    group: ansible
+    uid: 2000
+
+- name: create sudoers entry
+  community.general.sudoers:
+    name: ansible-become
+    state: present
+    user: ansible
+    runas: root
+    commands: ALL
+
+- name: change ansible-admin password
+  ansible.builtin.user:
+    name: ansible-admin
+    password: "{{ vault.init_admin_password | password_hash('sha512') }}"
