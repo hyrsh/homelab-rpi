@@ -1,0 +1,59 @@
+- name: stop & disable WIFI
+  service:
+    name: wpa_supplicant
+    state: stopped
+    enabled: false
+
+- name: stop & disable Bluetooth
+  service:
+    name: bluetooth
+    state: stopped
+    enabled: false
+
+- name: stop & disable Bluetooth dev
+  ignore_errors: true
+  service:
+    name: hciuart
+    state: stopped
+    enabled: false
+
+- name: stop & disable modem (e.g. 4G)
+  service:
+    name: ModemManager
+    state: stopped
+    enabled: false
+
+- name: stop & disable hotkey function
+  ignore_errors: true
+  service:
+    name: triggerhappy
+    state: stopped
+    enabled: false
+
+- name: mask APT daily
+  shell: systemctl mask apt-daily
+  args:
+    executable: /bin/bash
+
+- name: mask APT daily-upgrade
+  shell: systemctl mask apt-daily-upgrade
+  args:
+    executable: /bin/bash
+
+- name: stop & disable APT daily timer
+  service:
+    name: apt-daily.timer
+    state: stopped
+    enabled: false
+
+- name: stop & disable APT daily upgrade timer
+  service:
+    name: apt-daily-upgrade.timer
+    state: stopped
+    enabled: false
+
+- name: remove man-db updates
+  file:
+    path: /var/lib/man-db/auto-update
+    state: absent
+
