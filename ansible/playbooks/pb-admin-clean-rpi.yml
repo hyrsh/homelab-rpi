@@ -1,4 +1,4 @@
-- hosts: hl_master
+- hosts: hl_master, hl_worker, hl_lb, hl_ceph
   become: yes
   become_method: sudo
   remote_user: ansible-admin

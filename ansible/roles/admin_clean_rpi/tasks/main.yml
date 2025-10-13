@@ -57,3 +57,7 @@
     path: /var/lib/man-db/auto-update
     state: absent
 
+- name: disable swap
+  shell: swapoff -a
+  args:
+    executable: /bin/bash
