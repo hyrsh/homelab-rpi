@@ -5,4 +5,4 @@
     usr: ansible
     host_dbg: hl_k3s_01
   roles:
-    - debug_keys
+    - admin_debug_keys

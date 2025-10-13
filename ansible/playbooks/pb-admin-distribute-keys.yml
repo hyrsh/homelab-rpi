@@ -8,3 +8,9 @@
     - "vault/av_homelab"
   roles:
     - admin_distribute_sshkeys
+  handlers:
+  - name: h-sshd-restart
+    systemd_service:
+      name: sshd
+      state: restarted
+      daemon_reload: true

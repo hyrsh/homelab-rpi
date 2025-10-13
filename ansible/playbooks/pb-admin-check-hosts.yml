@@ -5,4 +5,4 @@
   vars:
     ansible_ssh_private_key_file: /datadisk/05_credentials/ssh-keys/admin.private
   roles:
-    - get_temperature
+    - admin_get_temperature
