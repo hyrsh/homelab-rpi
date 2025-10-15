@@ -61,3 +61,14 @@
   shell: swapoff -a
   args:
     executable: /bin/bash
+
+- name: mask swap service
+  shell: systemctl mask swap.target
+  args:
+    executable: /bin/bash
+
+- name: stop & disable swap service
+  service:
+    name: swap.target
+    state: stopped
+    enabled: false
