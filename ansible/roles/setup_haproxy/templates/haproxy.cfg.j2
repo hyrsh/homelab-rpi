@@ -1,0 +1,59 @@
+global
+        log /dev/log    local0
+        log /dev/log    local1 notice
+        chroot /var/lib/haproxy
+        stats socket /run/haproxy/admin.sock mode 660 level admin
+        stats timeout 30s
+        user haproxy
+        group haproxy
+        daemon
+
+        # Default SSL material locations
+        ca-base /etc/ssl/certs
+        crt-base /etc/ssl/private
+
+        # See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate
+        ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+        ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+        ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
+
+defaults
+        log     global
+        mode    http
+        option  httplog
+        option  dontlognull
+        timeout connect 10000
+        timeout client  10000
+        timeout server  10000
+        errorfile 400 /etc/haproxy/errors/400.http
+        errorfile 403 /etc/haproxy/errors/403.http
+        errorfile 408 /etc/haproxy/errors/408.http
+        errorfile 500 /etc/haproxy/errors/500.http
+        errorfile 502 /etc/haproxy/errors/502.http
+        errorfile 503 /etc/haproxy/errors/503.http
+        errorfile 504 /etc/haproxy/errors/504.http
+
+resolvers internal
+  nameserver home 192.168.1.1:53
+
+frontend gateway_01
+  bind :443 ssl crt /root/certs/hprx-bundle.pem
+  mode http
+  timeout client 10000
+{% for DOM in setupinfos.haproxy_domains %}
+  acl acl_{{DOM}} hdr(host) -i {{DOM}}.{{setupinfos.external_domain}}
+  use_backend be_{{DOM}} if acl_{{DOM}}
+{% endfor %}
+  default_backend be_default
+
+{% for DO in setupinfos.haproxy_domains %}
+backend be_{{DO}}
+  mode http
+  http-request set-header Host {{DO}}.{{setupinfos.internal_domain}}
+  server {{DO}} 192.168.1.22 ssl verify required ca-file /root/certs/self-signed/chain-2.pem
+{% endfor %}
+
+backend be_default
+  mode http
+  http-request set-header Host m0rpheus.ch
+  server ngx 127.0.0.1:444 ssl verify required ca-file /root/certs/ca_bundle.crt

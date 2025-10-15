@@ -1,0 +1,25 @@
+- name: create directory for keys
+  delegate_to: localhost
+  file:
+    path: "/tmp/ansible_exposed_keys"
+    state: directory
+
+- name: mutate host
+  set_fact:
+    ansible_mutated_host: "{{ ansible_host | replace('-','_') }}"
+
+- name: set private ssh key file #we need a separate call for that or we run into race-conditions
+  set_fact:
+    ansible_ssh_private_key_file: "/tmp/ansible_exposed_keys/{{ ansible_mutated_host }}.ssh_key"
+
+- name: get key value from vault
+  delegate_to: localhost
+  copy:
+    content: "{{ item }}"
+    dest: "/tmp/ansible_exposed_keys/{{ ansible_mutated_host }}.ssh_key"
+    mode: 0600
+  no_log: True
+  notify: h-clean-exposed-keys
+  changed_when: True
+  with_items:
+    - "{{ vault.ssh_keys_private[ansible_mutated_host] | b64decode }}"

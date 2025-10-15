@@ -1,0 +1,23 @@
+- name: install wireguard package
+  package:
+    name: wireguard
+    state: present
+  when: op_mode == "install"
+
+- name: get config template to directory
+  template:
+    src: templates/wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+  when: op_mode == "install"
+
+- name: uninstall wireguard package
+  package:
+    name: wireguard
+    state: absent
+  when: op_mode == "uninstall"
+
+- name: remove config directory
+  file:
+    path: /etc/wireguard
+    state: absent
+  when: op_mode == "uninstall"

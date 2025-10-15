@@ -1,3 +1,21 @@
 - name: Debug test connection
   debug:
     msg: "This is from host {{ ansible_host }}"
+
+- name: mutate host
+  set_fact:
+    ansible_mutated_host: "{{ ansible_host | replace('-','_') }}"
+
+- name: set fact
+  set_fact:
+    ansible_ssh_private_key_file: "/tmp/ansible_exposed_keys/{{ ansible_mutated_host }}.ssh_key"
+
+- name: test
+  shell: vcgencmd measure_temp
+  args:
+    executable: /bin/bash
+  register: tmpvar
+
+- name: get value
+  debug:
+    msg: "Temperature on {{ ansible_host }} is {{ tmpvar.stdout }}"

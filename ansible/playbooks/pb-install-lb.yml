@@ -1,4 +1,4 @@
-- hosts: hl_lb
+- hosts: hl-lb-01
   become: yes
   become_method: sudo
   remote_user: ansible
@@ -6,7 +6,8 @@
     - "vault/av_homelab"
   roles:
     - expose_ssh_keys
-    - debug
+    - setup_haproxy
+    - setup_wireguard
   handlers:
   - name: h-clean-exposed-keys
     delegate_to: localhost
