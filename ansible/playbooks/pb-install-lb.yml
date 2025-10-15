@@ -14,3 +14,11 @@
     file:
       name: /tmp/ansible_exposed_keys
       state: absent
+  - name: "h-restart-haproxy"
+    service:
+      name: haproxy
+      state: restarted
+  - name: "h-restart-keepalived"
+    service:
+      name: keepalived
+      state: restarted

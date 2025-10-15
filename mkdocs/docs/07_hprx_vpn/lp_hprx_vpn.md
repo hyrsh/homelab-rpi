@@ -22,8 +22,9 @@ I have configured Ansible that it can reach both HAProxy/VPN nodes with an indiv
 
 The directory structure for this is pretty straight forward:
 
-- Roles for setup
-- Roles for config
+- Roles for seting up [HAProxy](https://github.com/hyrsh/homelab-rpi/tree/main/ansible/roles/setup_haproxy)
+- Role for setting up [WireGuard](https://github.com/hyrsh/homelab-rpi/tree/main/ansible/roles/setup_wireguard)
+- Role for setting up KeepaliveD
 
 `Directory tree`
 ```shell
@@ -31,18 +32,16 @@ The directory structure for this is pretty straight forward:
   - /group_vars
   - inventory.yml
   - /roles
-    - /setup_haproxy/tasks/main.yml
-    - /setup_keepalived/tasks/main.yml
-    - /setup_wireguard/tasks/main.yml
-    - /config_haproxy
+    - /setup_haproxy
       - /tasks/main.yml
       - /templates/haproxy.cfg.j2
-    - /config_keepalived
+    - /setup_keepalived
       - /tasks/main.yml
       - /templates/keepalived.conf.j2
-    - /config_wireguard
+      - /scripts/haproxy_check.sh
+    - /setup_wireguard
       - /tasks/main.yml
-      - /templates/wireguard.conf.j2
+      - /templates/wg0.conf.j2
 ```
 
-We use separate roles for installing and configuration since we want to be able to update configs in the future without triggering a reinstall or application update (we could use assertions (and we will with other roles) within ansible and check for already installed packages but we keep it simple for this setup).
+We use conditions to be able to install/uninstall and/or toggle a simple config rollout.

@@ -1,25 +1,25 @@
-- name: install haproxy package
+- name: install keepalived package
   package:
-    name: haproxy
+    name: keepalived
     state: present
   when: op_mode == "install"
 
 - name: get config template to directory
   template:
-    src: "templates/haproxy.cfg.j2"
-    dest: /etc/haproxy/haproxy.cfg
+    src: "templates/keepalived.conf.j2"
+    dest: /etc/keepalived/keepalived.conf
   changed_when: True
-  notify: "h-restart-haproxy"
+  notify: "h-restart-keepalived"
   when: op_mode == "install" or op_mode == "config-update"
 
-- name: deinstall haproxy package
+- name: deinstall keepalived package
   package:
-    name: haproxy
+    name: keepalived
     state: absent
   when: op_mode == "uninstall"
 
 - name: remove config directory
   file:
-    path: /etc/haproxy
+    path: /etc/keepalived
     state: absent
   when: op_mode == "uninstall"

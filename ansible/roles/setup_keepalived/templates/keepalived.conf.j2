@@ -1,0 +1,14 @@
+vrrp_instance LB_HA {
+    state MASTER
+    interface eth0
+    virtual_router_id 101
+    priority {{ hostinfos[ansible_mutated_host].kd_prio }}
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        {{ setupinfos.lb_vip }}
+    }
+}
