@@ -22,9 +22,9 @@ I have configured Ansible that it can reach both HAProxy/VPN nodes with an indiv
 
 The directory structure for this is pretty straight forward:
 
-- Roles for seting up [HAProxy](https://github.com/hyrsh/homelab-rpi/tree/main/ansible/roles/setup_haproxy)
+- Role for seting up [HAProxy](https://github.com/hyrsh/homelab-rpi/tree/main/ansible/roles/setup_haproxy)
 - Role for setting up [WireGuard](https://github.com/hyrsh/homelab-rpi/tree/main/ansible/roles/setup_wireguard)
-- Role for setting up KeepaliveD
+- Role for setting up [KeepaliveD](https://github.com/hyrsh/homelab-rpi/tree/main/ansible/roles/setup_keepalived)
 
 `Directory tree`
 ```shell
@@ -42,6 +42,10 @@ The directory structure for this is pretty straight forward:
     - /setup_wireguard
       - /tasks/main.yml
       - /templates/wg0.conf.j2
+    ...
+  ...
 ```
 
-We use conditions to be able to install/uninstall and/or toggle a simple config rollout.
+We use conditions to be able to install/uninstall and/or toggle a simple config rollout. To control these conditions we can add a flag "-e" with our conditional variable (op_mode) alongside our playbook call.
+
+All our templates are in [Jinja2](https://en.wikipedia.org/wiki/Jinja_(template_engine)) and get their variables from our main configuration file at [/ansible/group_vars/all](https://github.com/hyrsh/homelab-rpi/blob/main/ansible/group_vars/all) and/or the corresponding playbook that is called.
