@@ -1,5 +1,5 @@
 - hosts: hl-lb-01
-  become: yes
+  become: True
   become_method: sudo
   remote_user: ansible
   vars_files:
