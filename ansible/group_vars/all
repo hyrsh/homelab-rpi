@@ -37,6 +37,5 @@ setupinfos:
   internal_domain: "hyrsh.io"
   external_domain: "m0rpheus.ch"
   haproxy_domains:
-    - "homelab-rpi"
-  wireguard:
-    local_dns: "192.168.1.1"
+    - {domain: "homelab-rpi", ip: "192.168.1.230", maxc: "100"}
+  local_dns: "192.168.1.1"

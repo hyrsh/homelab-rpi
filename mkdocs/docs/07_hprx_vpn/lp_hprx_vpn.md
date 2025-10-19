@@ -1,6 +1,6 @@
 # HAProxy & VPN
 
-To get a semi-high available entrypoint to our cluster from inside my local net and the public internet I decided to setup [HAProxy](https://www.haproxy.org/) with 2x instances and also install a VPN client ([WireGuard](https://www.wireguard.com/)) on the same nodes to enable simple DNS settings and local controlled policies.
+To get a semi-high available entrypoint to our cluster from inside my local net and the public internet I decided to setup [HAProxy](https://www.haproxy.org/) with 2x instances and also install a VPN client ([WireGuard](https://www.wireguard.com/)) on the same nodes to enable simple DNS settings, local controlled policies and connection to my VPS running on a CSP.
 
 The idea behind this is that every URL called that reaches the cluster is controlled by a [load balancer](https://www.geeksforgeeks.org/system-design/what-is-load-balancer-system-design/) policy/restriction **before** it reaches the cluster machines. I apply rate-limiting, maximum connection thresholds and throttling to different URLs to avoid melting my cluster and bandwidth.
 
@@ -18,7 +18,7 @@ I have configured Ansible that it can reach both HAProxy/VPN nodes with an indiv
 
 > Disclaimer:
 
->My style of Ansible differs a bit from the official structure since I want to have one directory that can be copied everywhere and contains everything needed to execute the playbooks. I use roles as primary config blocks and do not use umbrella-style configurations like global roles or variables that are sourced from somewhere else. My ansible-vault and variables are also within the main directory.
+>My style of Ansible differs a bit from the official structure --> [see here](../08_ansible/lp_ansible.md#structure)
 
 The directory structure for this is pretty straight forward:
 
@@ -48,4 +48,4 @@ The directory structure for this is pretty straight forward:
 
 We use conditions to be able to install/uninstall and/or toggle a simple config rollout. To control these conditions we can add a flag "-e" with our conditional variable (op_mode) alongside our playbook call.
 
-All our templates are in [Jinja2](https://en.wikipedia.org/wiki/Jinja_(template_engine)) and get their variables from our main configuration file at [/ansible/group_vars/all](https://github.com/hyrsh/homelab-rpi/blob/main/ansible/group_vars/all) and/or the corresponding playbook that is called.
+All our templates are in [Jinja2](https://en.wikipedia.org/wiki/Jinja_(template_engine)) and get their variables from our main configuration file at [/ansible/group_vars/all](https://github.com/hyrsh/homelab-rpi/blob/main/ansible/group_vars/all), the vault (not uploaded) and/or the corresponding playbook that is called.

@@ -109,5 +109,4 @@ Depending on the geometry and spatial placing of the RPIs it is not ideal since 
 
 It is enough for a homelab :)
 
-
 <hr>

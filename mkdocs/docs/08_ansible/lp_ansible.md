@@ -10,7 +10,7 @@ The general idea:
 - write human readable syntax that invokes specific [modules](https://docs.ansible.com/ansible/2.9/user_guide/modules_intro.html)
 - let it run using a [playbook](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
 - the target host only has to be reachable by [SSH](https://www.ssh.com/academy/ssh)
-- the host only has to have [minimal packages installed](https://docs.ansible.com/ansible/latest/reference_appendices/python_3_support.html#using-python-3-on-the-managed-machines-with-commands-and-playbooks) an **no agent** (which is what I like)
+- the target host only has to have [minimal packages installed](https://docs.ansible.com/ansible/latest/reference_appendices/python_3_support.html#using-python-3-on-the-managed-machines-with-commands-and-playbooks) an **no agent** (which is what I like)
 
 <hr>
 
@@ -167,8 +167,8 @@ In our playbook we included the vault file with "vars_files" by its relative pat
 
 ## Wrap-up
 
-If you understand these basics you can handle simple ansible installations. Everything else is a wild ride down the Ansible rabbit hole which consists of learning about its modules, inventories, logic and syntactic trickery that sometimes can be very daunting.
+If you understand these basics you can handle simple ansible installations. Everything else is a wild ride down the Ansible rabbit hole which consists of learning about its [modules](https://docs.ansible.com/ansible/2.9/user_guide/modules_intro.html), inventories, logic and syntactic trickery that sometimes can be very daunting.
 
 It is one of the easiest configuration tools to learn and its community is really great so don't give up if you are exhausted by it.
 
-And keep in mind to look for native Ansible modules before you use the "shell" module ;)
+And keep in mind to look for native Ansible modules before you use the "shell" module  :D

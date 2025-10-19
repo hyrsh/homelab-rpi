@@ -2,7 +2,7 @@
 PrivateKey = "{{ vault.wireguard_keys_private[ansible_mutated_host] }}"
 Address = "{{ hostinfos[ansible_mutated_host].wireguard_ip }}"
 ListenPort = "{{ hostinfos[ansible_mutated_host].wireguard_listening_port }}"
-DNS = "{{ setupinfos.wireguard.local_dns }}"
+DNS = "{{ setupinfos.local_dns }}"
 
 [Peer]
 PublicKey = "{{ vault.wireguard_keys_public.csp_vps }}"

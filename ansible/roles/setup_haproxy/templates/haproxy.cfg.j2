@@ -34,7 +34,7 @@ defaults
         errorfile 504 /etc/haproxy/errors/504.http
 
 resolvers internal
-  nameserver home 192.168.1.1:53
+  nameserver home {{ setupinfos.local_dns }}:53
 
 frontend gateway_01
   bind :443 ssl crt /root/certs/hprx-bundle.pem
@@ -47,10 +47,11 @@ frontend gateway_01
   default_backend be_default
 
 {% for DO in setupinfos.haproxy_domains %}
-backend be_{{DO}}
+backend be_{{DO.domain}}
   mode http
-  http-request set-header Host {{DO}}.{{setupinfos.internal_domain}}
-  server {{DO}} 192.168.1.22 ssl verify required ca-file /root/certs/self-signed/chain-2.pem
+  maxconn {{DO.maxc}}
+  http-request set-header Host {{DO.domain}}.{{setupinfos.internal_domain}}
+  server {{DO.domain}} {{DO.ip}} ssl verify required ca-file /root/certs/self-signed/chain-2.pem
 {% endfor %}
 
 backend be_default
