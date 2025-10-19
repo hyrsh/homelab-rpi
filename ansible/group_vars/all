@@ -32,6 +32,7 @@ userinfos:
 setupinfos:
   lb_master: [ "hl-lb-01" ]
   lb_vip: "192.168.1.13"
+  lb_cert_dir: "/etc/haproxy/own-certs"
   ceph_master: [ "hl-ceph-01", "hl-ceph-05" ]
   ingress_nodes: [ "hl-worker-05", "hl-worker-10" ]
   internal_domain: "hyrsh.io"

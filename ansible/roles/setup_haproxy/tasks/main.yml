@@ -4,13 +4,40 @@
     state: present
   when: op_mode == "install"
 
+- name: create cert directory
+  file:
+    path: "{{ setupinfos.lb_cert_dir }}"
+    state: directory
+    owner: haproxy
+    mode: '0655'
+  when: op_mode == "install"
+
+- name: copy public cert
+  copy:
+    content: "{{ vault.certs.pubpki_srv_crt | b64decode }}"
+    dest: "{{ setupinfos.lb_cert_dir }}/public-cert.crt"
+    mode: '0644'
+    owner: haproxy
+  when: op_mode == "install"
+
+- name: copy public cert
+  copy:
+    content: "{{ vault.certs.pubpki_srv_key | b64decode }}"
+    dest: "{{ setupinfos.lb_cert_dir }}/public-cert.key"
+    mode: '0644'
+    owner: haproxy
+  when: op_mode == "install"
+
 - name: get config template to directory
   template:
     src: "templates/haproxy.cfg.j2"
     dest: /etc/haproxy/haproxy.cfg
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
   changed_when: True
   notify: "h-restart-haproxy"
-  when: op_mode == "install" or op_mode == "config-update"
+  when: op_mode == "install" or op_mode == "update-config"
 
 - name: deinstall haproxy package
   package:
@@ -21,5 +48,12 @@
 - name: remove config directory
   file:
     path: /etc/haproxy
+    state: absent
+  when: op_mode == "uninstall"
+
+#maybe redundant
+- name: remove cert directory
+  file:
+    path: "{{ setupinfos.lb_cert_dir }}"
     state: absent
   when: op_mode == "uninstall"

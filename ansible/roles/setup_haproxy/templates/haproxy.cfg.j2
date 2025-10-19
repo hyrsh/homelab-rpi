@@ -8,7 +8,7 @@ global
         group haproxy
         daemon
 
-        # Default SSL material locations
+        # Default SSL material locations & please copy your self-signed ca.crt's to /usr/local/share/ca-certificates
         ca-base /etc/ssl/certs
         crt-base /etc/ssl/private
 
@@ -25,19 +25,12 @@ defaults
         timeout connect 10000
         timeout client  10000
         timeout server  10000
-        errorfile 400 /etc/haproxy/errors/400.http
-        errorfile 403 /etc/haproxy/errors/403.http
-        errorfile 408 /etc/haproxy/errors/408.http
-        errorfile 500 /etc/haproxy/errors/500.http
-        errorfile 502 /etc/haproxy/errors/502.http
-        errorfile 503 /etc/haproxy/errors/503.http
-        errorfile 504 /etc/haproxy/errors/504.http
 
 resolvers internal
   nameserver home {{ setupinfos.local_dns }}:53
 
 frontend gateway_01
-  bind :443 ssl crt /root/certs/hprx-bundle.pem
+  bind :443 ssl crt {{setupinfos.lb_cert_dir}}/public-server-bundle.pem
   mode http
   timeout client 10000
 {% for DOM in setupinfos.haproxy_domains %}
@@ -51,10 +44,10 @@ backend be_{{DO.domain}}
   mode http
   maxconn {{DO.maxc}}
   http-request set-header Host {{DO.domain}}.{{setupinfos.internal_domain}}
-  server {{DO.domain}} {{DO.ip}} ssl verify required ca-file /root/certs/self-signed/chain-2.pem
+  server {{DO.domain}} {{DO.ip}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-server-bundle.pem
 {% endfor %}
 
 backend be_default
   mode http
   http-request set-header Host m0rpheus.ch
-  server ngx 127.0.0.1:444 ssl verify required ca-file /root/certs/ca_bundle.crt
+  server ngx 127.0.0.1:444 ssl verify required ca-file /root/certs/public-ca-bundle.crt

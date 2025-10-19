@@ -4,6 +4,12 @@
     state: present
   when: op_mode == "install"
 
+- name: create config directory
+  file:
+    path: /etc/wireguard
+    state: absent
+  when: op_mode == "install" or op_mode "update-config"
+
 - name: get config template to directory
   template:
     src: templates/wg0.conf.j2
