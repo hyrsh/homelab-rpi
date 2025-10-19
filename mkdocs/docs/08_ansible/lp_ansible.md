@@ -45,7 +45,9 @@ The simplest structure of a working Ansible directory (written in my style) look
 
 We will go through all files and see why they are necessary (with examples).
 
-#### Variables
+<hr>
+
+### Variables
 
 `File: /ansible/group_vars/all`
 
@@ -58,7 +60,9 @@ Ansible uses "variable sourcing" which is a way to consume custom configuration 
 
 The variables shown in the */ansible/group_vars/all* file can be accessed with the "dot-notation" (e.g. myblock1.myvar1) representing grouping/hierarchical structures. This is important, since we can make our instructions (tasks in roles) highly dynamic (we want that!).
 
-#### Roles
+<hr>
+
+### Roles
 
 `File: /ansible/roles/debug/tasks/main.yml`
 
@@ -68,4 +72,103 @@ The variables shown in the */ansible/group_vars/all* file can be accessed with t
     msg: "My message!"
 ```
 
-Roles in Ansible are compact instruction sets of tasks that invoke modules to execute specific actions on a host. In this s
+Roles in Ansible are compact instruction sets of tasks that invoke modules to execute specific actions on a host. In this case we are creating a task ("echo output") using the "debug" module to output a simple string "My message!". To use our variable in this example we must alter it a bit.
+
+`File: /ansible/roles/debug/tasks/main.yml`
+
+```shell
+- name: echo output
+  debug:
+    msg: "My message says: {{ myblock1.myvar1 }}"
+```
+
+If we want to access our values from our variable files, we need to use double curly braces ([Ansible is using Jinja syntax](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#using-variables)) to do so. Now the output shows the string "My message says: hello".
+
+<hr>
+
+### Playbooks
+
+`File: /ansible/playbook.yml`
+
+```shell
+- hosts: localhost
+  roles:
+    - debug
+```
+
+A playbook is a reference on what host we want to execute specific roles.
+
+Here we execute the "debug" role on our localhost. The available roles are looked up from the directories under "/ansible/roles". In our case we created a directory called "debug" and this is where Ansible goes when we want to invoke that role.
+
+Executing this playbook is done with the ansible builtin CLI commands:
+
+```shell
+ansible-playbook playbook.yml
+```
+
+>We did not provide an inventory file (which is a list of hosts we can address) so the output may mention that. This is not a problem but a warning.
+
+<hr>
+
+### Vault
+
+`File: /ansible/myvault`
+
+```yaml
+vault:
+  mysecret: "1234"
+```
+
+Ansible does provide a small local security solution (that is sufficient for homelabs and smaller setups) called "vault". It is a file like our */ansible/group_vars/all* file with the same structure but encrypted with a 256-bit AES standard.
+
+`Creating a vault:`
+
+```shell
+ansible-vault create myvault
+```
+
+`Editing a vault:`
+
+```shell
+ansible-vault edit myvault
+```
+
+I personally choose to prefix the top-level hierarchy with "vault" so I can easily determine what variable in my roles are sourced from the vault.
+
+To use this variable we have to adjust our playbook, our role and the way we execute our playbook.
+
+`File: /ansible/playbook.yml`
+
+```shell
+- hosts: localhost
+  vars_files:
+    - "myvault"
+  roles:
+    - debug
+```
+
+`File: /ansible/roles/debug/tasks/main.yml`
+
+```shell
+- name: echo output
+  debug:
+    msg: "My message says: {{ myblock1.myvar1 }} with the secret: {{ vault.mysecret }}"
+```
+
+`Execution`
+
+```shell
+ansible-playbook -J playbook.yml
+```
+
+In our playbook we included the vault file with "vars_files" by its relative path and extended our debug role with the variable "vault.mysecret". To execute this playbook we added the flag "-J" which is a shorthand flag for asking the vault password to decrypt it.
+
+<hr>
+
+## Wrap-up
+
+If you understand these basics you can handle simple ansible installations. Everything else is a wild ride down the Ansible rabbit hole which consists of learning about its modules, inventories, logic and syntactic trickery that sometimes can be very daunting.
+
+It is one of the easiest configuration tools to learn and its community is really great so don't give up if you are exhausted by it.
+
+And keep in mind to look for native Ansible modules before you use the "shell" module ;)
