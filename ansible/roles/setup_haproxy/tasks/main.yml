@@ -12,20 +12,34 @@
     mode: '0655'
   when: op_mode == "install"
 
-- name: copy public cert
+- name: copy public ca bundle
   copy:
-    content: "{{ vault.certs.pubpki_srv_crt | b64decode }}"
-    dest: "{{ setupinfos.lb_cert_dir }}/public-cert.crt"
+    content: "{{ vault.certs.public_ca_bundle | b64decode }}"
+    dest: "{{ setupinfos.lb_cert_dir }}/public-ca-bundle.crt"
     mode: '0644'
     owner: haproxy
   when: op_mode == "install"
 
-- name: copy public cert
+- name: copy public server bundle
   copy:
-    content: "{{ vault.certs.pubpki_srv_key | b64decode }}"
-    dest: "{{ setupinfos.lb_cert_dir }}/public-cert.key"
+    content: "{{ vault.certs.public_server_bundle | b64decode }}"
+    dest: "{{ setupinfos.lb_cert_dir }}/public-server-bundle.pem"
     mode: '0644'
     owner: haproxy
+  when: op_mode == "install"
+
+- name: copy private ca bundle
+  copy:
+    content: "{{ vault.certs.private_ca_bundle | b64decode }}"
+    dest: "/usr/local/share/ca-certificates/private-ca-bundle.crt"
+    mode: '0644'
+    owner: haproxy
+  when: op_mode == "install"
+
+- name: OS update of certificates
+  shell: update-ca-certificates
+  args:
+    executable: /bin/bash
   when: op_mode == "install"
 
 - name: get config template to directory
@@ -51,9 +65,8 @@
     state: absent
   when: op_mode == "uninstall"
 
-#maybe redundant
-- name: remove cert directory
+- name: remove private cert ca
   file:
-    path: "{{ setupinfos.lb_cert_dir }}"
+    path: "/usr/local/share/ca-certificates/private-ca-bundle.crt"
     state: absent
   when: op_mode == "uninstall"
