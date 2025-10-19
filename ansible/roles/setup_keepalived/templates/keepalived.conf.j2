@@ -4,11 +4,17 @@ vrrp_instance LB_HA {
     virtual_router_id 101
     priority {{ hostinfos[ansible_mutated_host].kd_prio }}
     advert_int 1
-    authentication {
-        auth_type PASS
-        auth_pass 1111
+    track_script {
+      chk_haproxy
     }
     virtual_ipaddress {
         {{ setupinfos.lb_vip }}
     }
+}
+
+vrrp_script chk_haproxy {
+  script       "/etc/haproxy/kd_haproxy.sh"
+  interval 2   # check every 2 seconds
+  fall 2       # require 2 failures for KO
+  rise 2       # require 2 successes for OK
 }
