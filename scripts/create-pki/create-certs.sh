@@ -148,9 +148,10 @@ openssl genrsa -out ./$output_dir/intermediate_ca.key.pem 4096
 openssl req -config ./$output_dir/additional_info/int_ca_v3.cnf -key ./$output_dir/intermediate_ca.key.pem -new -sha256 -out ./$output_dir/intermediate_ca.csr.pem -subj "$int_subject"
 # Sign CSR with root CA
 openssl ca -config ./$output_dir/additional_info/root_ca_v3.cnf -extensions v3_intermediate_ca -days $int_ca_expiry -notext -md sha256 -in ./$output_dir/intermediate_ca.csr.pem -out ./$output_dir/intermediate_ca.cert.pem
-
-
-
+# Move CSR to additional_infos
+mv ./$output_dir/intermediate_ca.csr.pem ./$output_dir/additional_info/intermediate_ca.csr.pem
+# Create CA public chain
+cat ./$output_dir/intermediate_ca.cert.pem ./$output_dir/root_ca.cert.pem > ./$output_dir/ca_bundle.crt.pem
 
 
 
