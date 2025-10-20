@@ -9,8 +9,8 @@ new_certs_dir     = $dir/additional_infos                         # New certific
 database          = $dir/additional_infos/index_intermediate.txt  # Certificate index file
 serial            = $dir/additional_infos/serial_intermediate     # Serial number file
 RANDFILE          = $dir/additional_infos/.rand_intermediate      # Random number file
-private_key       = $dir/additional_infos/intermediate.key.pem    # Intermediate CA private key
-certificate       = $dir/intermediate.cert.pem                    # Intermediate CA certificate
+private_key       = $dir/additional_infos/intermediate_ca.key.pem # Intermediate CA private key
+certificate       = $dir/intermediate_ca.cert.pem                 # Intermediate CA certificate
 crl               = $dir/additional_infos/intermediate.crl.pem    # Intermediate CA CRL
 crlnumber         = $dir/additional_infos/crlnumber_intermediate  # Intermediate CA CRL number
 crl_extensions    = crl_ext                                       # CRL extensions
@@ -32,7 +32,7 @@ commonName              = supplied                                # Must provide
 emailAddress            = optional                                # Email address is optional
 
 [ req ]                                                           # Request settings
-default_bits        = 2048                                        # Default key size
+default_bits        = 4096                                        # Default key size
 distinguished_name  = req_distinguished_name                      # Default DN template
 string_mask         = utf8only                                    # UTF-8 encoding
 default_md          = sha256                                      # Default message digest
