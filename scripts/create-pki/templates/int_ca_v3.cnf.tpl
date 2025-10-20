@@ -4,15 +4,15 @@ default_ca = CA_default          # The default CA name
 [ CA_default ]                                                    # Default settings for the intermediate CA
 dir               = {{ output_dir }}                              # Intermediate CA directory
 certs             = $dir                                          # Certificates directory
-crl_dir           = $dir/additional_infos                         # CRL directory
-new_certs_dir     = $dir/additional_infos                         # New certificates directory
-database          = $dir/additional_infos/index_intermediate.txt  # Certificate index file
-serial            = $dir/additional_infos/serial_intermediate     # Serial number file
-RANDFILE          = $dir/additional_infos/.rand_intermediate      # Random number file
-private_key       = $dir/additional_infos/intermediate_ca.key.pem # Intermediate CA private key
+crl_dir           = $dir/additional_info                         # CRL directory
+new_certs_dir     = $dir/additional_info                         # New certificates directory
+database          = $dir/additional_info/index_intermediate.txt  # Certificate index file
+serial            = $dir/additional_info/serial_intermediate     # Serial number file
+RANDFILE          = $dir/additional_info/.rand_intermediate      # Random number file
+private_key       = $dir/intermediate_ca.key.pem                  # Intermediate CA private key
 certificate       = $dir/intermediate_ca.cert.pem                 # Intermediate CA certificate
-crl               = $dir/additional_infos/intermediate.crl.pem    # Intermediate CA CRL
-crlnumber         = $dir/additional_infos/crlnumber_intermediate  # Intermediate CA CRL number
+crl               = $dir/additional_info/intermediate.crl.pem    # Intermediate CA CRL
+crlnumber         = $dir/additional_info/crlnumber_intermediate  # Intermediate CA CRL number
 crl_extensions    = crl_ext                                       # CRL extensions
 default_crl_days  = 30                                            # Default CRL validity days
 default_md        = sha256                                        # Default message digest
@@ -33,19 +33,20 @@ emailAddress            = optional                                # Email addres
 
 [ req ]                                                           # Request settings
 default_bits        = 4096                                        # Default key size
-distinguished_name  = req_distinguished_name                      # Default DN template
+distinguished_name  = dn                                          # Default DN template
 string_mask         = utf8only                                    # UTF-8 encoding
 default_md          = sha256                                      # Default message digest
 x509_extensions     = v3_intermediate_ca                          # Extensions for intermediate CA certificate
+prompt              = no
 
-[ req_distinguished_name ]                               # Template for the DN in the CSR
-countryName                     = OS
-stateOrProvinceName             = OuterSpace
-localityName                    = Orbit
-0.organizationName              = TLSCorp
-organizationalUnitName          = Self-Signed PKI
-commonName                      = {{ domain }}
-emailAddress                    = neutron@blackhole.os
+[ dn ]                               # Template for the DN in the CSR
+C             = {{ srv_country }}
+ST            = {{ srv_state }}
+L             = {{ srv_loc }}
+O             = {{ srv_org }}
+OU            = {{ srv_ou }}
+CN            = {{ domain }}
+emailAddress  = {{ srv_mail }}
 
 [ v3_intermediate_ca ]                                      # Intermediate CA certificate extensions
 subjectKeyIdentifier = hash                                 # Subject key identifier
