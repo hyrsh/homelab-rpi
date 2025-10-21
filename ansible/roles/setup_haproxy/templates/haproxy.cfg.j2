@@ -32,6 +32,7 @@ resolvers internal
 frontend gateway_01
   bind :443 ssl crt {{setupinfos.lb_cert_dir}}/public-server-bundle.pem
   mode http
+  maxconn {{ setupinfos.max_connections_haproxy }}
   timeout client 10000
 {% for DOM in setupinfos.haproxy_domains %}
   acl acl_{{DOM.domain}} hdr(host) -i {{DOM.domain}}.{{setupinfos.external_domain}}
@@ -42,7 +43,6 @@ frontend gateway_01
 {% for DO in setupinfos.haproxy_domains %}
 backend be_{{DO.domain}}
   mode http
-  maxconn {{DO.maxc}}
   http-request set-header Host {{DO.domain}}.{{setupinfos.internal_domain}}
   server {{DO.domain}} {{DO.ip}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-ca-bundle.crt
 {% endfor %}
