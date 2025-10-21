@@ -7,8 +7,8 @@
 - name: create config directory
   file:
     path: /etc/wireguard
-    state: absent
-  when: op_mode == "install" or op_mode "update-config"
+    state: directory
+  when: op_mode == "install" or op_mode == "update-config"
 
 - name: get config template to directory
   template:

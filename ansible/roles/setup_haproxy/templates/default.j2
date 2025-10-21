@@ -1,0 +1,20 @@
+# Default server configuration
+#
+server {
+        listen 444 ssl;
+        server_name         www.{{ setupinfos.external_domain }};
+        ssl_protocols       TLSv1.2 TLSv1.3;
+        ssl_certificate     {{ setupinfos.lb_cert_dir }}/public-fullchain.crt;
+        ssl_certificate_key {{ setupinfos.lb_cert_dir }}/public-server-key.key;
+
+
+        root /var/www/html;
+
+        index index.html index.htm index.nginx-debian.html;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+}

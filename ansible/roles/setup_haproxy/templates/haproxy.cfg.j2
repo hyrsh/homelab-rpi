@@ -34,8 +34,8 @@ frontend gateway_01
   mode http
   timeout client 10000
 {% for DOM in setupinfos.haproxy_domains %}
-  acl acl_{{DOM}} hdr(host) -i {{DOM}}.{{setupinfos.external_domain}}
-  use_backend be_{{DOM}} if acl_{{DOM}}
+  acl acl_{{DOM.domain}} hdr(host) -i {{DOM.domain}}.{{setupinfos.external_domain}}
+  use_backend be_{{DOM.domain}} if acl_{{DOM.domain}}
 {% endfor %}
   default_backend be_default
 
@@ -44,7 +44,7 @@ backend be_{{DO.domain}}
   mode http
   maxconn {{DO.maxc}}
   http-request set-header Host {{DO.domain}}.{{setupinfos.internal_domain}}
-  server {{DO.domain}} {{DO.ip}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-server-bundle.pem
+  server {{DO.domain}} {{DO.ip}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-ca-bundle.crt
 {% endfor %}
 
 backend be_default

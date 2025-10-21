@@ -59,7 +59,7 @@ while [ $# -gt 0 ]; do
       srv_cert_expiry=$1
       shift
       ;;
-    -dom|-domain)
+    -d|-domain)
       shift
       domain=$1
       shift
@@ -116,6 +116,12 @@ d_srv=$(echo $domain | awk -F\. '{print $1}')
 d_dom=$(echo $domain | awk -F\. '{print $2}')
 d_apx=$(echo $domain | awk -F\. '{print $3}')
 
+# Pretty name replacement
+pretty_name=$domain
+if [ "$d_srv" == "*" ]; then
+  pretty_name="wildcard.${d_dom}.${d_apx}"
+fi
+
 # Simple check for 3x parts with dots as separator
 if [ "$d_srv" == "" ] || [ "$d_dom" == "" ] || [ "$d_apx" == "" ] || [ "$(echo $domain | awk -F\. '{print $NF}')" != "$d_apx" ]; then
   echo -e "\e[31;1m[!] Given domain is not in correct format (e.g. myserver.domain.io)\e[0;0m"
@@ -124,7 +130,7 @@ fi
 echo -e "\e[32;1m[+] Using domain: $domain\e[0;0m"
 
 # Create output dir for certificates
-output_dir="cert_$(echo $domain | sed "s/\./_/g")_${ts}"
+output_dir="cert_$(echo $pretty_name | sed "s/\./_/g")_${ts}"
 echo -e "\e[32;1m[+] Using dir: $output_dir\e[0;0m"
 
 # Creating OpenSSL settings
@@ -183,15 +189,15 @@ openssl ca -config ./$output_dir/additional_info/root_ca_v3.cnf -extensions v3_i
 ###
 
 # Create server cert key
-openssl genrsa -out ./$output_dir/${domain}.key.pem 4096
+openssl genrsa -out ./$output_dir/${pretty_name}.key.pem 4096
 # Create server cert CSR
-openssl req -config ./$output_dir/additional_info/int_ca_v3.cnf -key ./$output_dir/${domain}.key.pem -new -sha256 -out ./$output_dir/${domain}.csr.pem -batch
+openssl req -config ./$output_dir/additional_info/int_ca_v3.cnf -key ./$output_dir/${pretty_name}.key.pem -new -sha256 -out ./$output_dir/${pretty_name}.csr.pem -batch
 # Sign CSR with int CA
-openssl ca -config ./$output_dir/additional_info/int_ca_v3.cnf -extensions server_cert -days $srv_cert_expiry -notext -md sha256 -in ./$output_dir/${domain}.csr.pem -out ./$output_dir/${domain}.cert.pem
+openssl ca -config ./$output_dir/additional_info/int_ca_v3.cnf -extensions server_cert -days $srv_cert_expiry -notext -md sha256 -in ./$output_dir/${pretty_name}.csr.pem -out ./$output_dir/${pretty_name}.cert.pem
 
 # Move CSR to additional_infos
 mv ./$output_dir/intermediate_ca.csr.pem ./$output_dir/additional_info/intermediate_ca.csr.pem
-mv ./$output_dir/${domain}.csr.pem ./$output_dir/additional_info/${domain}.csr.pem
+mv ./$output_dir/${pretty_name}.csr.pem ./$output_dir/additional_info/${pretty_name}.csr.pem
 # Create CA public chain
 cat ./$output_dir/intermediate_ca.cert.pem ./$output_dir/root_ca.cert.pem > ./$output_dir/ca_bundle.crt.pem
 

@@ -19,7 +19,14 @@
     service:
       name: haproxy
       state: restarted
+      enabled: yes
   - name: "h-restart-keepalived"
     service:
       name: keepalived
       state: restarted
+      enabled: yes
+  - name: "h-restart-nginx"
+    service:
+      name: nginx
+      state: restarted
+      enabled: yes

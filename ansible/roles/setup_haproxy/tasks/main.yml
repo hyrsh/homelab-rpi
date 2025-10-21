@@ -4,36 +4,108 @@
     state: present
   when: op_mode == "install"
 
+# NGINX will be our fallback server for non-matched backends
+- name: install nginx package
+  package:
+    name: nginx
+    state: present
+  when: op_mode == "install"
+
+# certificates from HAProxy and NGINX will be placed here
 - name: create cert directory
   file:
     path: "{{ setupinfos.lb_cert_dir }}"
     state: directory
     owner: haproxy
+    group: haproxy
     mode: '0655'
   when: op_mode == "install"
 
+# NGINX requires us to create a full chain of certs srv+int+root
+- name: copy public server cert to destination
+  copy:
+    content: "{{ vault.certs.pubpki_srv_crt | b64decode }}"
+    dest: "{{ setupinfos.lb_cert_dir }}/public-fullchain.crt"
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
+  when: op_mode == "install"
+
+- name: append public ca bundle to public server cert to create full chain
+  lineinfile:
+    path: "{{ setupinfos.lb_cert_dir }}/public-fullchain.crt"
+    line: "{{  vault.certs.public_ca_bundle | b64decode }}"
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
+  when: op_mode == "install"
+
+# contains the public server key
+- name: copy public server key to destination
+  copy:
+    content: "{{ vault.certs.pubpki_srv_key | b64decode }}"
+    dest: "{{ setupinfos.lb_cert_dir }}/public-server-key.key"
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
+  when: op_mode == "install"
+
+# contains the CA chain of our public server certificate
 - name: copy public ca bundle
   copy:
     content: "{{ vault.certs.public_ca_bundle | b64decode }}"
     dest: "{{ setupinfos.lb_cert_dir }}/public-ca-bundle.crt"
     mode: '0644'
     owner: haproxy
+    group: haproxy
   when: op_mode == "install"
 
-- name: copy public server bundle
+# contains key and cert of our public server certificate for external access hosted by HAProxy
+- name: copy public server cert to destination
   copy:
-    content: "{{ vault.certs.public_server_bundle | b64decode }}"
+    content: "{{ vault.certs.pubpki_srv_crt | b64decode }}"
     dest: "{{ setupinfos.lb_cert_dir }}/public-server-bundle.pem"
     mode: '0644'
     owner: haproxy
+    group: haproxy
   when: op_mode == "install"
 
-- name: copy private ca bundle
+- name: append public server key to cert
+  lineinfile:
+    path: "{{ setupinfos.lb_cert_dir }}/public-server-bundle.pem"
+    line: "{{  vault.certs.pubpki_srv_key | b64decode }}"
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
+  when: op_mode == "install"
+
+# contains our private CA chain int+root
+- name: create private ca bundle
   copy:
-    content: "{{ vault.certs.private_ca_bundle | b64decode }}"
+    content: "{{ vault.certs.sspki_int_crt | b64decode }}"
     dest: "/usr/local/share/ca-certificates/private-ca-bundle.crt"
     mode: '0644'
     owner: haproxy
+    group: haproxy
+  when: op_mode == "install"
+
+- name: append private root cert to bundle
+  lineinfile:
+    path: "/usr/local/share/ca-certificates/private-ca-bundle.crt"
+    line: "{{  vault.certs.sspki_root_crt | b64decode }}"
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
+  when: op_mode == "install"
+
+- name: copy private bundle to HAProxy dir
+  copy:
+    src: "/usr/local/share/ca-certificates/private-ca-bundle.crt"
+    dest: "{{ setupinfos.lb_cert_dir }}/private-ca-bundle.crt"
+    remote_src: True
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
   when: op_mode == "install"
 
 - name: OS update of certificates
@@ -53,11 +125,36 @@
   notify: "h-restart-haproxy"
   when: op_mode == "install" or op_mode == "update-config"
 
+- name: get nginx default site config template to directory
+  template:
+    src: "templates/default.j2"
+    dest: /etc/nginx/sites-available/default
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
+  changed_when: True
+  notify: "h-restart-nginx"
+  when: op_mode == "install" or op_mode == "update-config"
+
+- name: get nginx default website template to directory
+  template:
+    src: "templates/index.nginx-debian.html.j2"
+    dest: /var/www/html/index.nginx-debian.html
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
+  changed_when: True
+  notify: "h-restart-nginx"
+  when: op_mode == "install" or op_mode == "update-config"
+
 - name: deinstall haproxy package
   package:
-    name: haproxy
+    name: "{{ item }}"
     state: absent
   when: op_mode == "uninstall"
+  with_items:
+    - haproxy
+    - nginx
 
 - name: remove config directory
   file:
