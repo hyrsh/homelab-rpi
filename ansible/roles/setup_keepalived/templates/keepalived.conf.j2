@@ -1,3 +1,16 @@
+global_defs {
+  enable_script_security
+  script_user root
+}
+
+vrrp_script chk_haproxy {
+  script       "/etc/haproxy/kd_haproxy.sh"
+  interval 2   # check every 2 seconds
+  fall 2       # require 2 failures for KO
+  rise 2       # require 2 successes for OK
+  user root
+}
+
 vrrp_instance LB_HA {
     state MASTER
     interface eth0
@@ -10,11 +23,4 @@ vrrp_instance LB_HA {
     virtual_ipaddress {
         {{ setupinfos.lb_vip }}
     }
-}
-
-vrrp_script chk_haproxy {
-  script       "/etc/haproxy/kd_haproxy.sh"
-  interval 2   # check every 2 seconds
-  fall 2       # require 2 failures for KO
-  rise 2       # require 2 successes for OK
 }

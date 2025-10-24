@@ -1,4 +1,4 @@
-- hosts: hl-lb-01
+- hosts: hl_lb
   gather_facts: False
   become: True
   become_method: sudo
@@ -8,7 +8,8 @@
   roles:
     - expose_ssh_keys
     - setup_haproxy
-    - setup_wireguard
+    #- setup_wireguard
+    - setup_keepalived
   handlers:
   - name: h-clean-exposed-keys
     delegate_to: localhost

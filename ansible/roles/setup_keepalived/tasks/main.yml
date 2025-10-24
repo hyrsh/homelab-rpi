@@ -1,3 +1,13 @@
+- name: stop services before uninstalling
+  ignore_errors: True
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  when: op_mode == "uninstall"
+  with_items:
+    - keepalived
+
 - name: install keepalived package
   package:
     name: keepalived
@@ -8,6 +18,34 @@
   template:
     src: "templates/keepalived.conf.j2"
     dest: /etc/keepalived/keepalived.conf
+    mode: '0644'
+  changed_when: True
+  notify: "h-restart-keepalived"
+  when: op_mode == "install" or op_mode == "config-update"
+
+- name: get config sample template to directory
+  template:
+    src: "templates/keepalived.conf.sample.j2"
+    dest: /etc/keepalived/keepalived.conf.sample
+    mode: '0644'
+  changed_when: True
+  notify: "h-restart-keepalived"
+  when: op_mode == "install" or op_mode == "config-update"
+
+- name: get config-opts template to directory
+  template:
+    src: "templates/keepalived.config-opts.j2"
+    dest: /etc/keepalived/keepalived.config-opts
+    mode: '0644'
+  changed_when: True
+  notify: "h-restart-keepalived"
+  when: op_mode == "install" or op_mode == "config-update"
+
+- name: get check script for haproxy to directory
+  template:
+    src: "templates/kd_haproxy.sh.j2"
+    dest: /etc/haproxy/kd_haproxy.sh
+    mode: '0700'
   changed_when: True
   notify: "h-restart-keepalived"
   when: op_mode == "install" or op_mode == "config-update"
@@ -22,4 +60,9 @@
   file:
     path: /etc/keepalived
     state: absent
+  when: op_mode == "uninstall"
+
+- name: autoremove unused packages with APT
+  apt:
+    autoremove: yes
   when: op_mode == "uninstall"

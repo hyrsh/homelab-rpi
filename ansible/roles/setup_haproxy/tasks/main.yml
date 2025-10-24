@@ -1,3 +1,14 @@
+- name: stop services before uninstalling
+  ignore_errors: True
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  when: op_mode == "uninstall"
+  with_items:
+    - haproxy
+    - nginx
+
 - name: install haproxy package
   package:
     name: haproxy
@@ -147,7 +158,7 @@
   notify: "h-restart-nginx"
   when: op_mode == "install" or op_mode == "update-config"
 
-- name: deinstall haproxy package
+- name: deinstall packages
   package:
     name: "{{ item }}"
     state: absent
@@ -166,4 +177,9 @@
   file:
     path: "/usr/local/share/ca-certificates/private-ca-bundle.crt"
     state: absent
+  when: op_mode == "uninstall"
+
+- name: autoremove unused packages with APT
+  apt:
+    autoremove: yes
   when: op_mode == "uninstall"

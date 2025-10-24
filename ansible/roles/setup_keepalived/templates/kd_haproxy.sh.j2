@@ -1,0 +1,8 @@
+#!/bin/bash
+
+state=$(systemctl is-active haproxy)
+
+if [ "$state" != "active" ]; then
+  exit 1
+fi
+

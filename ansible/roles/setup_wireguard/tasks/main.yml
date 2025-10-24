@@ -27,3 +27,8 @@
     path: /etc/wireguard
     state: absent
   when: op_mode == "uninstall"
+
+- name: autoremove unused packages with APT
+  apt:
+    autoremove: yes
+  when: op_mode == "uninstall"
