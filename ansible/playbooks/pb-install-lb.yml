@@ -8,8 +8,8 @@
   roles:
     - expose_ssh_keys
     - setup_haproxy
-    #- setup_wireguard
     - setup_keepalived
+    - setup_wireguard
   handlers:
   - name: h-clean-exposed-keys
     delegate_to: localhost
@@ -29,5 +29,10 @@
   - name: "h-restart-nginx"
     service:
       name: nginx
+      state: restarted
+      enabled: yes
+  - name: "h-restart-wireguard"
+    service:
+      name: wg-quick@wg0.service
       state: restarted
       enabled: yes

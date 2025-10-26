@@ -1,20 +1,43 @@
+- name: stop wireguard service
+  service:
+    name: wg-quick@wg0.service
+    state: stopped
+    enabled: no
+  when: op_mode == "uninstall"
+
+- name: update apt cache for iptables
+  ansible.builtin.apt:
+    update_cache: yes
+  when: op_mode == "install"
+
 - name: install wireguard package
   package:
     name: wireguard
     state: present
   when: op_mode == "install"
 
+- name: install needed packages
+  package:
+    name: "{{ item }}"
+    state: present
+  when: op_mode == "install"
+  with_items:
+    - resolvconf
+    - iptables
+
 - name: create config directory
   file:
     path: /etc/wireguard
     state: directory
-  when: op_mode == "install" or op_mode == "update-config"
+  when: op_mode == "install"
 
 - name: get config template to directory
   template:
     src: templates/wg0.conf.j2
     dest: /etc/wireguard/wg0.conf
-  when: op_mode == "install"
+  changed_when: True
+  notify: "h-restart-wireguard"
+  when: op_mode == "install" or op_mode == "update-config"
 
 - name: uninstall wireguard package
   package:
