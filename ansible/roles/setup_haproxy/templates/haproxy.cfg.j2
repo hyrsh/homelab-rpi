@@ -29,6 +29,14 @@ defaults
 resolvers internal
   nameserver home {{ setupinfos.local_dns }}:53
 
+frontend stats
+  mode http
+  bind :8080
+  stats enable
+  stats refresh 10s
+  stats uri /stats
+  stats show-modules
+
 frontend gateway_01
   bind :443 ssl crt {{setupinfos.lb_cert_dir}}/public-server-bundle.pem
   mode http
