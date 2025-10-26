@@ -9,6 +9,12 @@
     - haproxy
     - nginx
 
+- name: copy landing page background
+  copy:
+    src: "files/lp_bg.jpg"
+    dest: /var/www/html/bg.jpg
+  when: op_mode == "update-background"
+
 - name: install haproxy package
   package:
     name: haproxy
