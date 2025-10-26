@@ -23,10 +23,20 @@ hostinfos:
   hl_worker_09:
   hl_worker_10:
   hl_ceph_01:
+    admin_node: yes
+    monitor_node: yes
   hl_ceph_02:
+    admin_node: no
+    monitor_node: no
   hl_ceph_03:
+    admin_node: no
+    monitor_node: no 
   hl_ceph_04:
+    admin_node: no
+    monitor_node: yes
   hl_ceph_05:
+    admin_node: yes
+    monitor_node: yes
 userinfos:
   allowed_ssh_users: "ansible-admin ansible"
 setupinfos:

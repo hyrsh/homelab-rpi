@@ -1,0 +1,21 @@
+- hosts: hl_ceph
+  gather_facts: False
+  become: True
+  become_method: sudo
+  remote_user: ansible
+  vars_files:
+    - "vault/av_homelab"
+  roles:
+    - expose_ssh_keys
+    - setup_ceph
+  handlers:
+  - name: h-clean-exposed-keys
+    delegate_to: localhost
+    file:
+      name: /tmp/ansible_exposed_keys
+      state: absent
+  - name: "h-restart-chrony"
+    service:
+      name: chrony
+      state: restarted
+      enabled: yes

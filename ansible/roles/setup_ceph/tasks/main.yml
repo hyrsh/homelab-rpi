@@ -1,0 +1,28 @@
+- name: update package cache
+  apt:
+    update_caches: yes
+  when: op_mode == "install"
+
+- name: install packages for all hosts
+  packages:
+    name: "{{ item }}"
+    state: present
+  changed_when: True
+  notify: "h-restart-chrony"
+  when: op_mode == "install"
+  with_items:
+    - podman
+    - lvm2
+    - chrony
+    - cephadm
+
+- name: uninstall packages for all hosts
+  packages:
+    name: "{{ item }}"
+    state: absent 
+  when: op_mode == "uninstall"
+  with_items:
+    - podman
+    - lvm2
+    - chrony
+    - cephadm
