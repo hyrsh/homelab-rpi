@@ -16,7 +16,7 @@ All other components are redundant and can tank at least one hardware blackout p
 - Managements (3x Kubernetes master nodes)
 - Network (4x PoE Switches)
 
-> Production note:
+> ⚠️ Production note:
 
 > - Ceph storage in production must be carefully planned to meet the desired availability, storage and network consumption. Due to its SDS nature, the network exhaustion is a bit different from legacy/traditional storage systems (NAS, SAN)
 

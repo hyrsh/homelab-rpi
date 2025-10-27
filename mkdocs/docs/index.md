@@ -1,16 +1,25 @@
 # Homelab with RPI 5
 
-This is a beginner guide to create a homelab using Raspberry Pi 5 SBC's to run a stable Kubernetes cluster with Ceph storage.
+This is a beginners guide to create a homelab using Raspberry Pi 5 SBC's to run a stable Kubernetes cluster with Ceph storage.
 
-Everything will be publicly usable for everyone. Since the topic of Kubernetes kind of exploded since 2016 I wanted to provide a general approach to handle bare-metal installations.
+**Everything will be publicly usable for everyone.**
 
-This homelab can easily be extended to a full production-grade setup and I will mention the missing parts that we do not need in a home environment.
+Since the topic of Kubernetes kind of exploded since 2016 I wanted to provide a general base of knowledge and support to handle bare-metal installations.
+
+This homelab and its ideas can be extended to a full production-grade setup and I will mention the missing parts that we do not need in a homelab environment.
 
 I decided to use RPI's because they are very quiet, do not need much power and still can carry basic applications.
 
 All installation routines will be done with [Ansible](https://docs.ansible.com/ansible/latest/index.html) but there are still some manual tasks to perform.
 
 
+Thanks to the software and infrastructure people:
+
+- [Infomaniak](https://www.infomaniak.com/en)
+- [The Ceph Foundation](https://ceph.io/en/foundation/about/)
+- [The Raspberry Pi Foundation](https://www.raspberrypi.org/about/)
+- [The Ansible Community](https://docs.ansible.com/)
+- [The Kubernetes Community](https://kubernetes.io/)
 
 Thanks to the shops that everything was in stock:
 
@@ -34,7 +43,6 @@ I listed most of it in the [material page](05_material/lp_material.md) (if thing
 - Deploying several services using Helm (inkl. setup)
 - Using and structuring Ansible Playbooks to handle everything in a declarative manner
 - Explanations of why and how I decided to do things the way I did
-- Deep-dive explanations of the respective technologies used
 
 <hr>
 

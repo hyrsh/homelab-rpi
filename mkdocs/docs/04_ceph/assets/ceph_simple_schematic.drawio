@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0" version="28.2.8">
+  <diagram name="Seite-1" id="UFae9l1GmrUyS1nVlu2K">
+    <mxGraphModel dx="1426" dy="787" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="S_GmgIgAWCJ3ujONDcul-1" value="Core Storage Layer (RADOS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#E51400,#160000);fontColor=light-dark(#FFFFFF,#FEFEFE);strokeColor=default;fontStyle=1;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="120" y="360" width="560" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="S_GmgIgAWCJ3ujONDcul-4" value="Applications, Clients" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#E51400,#061A93);fontColor=light-dark(#FFFFFF,#FEFEFE);strokeColor=none;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="120" y="120" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="S_GmgIgAWCJ3ujONDcul-5" value="Applications, Clients" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#E51400,#061A93);fontColor=light-dark(#FFFFFF,#FEFEFE);strokeColor=none;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="320" y="120" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="S_GmgIgAWCJ3ujONDcul-6" value="Applications, Clients" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#E51400,#061A93);fontColor=light-dark(#FFFFFF,#FEFEFE);strokeColor=none;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="520" y="120" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="S_GmgIgAWCJ3ujONDcul-7" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;strokeWidth=2;strokeColor=light-dark(#000000,#00B129);" edge="1" parent="1" source="S_GmgIgAWCJ3ujONDcul-2" target="S_GmgIgAWCJ3ujONDcul-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="380" y="270" as="sourcePoint" />
+            <mxPoint x="430" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S_GmgIgAWCJ3ujONDcul-8" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;strokeWidth=2;strokeColor=light-dark(#000000,#00B129);" edge="1" parent="1" source="S_GmgIgAWCJ3ujONDcul-2" target="S_GmgIgAWCJ3ujONDcul-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="250" as="sourcePoint" />
+            <mxPoint x="410" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S_GmgIgAWCJ3ujONDcul-9" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;strokeWidth=2;strokeColor=light-dark(#000000,#00B129);" edge="1" parent="1" source="S_GmgIgAWCJ3ujONDcul-2" target="S_GmgIgAWCJ3ujONDcul-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="250" as="sourcePoint" />
+            <mxPoint x="410" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S_GmgIgAWCJ3ujONDcul-10" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeWidth=2;strokeColor=light-dark(#000000,#00B129);" edge="1" parent="1" source="S_GmgIgAWCJ3ujONDcul-2" target="S_GmgIgAWCJ3ujONDcul-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="250" as="sourcePoint" />
+            <mxPoint x="410" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S_GmgIgAWCJ3ujONDcul-2" value="Access Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#E51400,#1FC687);fontColor=light-dark(#FFFFFF,#FEFEFE);strokeColor=default;fontStyle=1;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="280" y="240" width="240" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
