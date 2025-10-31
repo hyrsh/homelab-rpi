@@ -98,7 +98,7 @@ root@hl-ceph-01:~# cephadm bootstrap --mon-ip 192.168.1.30
 
 This command bootstraps the first cluster monitor and sets some initial configuration that is necessary for Ceph to function properly. It also downloads the Ceph container images which can take a while (depending on your internet bandwidth).
 
-After the command completes it will display some initial information about your dashboard login. Write that down and login. You will be asked to change your initial password. Do that and save it in a safe location (e.g. [KeePass](https://keepass.info/download.html)).
+After the command completes it will display some initial information about your dashboard login (e.g. https://hl-ceph-01:8443). Write that down and login. You will be asked to change your initial password. Do that and save it in a safe location (e.g. [KeePass](https://keepass.info/download.html)).
 
 Now you must copy the newly generated Ceph SSH key to all other hosts because the Ceph CLI does use different SSH keys than our system. In my setup this goes like this:
 
@@ -119,13 +119,12 @@ The Ceph CLI can be accessed on your master nodes with "cephadm shell". This sta
 
 At any time your can type "exit" and go back to your system.
 
-`Add hosts`
+`Enter Ceph CLI`
 
 ```shell
 cephadm shell
 ```
-
-`Chech current hosts in cluster`
+`Check current hosts in cluster`
 
 ```shell
 ceph orch host ls
@@ -136,5 +135,53 @@ ceph orch host ls
 HOST        ADDR          LABELS  STATUS
 hl-ceph-01  192.168.1.30  _admin
 1 hosts in cluster
+```
+`Add your hosts`
+
+```shell
+ceph orch host add hl-ceph-02
+ceph orch host add hl-ceph-03
+ceph orch host add hl-ceph-04
+ceph orch host add hl-ceph-05
+```
+
+Ceph does orient the system design of itself based on labels. Specific responsibilities are associated with these and make it easy to expand or change the respective nodes.
+
+I do the system setup as follows:
+
+- hl-ceph-01 Monitor0, OSD0, OSD1
+- hl-ceph-02 Monitor1, OSD2, OSD3
+- hl-ceph-03 Manager0, OSD4, OSD5
+- hl-ceph-04 Manager1, OSD6, OSD7
+- hl-ceph-05 Monitor2, OSD8, OSD9, \_admin
+
+To keep it brief I abbreviate the labels to e.g. mon0, mgr0, osd0 and so on.
+
+```shell
+ceph orch host label add hl-ceph-02 mon1
+ceph orch host label add hl-ceph-02 osd2
+ceph orch host label add hl-ceph-02 osd3
+ceph orch host label add hl-ceph-03 mgr0
+ceph orch host label add hl-ceph-03 osd4
+ceph orch host label add hl-ceph-03 osd5
+ceph orch host label add hl-ceph-04 mgr1
+ceph orch host label add hl-ceph-04 osd6
+ceph orch host label add hl-ceph-04 osd7
+ceph orch host label add hl-ceph-05 mon2
+ceph orch host label add hl-ceph-05 osd8
+ceph orch host label add hl-ceph-05 osd9
+ceph orch host label add hl-ceph-05 _admin
+```
+`Check hosts again`
+```shell
+ceph orch host ls
+
+HOST        ADDR          LABELS                 STATUS
+hl-ceph-01  192.168.1.30  _admin,mon0,osd0,osd1
+hl-ceph-02  192.168.1.31  mon1,osd2,osd3
+hl-ceph-03  192.168.1.32  mgr0,osd4,osd5
+hl-ceph-04  192.168.1.33  mgr1,osd6,osd7
+hl-ceph-05  192.168.1.34  mon2,osd8,osd9,_admin
+5 hosts in cluster
 ```
 
