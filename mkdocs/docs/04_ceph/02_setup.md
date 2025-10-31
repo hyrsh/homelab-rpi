@@ -20,7 +20,6 @@ git clone https://github.com/hyrsh/homelab-rpi && cd homelab-rpi/ansible
 
 ```shell
 ansible-playbook -J -i inventory.yml -e op_mode=install playbooks/pb-prepare-ceph.yml
-
 ```
 
 The playbook expects a vault file at "./vault/av_homelab" and executes the run on hosts in the group "hl_ceph" so be aware that you may have to change that if you have custom paths/groups.
@@ -28,6 +27,7 @@ The playbook expects a vault file at "./vault/av_homelab" and executes the run o
 Wait for the Ansible playbook to finish and check for errors.
 
 >Important note:
+<empty>
 >I use the root user within my Ceph installation which some may find too dangerous but these nodes are never exposed to anything else than my local k8s workers. In addition they have an internal SSH key for root that is only present on these 5x nodes. Ansible already has root access.
 
 Next we generate a SSH key for the root user to be used accross our Ceph nodes.
