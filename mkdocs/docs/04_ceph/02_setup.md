@@ -4,6 +4,8 @@ First we have to pick a initial "master" node that gives birth to some crucial i
 
 I pick my host "hl-ceph-01" as initial master node. At the time of writing it has the IP "192.168.1.30".
 
+<hr>
+
 ## Preparation of nodes
 
 To make all nodes capable of joining the ceph cluster we must install some packages before anything. I also install the ceph-management package "cephadm" on all nodes to be able to switch admin nodes if another one fails.
@@ -26,9 +28,9 @@ The playbook expects a vault file at "./vault/av_homelab" and executes the run o
 
 Wait for the Ansible playbook to finish and check for errors.
 
->Important note:
-<empty>
->I use the root user within my Ceph installation which some may find too dangerous but these nodes are never exposed to anything else than my local k8s workers. In addition they have an internal SSH key for root that is only present on these 5x nodes. Ansible already has root access.
+> Important note:
+
+> - I use the root user within my Ceph installation which some may find too dangerous but these nodes are never exposed to anything else than my local k8s workers. In addition they have an internal SSH key for root that is only present on these 5x nodes. Ansible already has root access.
 
 Next we generate a SSH key for the root user to be used accross our Ceph nodes.
 
@@ -48,7 +50,9 @@ cat /root/.ssh/id_ed25519 | base64 -w0
 cat /root/.ssh/id_ed25519.pub | base64 -w0
 ```
 
-Save both outputs in your Ansible vault under "vault.ceph.ssh_key_private" and "vault.ceph.ssh_key_public":
+Save both outputs in your Ansible vault under "vault.ceph.ssh_key_private" and "vault.ceph.ssh_key_public".
+
+`ansible-vault edit vault/av_homelab`
 
 ```yaml
 vault:
@@ -56,3 +60,5 @@ vault:
     ssh_key_private: "<YOUR VALUE>"
     ssh_key_public: "<YOUR VALUE>"
 ```
+
+
