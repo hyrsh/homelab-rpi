@@ -48,4 +48,5 @@
     dest: /etc/ssh/sshd_config
     mode: '0644'
     owner: root
+  change_when: True
   notify: "h-sshd-restart"

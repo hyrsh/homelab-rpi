@@ -1,0 +1,21 @@
+- hosts: hl-ceph-01, hl-ceph-02, hl-ceph-03, hl-ceph-04, hl-ceph-05
+  gather_facts: False
+  become: True
+  become_method: sudo
+  remote_user: ansible
+  vars_files:
+    - "vault/av_homelab"
+  roles:
+    - expose_ssh_keys
+    - distribute_ceph_ssh
+  handlers:
+  - name: h-clean-exposed-keys
+    delegate_to: localhost
+    file:
+      name: /tmp/ansible_exposed_keys
+      state: absent
+  - name: h-sshd-restart
+    systemd_service:
+      name: sshd
+      state: restarted
+      daemon_reload: true

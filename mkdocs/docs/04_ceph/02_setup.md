@@ -61,4 +61,29 @@ vault:
     ssh_key_public: "<YOUR VALUE>"
 ```
 
+Now you can execute the Ansible playbook "pb-distribute-ceph-keys.yml".
+
+```shell
+ansible-playbook -J -i inventory.yml -e op_mode=install playbooks/pb-distribute-ceph-keys.yml
+```
+
+After that connect to your master node (in my case "hl-ceph-01") and try to reach all other nodes by SSH.
+
+```shell
+root@underwood:~# ssh -i $SSHPRIV ansible-admin@hl-ceph-01
+ansible-admin@hl-ceph-01:~ $ sudo -i
+root@hl-ceph-01:~# ssh hl-ceph-02
+root@hl-ceph-02:~#
+```
+
+If this succeeds for all your nodes you have setup all SSH keys correctly.
+
+> Info:
+
+> - if there is a prompt for "The authenticity of host (...)" is shown answer with yes. This is a security warning if you can trust this host and want to add its identity (fingerprint hash) to your list of trusted endpoints. Since this is a homelab we know our hosts and enter "yes"
+
+> - in a production environment if we do not know who controls the unknown host it is advised to enter "no" and re-check who setup and controls it
+
+
+
 
