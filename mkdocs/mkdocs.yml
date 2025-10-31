@@ -33,6 +33,7 @@ nav:
       - Overview: 03_kubernetes/00_overview.md
   - Ceph:
       - Overview: 04_ceph/01_overview.md
+      - Setup: 04_ceph/02_setup.md
   - Material: 05_material/lp_material.md
   - TheBox: 06_thebox/lp_thebox.md
 
