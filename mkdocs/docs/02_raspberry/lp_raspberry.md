@@ -60,6 +60,13 @@ The "-i" flag of SSH uses the given file to identify us with the user we provide
 ssh -i /opt/mykeys/myuser.private myuser@myhost
 ```
 
+You can also save the path to your private SSH key in a environment variable and access it that way. In my examples I use the "ansible-admin" user with the assigned variable "$SSHPRIV".
+
+```shell
+export SSHPRIV=/opt/mykeys/myuser.private
+ssh -i $SSHPRIV ansible-admin@myhost
+```
+
 > ⚠️ Production note:
 
 > Users <span style="color:red"><b>must not</b></span> have direct access via SSH to machines running in any stage. The best practice is to setup a jumphost that requires the user to strongly authenticate (Domain + MFA) and is strictly regulated through corporate administration. On that jumphost only minimal permissions are granted and SSH connections per stage are only allowed from that source IP. Consider setting up multiple jumphosts per staged environment to address the "separation of concerns" concept and minimize the blast radius in case of a breach
