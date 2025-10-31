@@ -67,3 +67,7 @@ There are several daemons that we need to understand and how much of them we nee
 <hr>
 
 ## Manual labor
+
+The fact that we only look at a total of 5x Ceph nodes and working very closely to hardware (SSDs) I decided to do setup the initial cluster by hand and document every step I take.
+
+If there are automation steps that are not dangerous for the system **after it was brought to life** I will create the respective roles for Ansible.

@@ -1,10 +1,10 @@
 - name: update package cache
   apt:
-    update_caches: yes
+    update_cache: yes
   when: op_mode == "install"
 
 - name: install packages for all hosts
-  packages:
+  package:
     name: "{{ item }}"
     state: present
   changed_when: True
@@ -15,9 +15,10 @@
     - lvm2
     - chrony
     - cephadm
+    - ceph-common
 
 - name: uninstall packages for all hosts
-  packages:
+  package:
     name: "{{ item }}"
     state: absent 
   when: op_mode == "uninstall"
@@ -26,3 +27,4 @@
     - lvm2
     - chrony
     - cephadm
+    - ceph-common

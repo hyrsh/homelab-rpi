@@ -7,7 +7,7 @@
     - "vault/av_homelab"
   roles:
     - expose_ssh_keys
-    - setup_ceph
+    - prepare_ceph_nodes
   handlers:
   - name: h-clean-exposed-keys
     delegate_to: localhost

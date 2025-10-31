@@ -1,0 +1,17 @@
+- name: get ceph private ssh key to directory
+  copy:
+    content: "{{ vault.ceph.ssh_key_private | b64decode }}"
+    dest: /root/.ssh/id_ed25519
+    mode: '0600'
+    owner: root
+    group: root
+  when: op_mode == "install"
+
+- name: append ceph public key to authorized keys
+  lineinfile:
+    path: /root/.ssh/authorized_keys
+    line: "{{  vault.ceph.ssh_key_public | b64decode }}"
+    mode: '0600'
+    owner: root
+    group: root
+  when: op_mode == "install"
