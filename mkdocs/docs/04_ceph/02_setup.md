@@ -84,6 +84,57 @@ If this succeeds for all your nodes you have setup all SSH keys correctly.
 
 > - in a production environment if we do not know who controls the unknown host it is advised to enter "no" and re-check who setup and controls it
 
+If all connections work and all packages are installed you are ready to setup your first node in Ceph.
 
+<hr>
 
+## Setup first monitor
+
+We use the "cephadm" CLI command "bootstrap" to initialize our first monitor on our first master node (I chose hl-ceph-01 with IP 192.168.1.30):
+
+```shell
+root@hl-ceph-01:~# cephadm bootstrap --mon-ip 192.168.1.30
+```
+
+This command bootstraps the first cluster monitor and sets some initial configuration that is necessary for Ceph to function properly. It also downloads the Ceph container images which can take a while (depending on your internet bandwidth).
+
+After the command completes it will display some initial information about your dashboard login. Write that down and login. You will be asked to change your initial password. Do that and save it in a safe location (e.g. [KeePass](https://keepass.info/download.html)).
+
+Now you must copy the newly generated Ceph SSH key to all other hosts because the Ceph CLI does use different SSH keys than our system. In my setup this goes like this:
+
+```shell
+root@hl-ceph-01:~# ssh-copy-id -f -i /etc/ceph/ceph.pub root@hl-ceph-02
+root@hl-ceph-01:~# ssh-copy-id -f -i /etc/ceph/ceph.pub root@hl-ceph-03
+root@hl-ceph-01:~# ssh-copy-id -f -i /etc/ceph/ceph.pub root@hl-ceph-04
+root@hl-ceph-01:~# ssh-copy-id -f -i /etc/ceph/ceph.pub root@hl-ceph-05
+```
+
+Now you can work with the Ceph CLI on all nodes.
+
+<hr>
+
+## Add hosts to your cluster
+
+The Ceph CLI can be accessed on your master nodes with "cephadm shell". This starts a container with all Ceph tools and puts you right in the home directory of the containers root user.
+
+At any time your can type "exit" and go back to your system.
+
+`Add hosts`
+
+```shell
+cephadm shell
+```
+
+`Chech current hosts in cluster`
+
+```shell
+ceph orch host ls
+```
+`Example output`
+
+```shell
+HOST        ADDR          LABELS  STATUS
+hl-ceph-01  192.168.1.30  _admin
+1 hosts in cluster
+```
 

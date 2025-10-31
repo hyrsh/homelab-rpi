@@ -60,7 +60,7 @@ The "-i" flag of SSH uses the given file to identify us with the user we provide
 ssh -i /opt/mykeys/myuser.private myuser@myhost
 ```
 
-You can also save the path to your private SSH key in a [environment variable](https://linuxize.com/post/how-to-set-and-list-environment-variables-in-linux/) and access it that way. In my examples I use the "ansible-admin" user with the assigned variable "$SSHPRIV".
+You can also save the path to your private SSH key in an [environment variable](https://linuxize.com/post/how-to-set-and-list-environment-variables-in-linux/) and access it that way. In my examples I use the "ansible-admin" user with the assigned variable "$SSHPRIV".
 
 ```shell
 export SSHPRIV=/opt/mykeys/myuser.private
