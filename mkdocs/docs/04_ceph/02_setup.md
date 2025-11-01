@@ -201,6 +201,7 @@ ceph orch apply mgr --placement="hl-ceph-03,hl-ceph-04"
 `Check placements`
 ```shell
 ceph orch ls
+
 NAME           PORTS        RUNNING  REFRESHED  AGE  PLACEMENT
 alertmanager   ?:9093,9094      1/1  7m ago     28m  count:1
 crash                           5/5  8m ago     28m  *
@@ -210,3 +211,67 @@ mon                             3/3  8m ago     9m   hl-ceph-01;hl-ceph-02;hl-ce
 node-exporter  ?:9100           5/5  8m ago     28m  *
 prometheus     ?:9095           1/1  7m ago     28m  count:1
 ```
+
+Now we can start adding OSDs to our storage layer.
+
+<hr>
+
+## Adding OSDs
+
+Before we can handle disks with Ceph we need to prepare them on each host.
+
+`List block devices on e.g. hl-ceph-01`
+```shell
+root@hl-ceph-01:~# lsblk
+
+NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda           8:0    0   1.8T  0 disk
+sdb           8:16   0   1.8T  0 disk
+mmcblk0     179:0    0 116.2G  0 disk
+|-mmcblk0p1 179:1    0   512M  0 part /boot/firmware
+`-mmcblk0p2 179:2    0 115.6G  0 part /var/lib/containers/storage/overlay
+```
+
+Here we can see that our devices "sda" and "sdb" are listed with 1.8TB. These are the ones we want to prepare.
+
+`Clear partition information`
+```shell
+fdisk /dev/sda
+
+Welcome to fdisk (util-linux 2.38.1).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table.
+Created a new DOS (MBR) disklabel with disk identifier 0x3a55ce1f.
+
+Command (m for help): d
+No partition is defined yet!
+
+Command (m for help): g
+
+Created a new GPT disklabel (GUID: D53FF75F-A836-E84D-BA31-4CF502BC59A5).
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+```
+
+We use the options "d" to delete any partition (in our case I already did it so there wasn't a definition) then we use option "g" to set a GPT disklabel and in the end we use option "w" to write the configuration to the disk.
+
+After that we need to wipe the entire disk clean of anything so Ceph can play with it.
+
+`Use wipefs to clear everything`
+```shell
+wipefs -a /dev/sda
+
+/dev/sda: 8 bytes were erased at offset 0x00000200 (gpt): 45 46 49 20 50 41 52 54
+/dev/sda: 8 bytes were erased at offset 0x1d1c1115e00 (gpt): 45 46 49 20 50 41 52 54
+/dev/sda: 2 bytes were erased at offset 0x000001fe (PMBR): 55 aa
+/dev/sda: calling ioctl to re-read partition table: Success
+```
+
+We have to do this for **every** device we want to be managed by Ceph on **every** host. If anything fails you always repeat the steps. If it fails consistently you can assume that your drive is damaged and you may need to buy a new one.
+
+
