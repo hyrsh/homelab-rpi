@@ -234,6 +234,8 @@ mmcblk0     179:0    0 116.2G  0 disk
 
 Here we can see that our devices "sda" and "sdb" are listed with 1.8TB. These are the ones we want to prepare.
 
+> Hint: the device "mmcblk0" is our SD card in the RPI and we to not want to touch that!
+
 `Clear partition information`
 ```shell
 fdisk /dev/sda
@@ -274,4 +276,50 @@ wipefs -a /dev/sda
 
 We have to do this for **every** device we want to be managed by Ceph on **every** host. If anything fails you always repeat the steps. If it fails consistently you can assume that your drive is damaged and you may need to buy a new one.
 
+If we have done that on all RPIs (all disks I cleared were /dev/sda and /dev/sdb) we can add the OSD via the Ceph CLI.
 
+`Enter Ceph CLI`
+```shell
+cephadm shell
+```
+`Add OSD per disk and host`
+```shell
+ceph orch daemon add osd hl-ceph-01:/dev/sda raw
+ceph orch daemon add osd hl-ceph-01:/dev/sdb raw
+ceph orch daemon add osd hl-ceph-02:/dev/sda raw
+ceph orch daemon add osd hl-ceph-02:/dev/sdb raw
+ceph orch daemon add osd hl-ceph-03:/dev/sda raw
+ceph orch daemon add osd hl-ceph-03:/dev/sdb raw
+ceph orch daemon add osd hl-ceph-04:/dev/sda raw
+ceph orch daemon add osd hl-ceph-04:/dev/sdb raw
+ceph orch daemon add osd hl-ceph-05:/dev/sda raw
+ceph orch daemon add osd hl-ceph-05:/dev/sdb raw
+```
+
+If everything went well we can look at the setup:
+
+```shell
+ceph osd tree
+
+ID   CLASS  WEIGHT    TYPE NAME            STATUS  REWEIGHT  PRI-AFF
+ -1         18.19397  root default
+ -3          3.63879      host hl-ceph-01
+  0    ssd   1.81940          osd.0            up   1.00000  1.00000
+  1    ssd   1.81940          osd.1            up   1.00000  1.00000
+ -5          3.63879      host hl-ceph-02
+  2    ssd   1.81940          osd.2            up   1.00000  1.00000
+  3    ssd   1.81940          osd.3            up   1.00000  1.00000
+ -7          3.63879      host hl-ceph-03
+  4    ssd   1.81940          osd.4            up   1.00000  1.00000
+  5    ssd   1.81940          osd.5            up   1.00000  1.00000
+ -9          3.63879      host hl-ceph-04
+  6    ssd   1.81940          osd.6            up   1.00000  1.00000
+  7    ssd   1.81940          osd.7            up   1.00000  1.00000
+-11          3.63879      host hl-ceph-05
+  8    ssd   1.81940          osd.8            up   1.00000  1.00000
+  9    ssd   1.81940          osd.9            up   1.00000  1.00000
+```
+
+Now our dashboard should also show the OSDs and a healthy status.
+
+![image](assets/ceph-db-healthy.jpg)
