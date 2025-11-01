@@ -185,3 +185,28 @@ hl-ceph-05  192.168.1.34  mon2,osd8,osd9,_admin
 5 hosts in cluster
 ```
 
+To prevent an autodeploy of services we want to disable the management functionality:
+
+```shell
+ceph orch apply mon --unmanaged
+ceph orch apply mgr --unmanaged
+```
+
+Now we can choose where we want to deploy our monitors and manger nodes:
+
+```shell
+ceph orch apply mon --placement="hl-ceph-01,hl-ceph-02,hl-ceph-05"
+ceph orch apply mgr --placement="hl-ceph-03,hl-ceph-04"
+```
+`Check placements`
+```shell
+ceph orch ls
+NAME           PORTS        RUNNING  REFRESHED  AGE  PLACEMENT
+alertmanager   ?:9093,9094      1/1  7m ago     28m  count:1
+crash                           5/5  8m ago     28m  *
+grafana        ?:3000           1/1  7m ago     28m  count:1
+mgr                             2/2  8m ago     8m   hl-ceph-03;hl-ceph-04
+mon                             3/3  8m ago     9m   hl-ceph-01;hl-ceph-02;hl-ceph-05
+node-exporter  ?:9100           5/5  8m ago     28m  *
+prometheus     ?:9095           1/1  7m ago     28m  count:1
+```
