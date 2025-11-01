@@ -1,0 +1,35 @@
+- name: make sure the directory exists
+  file:
+    path: "/var/lib/ceph/{{ vault.ceph.fsid }}/home"
+    state: directory
+    mode: '0660'
+    owner: root
+    group: root
+  when: op_mode == "install"
+
+- name: copy private certificate to dir
+  copy:
+    content: "{{ vault.certs.sspki_srv_crt | b64decode }}"
+    dest: "/var/lib/ceph/{{ vault.ceph.fsid }}/home/private-srv.crt"
+    mode: '0644'
+    owner: root
+    group: root
+  when: op_mode == "install"
+
+- name: copy private certificate key to dir
+  copy:
+    content: "{{ vault.certs.sspki_srv_key | b64decode }}"
+    dest: "/var/lib/ceph/{{ vault.ceph.fsid }}/home/private-srv.key"
+    mode: '0644'
+    owner: root
+    group: root
+  when: op_mode == "install"
+
+- name: remove certificate and key
+  file:
+    path: "/var/lib/ceph/{{ vault.ceph.fsid }}/home/{{ item }}"
+    state: absent
+  when: op_mode == "uninstall"
+  with_items:
+    - private-srv.crt
+    - private-srv.key

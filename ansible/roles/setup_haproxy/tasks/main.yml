@@ -96,6 +96,25 @@
     group: haproxy
   when: op_mode == "install"
 
+# contains key and cert of our private server certificate for external access hosted by HAProxy
+- name: copy private server cert to destination
+  copy:
+    content: "{{ vault.certs.sspki_srv_crt | b64decode }}"
+    dest: "{{ setupinfos.lb_cert_dir }}/private-server-bundle.pem"
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
+  when: op_mode == "install"
+
+- name: append public server key to cert
+  lineinfile:
+    path: "{{ setupinfos.lb_cert_dir }}/private-server-bundle.pem"
+    line: "{{  vault.certs.sspki_srv_key | b64decode }}"
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
+  when: op_mode == "install"
+
 # contains our private CA chain int+root
 - name: create private ca bundle
   copy:

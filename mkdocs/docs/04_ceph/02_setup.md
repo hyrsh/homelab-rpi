@@ -323,3 +323,24 @@ ID   CLASS  WEIGHT    TYPE NAME            STATUS  REWEIGHT  PRI-AFF
 Now our dashboard should also show the OSDs and a healthy status.
 
 ![image](assets/ceph-db-healthy.jpg)
+
+To get an overall state of your cluster you can also check it from your Ceph CLI.
+
+```shell
+ceph status
+
+  cluster:
+    id:     <YOUR FSID>
+    health: HEALTH_OK
+
+  services:
+    mon: 3 daemons, quorum hl-ceph-05,hl-ceph-02,hl-ceph-01 (age 59m)
+    mgr: hl-ceph-03.vaogpo(active, since 59m), standbys: hl-ceph-04.nrcpex
+    osd: 10 osds: 10 up (since 26m), 10 in (since 27m)
+
+  data:
+    pools:   1 pools, 1 pgs
+    objects: 0 objects, 0 B
+    usage:   2.8 GiB used, 18 TiB / 18 TiB avail
+    pgs:     1 active+clean
+```

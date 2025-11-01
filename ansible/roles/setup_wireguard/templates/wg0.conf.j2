@@ -1,6 +1,6 @@
 [Interface]
 PrivateKey = {{ vault.wireguard_keys_private[ansible_mutated_host] }}
-Address = {{ hostinfos[ansible_mutated_host].wireguard_ip }}
+Address = {{ hostinfos[ansible_mutated_host].wireguard_ip }}/32
 ListenPort = {{ hostinfos[ansible_mutated_host].wireguard_listening_port }}
 DNS = {{ setupinfos.local_dns }}
 

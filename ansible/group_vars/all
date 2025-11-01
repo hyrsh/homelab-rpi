@@ -3,12 +3,12 @@ hostinfos:
   hl_master_02:
   hl_master_03:
   hl_lb_01:
-    wireguard_ip: "172.16.98.3/32"
+    wireguard_ip: "172.16.98.3"
     wireguard_listening_port: "55556"
     wireguard_allowedips_peer: "172.16.99.0/24"
     kd_prio: "101"
   hl_lb_02:
-    wireguard_ip: "172.16.98.4/32"
+    wireguard_ip: "172.16.98.4"
     wireguard_listening_port: "55557"
     wireguard_allowedips_peer: "172.16.99.0/24"
     kd_prio: "100"

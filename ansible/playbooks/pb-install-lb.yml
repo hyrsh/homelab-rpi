@@ -8,8 +8,8 @@
   roles:
     - expose_ssh_keys
     - setup_haproxy
-    - setup_keepalived
-    - setup_wireguard
+    #- setup_keepalived
+    #- setup_wireguard
   handlers:
   - name: h-clean-exposed-keys
     delegate_to: localhost
