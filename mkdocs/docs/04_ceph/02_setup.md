@@ -26,18 +26,20 @@ ansible-playbook -J -i inventory.yml -e op_mode=install playbooks/pb-prepare-cep
 
 The playbook expects a vault file at "./vault/av_homelab" and executes the run on hosts in the group "hl_ceph" so be aware that you may have to change that if you have custom paths/groups.
 
+![image](assets/prepare-ceph.png)
+
 Wait for the Ansible playbook to finish and check for errors.
 
 > Important note:
 
 > - I use the root user within my Ceph installation which some may find too dangerous but these nodes are never exposed to anything else than my local k8s workers. In addition they have an internal SSH key for root that is only present on these 5x nodes. Ansible already has root access.
 
-Next we generate a SSH key for the root user to be used accross our Ceph nodes.
+Next we generate a SSH key for the root user to be used accross our Ceph nodes. On your initial Ceph master node (I use hl-ceph-01) change to the root user and create the keys.
 
 `Generate keys`
 
 ```shell
-ssh-keygen
+root@hl-ceph-01:~# ssh-keygen
 ```
 
 Confirm with 2x enter for an empty passphrase.
@@ -67,6 +69,8 @@ Now you can execute the Ansible playbook "pb-distribute-ceph-keys.yml".
 ansible-playbook -J -i inventory.yml -e op_mode=install playbooks/pb-distribute-ceph-keys.yml
 ```
 
+![image](assets/dist-ceph-keys.png)
+
 After that connect to your master node (in my case "hl-ceph-01") and try to reach all other nodes by SSH.
 
 ```shell
@@ -90,7 +94,9 @@ If all connections work and all packages are installed you are ready to setup yo
 
 ## Setup first monitor
 
-We use the "cephadm" CLI command "bootstrap" to initialize our first monitor on our first master node (I chose hl-ceph-01 with IP 192.168.1.30):
+We use the "cephadm" CLI command "bootstrap" to initialize our first monitor on our first master node (I chose hl-ceph-01 with IP 192.168.1.30).
+
+![image](assets/ceph-id-01.png)
 
 ```shell
 root@hl-ceph-01:~# cephadm bootstrap --mon-ip 192.168.1.30
@@ -119,6 +125,8 @@ The Ceph CLI can be accessed on your master nodes with "cephadm shell". This sta
 
 At any time your can type "exit" and go back to your system.
 
+![image](assets/ceph-id-01.png)
+
 `Enter Ceph CLI`
 
 ```shell
@@ -145,11 +153,9 @@ ceph orch host add hl-ceph-04
 ceph orch host add hl-ceph-05
 ```
 
-Ceph does orient the system design of itself based on labels. Specific responsibilities are associated with these and make it easy to expand or change the respective nodes.
-
 I do the system setup as follows:
 
-- hl-ceph-01 Monitor0, OSD0, OSD1
+- hl-ceph-01 Monitor0, OSD0, OSD1, \_admin
 - hl-ceph-02 Monitor1, OSD2, OSD3
 - hl-ceph-03 Manager0, OSD4, OSD5
 - hl-ceph-04 Manager1, OSD6, OSD7
@@ -212,7 +218,9 @@ node-exporter  ?:9100           5/5  8m ago     28m  *
 prometheus     ?:9095           1/1  7m ago     28m  count:1
 ```
 
-Now we can start adding OSDs to our storage layer.
+![image](assets/ceph-svc-core.png)
+
+There are other services deployed but we take care of that later. Now we can start adding OSDs to our storage layer.
 
 <hr>
 
@@ -344,3 +352,24 @@ ceph status
     usage:   2.8 GiB used, 18 TiB / 18 TiB avail
     pgs:     1 active+clean
 ```
+
+<hr>
+
+## TLS for Grafana and Dashboard
+
+We want to use our generated wildcard certificate to be used for the Dashboard and the internal Grafana instance of Ceph (it is builtin so we have to deal with it).
+
+> Super important note:
+
+> - If you use self-signed certificates make sure the SAN field is also provisioned with your wildcard domain. Since 2012 browsers deprecated the fallback to the common name (CN) if a direct URL match is not met. The [certificate creation script](https://github.com/hyrsh/homelab-rpi/blob/main/scripts/create-pki/create-certs.sh) I provided does that already. The CN can contain your TLD e.g. "mydomain.io" but at least one SAN field has to have "*.mydomain.io" present if you want to use wildcards. Otherwise browsers will reject the certificate
+
+To make our private certificates work with Ceph we need to do a couple of things:
+
+- Extract the Root CA certificate from our Ansible vault
+- Extract the Intermediate CA certificate from our Ansible vault
+- Extract the Server certificate and key from our Ansible vault
+- Rollout the Server certificate and key to all Ceph nodes
+- Change Ceph settings for Grafana
+- Change Ceph settings for the Dashboard
+- Add certificates to our browser
+

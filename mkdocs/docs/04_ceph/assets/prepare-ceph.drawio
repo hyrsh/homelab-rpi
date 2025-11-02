@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0" version="28.2.8">
+  <diagram name="Seite-1" id="UnX-v6LhSZ54VJQuqT_m">
+    <mxGraphModel dx="1426" dy="787" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-1" value="hl-ceph-01" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#3E3E3E);" vertex="1" parent="1">
+          <mxGeometry x="80" y="320" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-2" value="hl-ceph-02" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#3E3E3E);" vertex="1" parent="1">
+          <mxGeometry x="240" y="320" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-3" value="hl-ceph-03" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#3E3E3E);" vertex="1" parent="1">
+          <mxGeometry x="400" y="320" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-4" value="hl-ceph-04" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#3E3E3E);" vertex="1" parent="1">
+          <mxGeometry x="560" y="320" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-5" value="hl-ceph-05" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#3E3E3E);" vertex="1" parent="1">
+          <mxGeometry x="720" y="320" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-6" value="Ansible Workstation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#6332AC);" vertex="1" parent="1">
+          <mxGeometry x="80" y="440" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-7" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;strokeColor=light-dark(#000000,#88FF00);strokeWidth=2;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="Q6-0TbaTN2OZVJRLpgSS-6" target="Q6-0TbaTN2OZVJRLpgSS-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="340" y="580" as="sourcePoint" />
+            <mxPoint x="390" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-8" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;strokeColor=light-dark(#000000,#88FF00);strokeWidth=2;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="Q6-0TbaTN2OZVJRLpgSS-6" target="Q6-0TbaTN2OZVJRLpgSS-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="150" y="570" as="sourcePoint" />
+            <mxPoint x="150" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-9" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;strokeColor=light-dark(#000000,#88FF00);strokeWidth=2;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="Q6-0TbaTN2OZVJRLpgSS-6" target="Q6-0TbaTN2OZVJRLpgSS-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="150" y="570" as="sourcePoint" />
+            <mxPoint x="310" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-10" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;strokeColor=light-dark(#000000,#88FF00);strokeWidth=2;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="Q6-0TbaTN2OZVJRLpgSS-6" target="Q6-0TbaTN2OZVJRLpgSS-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="150" y="570" as="sourcePoint" />
+            <mxPoint x="470" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-11" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;strokeColor=light-dark(#000000,#88FF00);strokeWidth=2;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="Q6-0TbaTN2OZVJRLpgSS-6" target="Q6-0TbaTN2OZVJRLpgSS-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="150" y="570" as="sourcePoint" />
+            <mxPoint x="630" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-12" value="&lt;div&gt;Playbook: pb-prepare-ceph.yml&lt;/div&gt;&lt;div&gt;- Installs packages necessary for Ceph&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=bottom;rounded=0;fontStyle=1;fontSize=14;fontColor=light-dark(#000000,#FFFFFF);spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="200" y="400" width="640" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-13" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;flipH=1;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;rotation=-90;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="449.52" y="-86.19" width="22.85" height="757.63" as="geometry" />
+        </mxCell>
+        <mxCell id="Q6-0TbaTN2OZVJRLpgSS-14" value="Ansible inventory group &quot;hl_ceph&quot;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="240" width="760" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

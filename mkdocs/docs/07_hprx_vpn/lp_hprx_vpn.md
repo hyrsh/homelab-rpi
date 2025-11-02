@@ -28,23 +28,46 @@ The directory structure for this is pretty straight forward:
 
 `Directory tree`
 ```shell
--/ansible
-  - /group_vars
-  - inventory.yml
-  - /roles
-    - /setup_haproxy
-      - /tasks/main.yml
-      - /templates/haproxy.cfg.j2
-    - /setup_keepalived
-      - /tasks/main.yml
-      - /templates/keepalived.conf.j2
-      - /scripts/haproxy_check.sh
-    - /setup_wireguard
-      - /tasks/main.yml
-      - /templates/wg0.conf.j2
-    ...
-  ...
+.
+├── ansible.cfg
+├── group_vars
+│   └── all
+├── inventory.yml
+├── playbooks
+│   ├── pb-install-lb.yml
+│   ├── roles -> ../roles
+│   └── vault -> ../vault
+├── roles
+│   ├── setup_haproxy
+│   │   ├── files
+│   │   │   └── lp_bg.jpg
+│   │   ├── tasks
+│   │   │   └── main.yml
+│   │   └── templates
+│   │       ├── default.j2
+│   │       ├── haproxy.cfg.j2
+│   │       └── index.nginx-debian.html.j2
+│   ├── setup_keepalived
+│   │   ├── tasks
+│   │   │   └── main.yml
+│   │   └── templates
+│   │       ├── kd_haproxy.sh.j2
+│   │       ├── keepalived.config-opts.j2
+│   │       ├── keepalived.conf.j2
+│   │       └── keepalived.conf.sample.j2
+│   └── setup_wireguard
+│       ├── tasks
+│       │   └── main.yml
+│       └── templates
+│           ├── vps.conf
+│           └── wg0.conf.j2
+└── vault
+    └── av_homelab
 ```
+
+> Note:
+
+> - In our playbook directory we have symbolic links to roles and vault since Ansible expects these directories to be on the same level as the executing playbook. Just point them to the respective paths
 
 We use conditions to be able to install/uninstall and/or toggle a simple config rollout. To control these conditions we can add a flag "-e" with our conditional variable (op_mode) alongside our playbook call.
 
