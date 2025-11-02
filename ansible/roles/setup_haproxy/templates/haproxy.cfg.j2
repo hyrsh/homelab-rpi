@@ -79,9 +79,11 @@ backend be_{{DO.domain}}
 {% for HDB in vault.haproxy.hidden_domains %}
 backend be_{{HDB.domain}}
   mode http
+  option httpchk
+  http-check expect status 200
   http-request set-header Host {{HDB.domain}}.{{setupinfos.internal_domain}}
 {% for HDBI in HDB.ip %}
-  server srv{{loop.index0}} {{HDBI}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-ca-bundle.crt
+  server srv{{loop.index0}} {{HDBI}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-ca-bundle.crt check resolvers internal
 {% endfor %}
 {% endfor %}
 

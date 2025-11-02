@@ -63,3 +63,8 @@ nsCertType = server                                         # Server certificate
 keyUsage = critical, digitalSignature, keyEncipherment      # Key usage for a server cert
 extendedKeyUsage = serverAuth                               # Extended key usage for server authentication purposes (e.g., TLS/SSL servers).
 authorityKeyIdentifier = keyid,issuer                       # Authority key identifier linking the certificate to the issuer's public key.
+subjectAltName = @alt_names
+
+[ alt_names ]
+IP.0 = 127.0.0.1
+DNS.0 = {{ domain }}
