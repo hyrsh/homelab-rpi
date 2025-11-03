@@ -33,7 +33,27 @@ I listed most of it in the [material page](05_material/lp_material.md) (if thing
 
 <hr>
 
-#### General idea
+## Guidance
+
+If you start from scratch you can go through all pages like they are presented on the left hand side navigation from top to bottom.
+
+The page about [HAProxy & VPN](07_hprx_vpn/lp_hprx_vpn.md) is still relevant even if you do not plan on connecting VPN clients to an external source. You can easily ignore the WireGuard topics and roles written for Ansible.
+
+The pages about [material](05_material/lp_material.md) and the [box containing the RPIs](06_thebox/lp_thebox.md) are not necessary for the technical process.
+
+If you start with prior knowledge there is a logical order you should maintain:
+
+1. Raspberry Pi OS installation & SSH key distribution
+2. TLS certificate generation
+3. Setting all respective values in your Ansible vault
+4. HAProxy (optional VPN) configuration
+5. Setting up Ceph
+6. Setting up Kubernetes
+7. Final configurations
+
+<hr>
+
+## General idea
 
 - Bootstrapping the RPI's to handle them from a central workstation
     - Shameless plug for [Tuxedo](https://www.tuxedocomputers.com/de) laptops :)
@@ -46,7 +66,7 @@ I listed most of it in the [material page](05_material/lp_material.md) (if thing
 
 <hr>
 
-#### The result (in this example)
+## The result (in this example)
 
 - A [Kubernetes](https://kubernetes.io/) cluster with
     - 3x [master nodes](https://kubernetes.io/docs/concepts/overview/components/#control-plane-components)
@@ -71,11 +91,11 @@ I listed most of it in the [material page](05_material/lp_material.md) (if thing
 
 <hr>
 
-#### Technologies
+## Technologies
 
 |Name|Type|Description|
 |-|-|-|
-|Raspberry Pi OS Lite (64bit)|Linux OS (ARM) without GUI|Debian 13 for Raspberry Pi's|
+|Raspberry Pi OS Lite (64bit)|Linux OS (ARM) without GUI|Debian 12 and 13 for Raspberry Pi's|
 |Ansible|Configuration Management|Declarative configuration for our hosts|
 |SSH|Remote Connection|Used to connect to our hosts|
 |Bash|Linux Shell|Used to create scripts|

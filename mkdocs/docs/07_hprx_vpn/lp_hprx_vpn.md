@@ -14,7 +14,7 @@ To make this happen we need to install some packages and do some config work.
 
 ## Ansible configuration
 
-I have configured Ansible that it can reach both HAProxy/VPN nodes with an individual ssh-key and I have enough permissions to configure root-level applications (necessary because of vIP configs and port listening below port 1024; *more information*).
+I have configured Ansible that it can reach both HAProxy/VPN nodes with an individual ssh-key and I have enough permissions to configure root-level applications (necessary because of vIP configs and port listening below port 1024).
 
 > Disclaimer:
 
@@ -72,3 +72,90 @@ The directory structure for this is pretty straight forward:
 We use conditions to be able to install/uninstall and/or toggle a simple config rollout. To control these conditions we can add a flag "-e" with our conditional variable (op_mode) alongside our playbook call.
 
 All our templates are in [Jinja2](https://en.wikipedia.org/wiki/Jinja_(template_engine)) and get their variables from our main configuration file at [/ansible/group_vars/all](https://github.com/hyrsh/homelab-rpi/blob/main/ansible/group_vars/all), the vault (not uploaded) and/or the corresponding playbook that is called.
+
+<hr>
+
+## TLS Certificates
+
+Everything in this setup will be [TLS]() secured. To adhere to international standards I do create a [PKI]() with a root CA, an intermediate CA and a leaf certificate. I do not directly sign leaf certificates from root CAs.
+
+> If you know all about that already you will see how I did integrate the certificates in the Ansible vault and provisioned them with the playbooks.
+
+To ease the TLS bootstrapping for people who want their own self-signed certificates [I provided a script](https://github.com/hyrsh/homelab-rpi/blob/main/scripts/create-pki/create-certs.sh) that can be used for that.
+
+`Script help`
+```shell
+root@myhost:~# ./create-certs.sh -h
+
+[+] Usage:
+----------
+- e.g. ./create-certs.sh -domain *.homelab.org -s-exp 1000 -r-exp 10000 -i-exp 8000
+
+[+] Flags:
+----------
+  -r-exp|-root-expiry         > days of expiration of your root CA
+  -i-exp|-intermediate-expiry > days of expiration of your intermediate CA
+  -s-exp|-server-expiry       > days of expiration of your server cert
+  -d|-domain                  > domain of your server cert
+  -c|-country                 > country of your INT/ROOT CA
+  -st|-state                  > state of your INT/ROOT CA
+  -l|-locality                > locality of your INT/ROOT CA
+  -org|-organization          > organization of your INT/ROOT CA
+  -ou|-organizational-unit    > organizational unit of your INT/ROOT CA
+  -mail                       > mail to use for your server cert
+  -h|-help                    > prints this help
+```
+
+If parameters are omitted they will be filled with default values.
+
+`Script example overview`
+```shell
+root@myhost:~# ./create-certs.sh \
+  -d *.mydomain.io \
+  -c COUNTRY \
+  -st STATE \
+  -l LOCALITY \
+  -org MyOrg \
+  -ou MyUnit \
+  -mail info@noreply.io \
+  -r-exp 10000 \
+  -i-exp 8000 \
+  -s-exp 7500
+```
+
+`Script example one liner`
+```shell
+root@myhost:~# ./create-certs.sh -d *.mydomain.io -c JP -st Kyoto -l Maizuru -org MyOrg -ou MyUnit -mail info@noreply.ch -r-exp 10000 -i-exp 8000 -s-exp 7500
+```
+
+If you execute the script it will generate a directory and all necessary files for your own self-signed TLS infrastructure.
+
+Our focus is on the 6x certificates in the first directory level of the script output:
+
+- root_ca.cert.pem
+- root_ca.key.pem
+- intermediate_ca.cert.pem
+- intermediate_ca.key.pem
+- my-testdomain.pub.io.cert.pem *<-- will be named after your chosen domain*
+- my-testdomain.pub.io.key.pem *<-- will be named after your chosen domain*
+
+The used Ansible vault has to have a [specific structure to work](../08_ansible/lp_ansible.md#ansible-vault-structure), so make sure you enter the values accordingly.
+
+To create a base64 encoded string to be used in the vault you can do the following:
+
+```shell
+root@myhost:~# cat ./root_ca.key.pem | base64 -w0
+```
+
+Copy the output to the respective field in the vault:
+
+|base64 output of this file|goes in this Field in your vault|
+|-|-|
+|root_ca.key.pem|sspki_root_key|
+|root_ca.cert.pem|sspki_root_crt|
+|intermediate_ca.key.pem|sspki_int_key|
+|intermediate_ca.cert.pem|sspki_int_crt|
+|my-testdomain.pub.io.key.pem|sspki_srv_key|
+|my-testdomain.pub.io.cert.pem |sspki_srv_crt|
+
+<hr>

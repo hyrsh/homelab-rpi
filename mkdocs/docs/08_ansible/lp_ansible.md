@@ -172,3 +172,140 @@ If you understand these basics you can handle simple ansible installations. Ever
 It is one of the easiest configuration tools to learn and its community is really great so don't give up if you are exhausted by it.
 
 And keep in mind to look for native Ansible modules before you use the "shell" module  :D
+
+<hr>
+
+## Ansible group_vars/all Structure
+
+The playbooks expect a certain structure of the used group_vars/all so here is the current layout.
+
+```YAML
+hostinfos:
+  hl_master_01:
+  hl_master_02:
+  hl_master_03:
+  hl_lb_01:
+    wireguard_ip: "16.16.8.3"
+    wireguard_listening_port: "1337"
+    wireguard_allowedips_peer: "12.16.10.0/24"
+    kd_prio: "101"
+  hl_lb_02:
+    wireguard_ip: "16.16.8.4"
+    wireguard_listening_port: "1337"
+    wireguard_allowedips_peer: "12.16.10.0/24"
+    kd_prio: "100"
+  hl_worker_01:
+  hl_worker_02:
+  hl_worker_03:
+  hl_worker_04:
+  hl_worker_05:
+  hl_worker_06:
+  hl_worker_07:
+  hl_worker_08:
+  hl_worker_09:
+  hl_worker_10:
+  hl_ceph_01:
+  hl_ceph_02:
+  hl_ceph_03:
+  hl_ceph_04:
+  hl_ceph_05:
+userinfos:
+  allowed_ssh_users: "ansible-admin ansible"
+setupinfos:
+  lb_master: [ "hl-lb-01" ]
+  lb_vip: "192.168.1.13"
+  lb_cert_dir: "/etc/haproxy/own-certs"
+  ceph_master: [ "hl-ceph-01", "hl-ceph-05" ]
+  ingress_nodes: [ "hl-worker-05", "hl-worker-10" ]
+  internal_domain: "mycoolinternaldomain.io"
+  external_domain: "mycoolpublicdomain.nz"
+  haproxy_domains:
+    - {domain: "myexposed-url", ip: "192.168.1.3", info: "Info to my exposed url", state: "down"} <-- state can be "up" or "down" for maintenance
+  max_connections_haproxy: "100"
+  local_dns: "192.168.1.1"
+```
+
+<hr>
+
+## Ansible Vault Structure
+
+The playbooks expect a certain structure of the used vault so here is the current layout.
+
+- Fields with "#raw" contain the values "as-is" without encoding
+- Fields with "#b64" contain the values with base64 encoding
+
+```YAML
+vault:
+  init_admin_password: "myverysecretsecret" #raw
+  k3s_cluster_init_secret: "mycoolandverylongsecret" #raw
+  ssh_keys_private:
+    hl_ceph_01: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_ceph_02: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_ceph_03: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_ceph_04: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_ceph_05: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_lb_01: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_lb_02: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_master_01: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_master_02: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_master_03: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_01: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_02: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_03: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_04: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_05: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_06: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_07: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_08: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_09: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_10: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+  ssh_keys_public:
+    hl_ceph_01: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_ceph_02: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_ceph_03: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_ceph_04: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_ceph_05: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_lb_01: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_lb_02: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_master_01: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_master_02: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_master_03: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_01: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_02: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_03: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_04: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_05: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_06: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_07: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_08: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_09: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    hl_worker_10: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+  certs:
+    sspki_root_key: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    sspki_root_crt: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    sspki_int_key: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    sspki_int_crt: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    sspki_srv_key: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    sspki_srv_crt: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    public_ca_bundle: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    public_server_bundle: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    pubpki_srv_key: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    pubpki_srv_crt: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+  wireguard_keys_private:
+    csp_vps: "coolwireguardprivatekey" #raw
+    hl_lb_01: "coolwireguardprivatekey" #raw
+    hl_lb_02: "coolwireguardprivatekey" #raw
+  wireguard_keys_public:
+    csp_vps: "coolwireguardpublickey" #raw
+    hl_lb_01: "coolwireguardpublickey" #raw
+    hl_lb_02: "coolwireguardpublickey" #raw
+  csp:
+    vps_ip: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+  ceph:
+   ssh_key_private: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+   ssh_key_public: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+   fsid: "coolFSIDofCeph" #raw
+  haproxy:
+    hidden_domains:
+      - {domain: "mycooldomain", ip: ["192.168.1.2:8443"], info: "My coold site", state: "up"}
+```

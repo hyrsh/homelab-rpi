@@ -86,7 +86,7 @@ If this succeeds for all your nodes you have setup all SSH keys correctly.
 
 > - if there is a prompt for "The authenticity of host (...)" is shown answer with yes. This is a security warning if you can trust this host and want to add its identity (fingerprint hash) to your list of trusted endpoints. Since this is a homelab we know our hosts and enter "yes"
 
-> - in a production environment if we do not know who controls the unknown host it is advised to enter "no" and re-check who setup and controls it
+> - in a production environment if we do not know who controls the unknown host it is advised to enter "no" and re-check who set it up and controls it
 
 If all connections work and all packages are installed you are ready to setup your first node in Ceph.
 
@@ -109,6 +109,7 @@ After the command completes it will display some initial information about your 
 Now you must copy the newly generated Ceph SSH key to all other hosts because the Ceph CLI does use different SSH keys than our system. In my setup this goes like this:
 
 ```shell
+root@hl-ceph-01:~# ssh-copy-id -f -i /etc/ceph/ceph.pub root@hl-ceph-01
 root@hl-ceph-01:~# ssh-copy-id -f -i /etc/ceph/ceph.pub root@hl-ceph-02
 root@hl-ceph-01:~# ssh-copy-id -f -i /etc/ceph/ceph.pub root@hl-ceph-03
 root@hl-ceph-01:~# ssh-copy-id -f -i /etc/ceph/ceph.pub root@hl-ceph-04
@@ -361,15 +362,39 @@ We want to use our generated wildcard certificate to be used for the Dashboard a
 
 > Super important note:
 
-> - If you use self-signed certificates make sure the SAN field is also provisioned with your wildcard domain. Since 2012 browsers deprecated the fallback to the common name (CN) if a direct URL match is not met. The [certificate creation script](https://github.com/hyrsh/homelab-rpi/blob/main/scripts/create-pki/create-certs.sh) I provided does that already. The CN can contain your TLD e.g. "mydomain.io" but at least one SAN field has to have "*.mydomain.io" present if you want to use wildcards. Otherwise browsers will reject the certificate
+> - If you use self-signed certificates make sure the SAN field is also provisioned with your wildcard domain. Since 2012 browsers deprecated the fallback to the common name (CN) if a direct URL match is not met ([RFC2818](https://www.rfc-editor.org/rfc/rfc2818#section-3.1), *Server Identity*). The [certificate creation script](https://github.com/hyrsh/homelab-rpi/blob/main/scripts/create-pki/create-certs.sh) I provided does that already. The CN can contain your TLD e.g. "mydomain.io" but at least one SAN field has to have "*.mydomain.io" present if you want to use wildcards. Otherwise browsers will reject the certificate
 
 To make our private certificates work with Ceph we need to do a couple of things:
 
-- Extract the Root CA certificate from our Ansible vault
-- Extract the Intermediate CA certificate from our Ansible vault
-- Extract the Server certificate and key from our Ansible vault
-- Rollout the Server certificate and key to all Ceph nodes
-- Change Ceph settings for Grafana
-- Change Ceph settings for the Dashboard
-- Add certificates to our browser
+1. <span style="color:#ADFF2F">Extract the Root CA certificate from our Ansible vault</span>
+    - save it to e.g. root_ca.crt on your Desktop or somewhere else
+        - `root@myhost:~# ansible-vault view vault/av_homelab`
+        - copy the value from "sspki_root_crt"
+        - `root@myhost:~# echo "COPIED_VALUE | base64 -d > root_ca.crt`
+2. <span style="color:#ADFF2F">Extract the Intermediate CA certificate from our Ansible vault</span>
+    - save it to e.g. int_ca.crt on your Desktop or somewhere else
+        - `root@myhost:~# ansible-vault view vault/av_homelab`
+        - copy the value from "sspki_int_crt"
+        - `root@myhost:~# echo "COPIED_VALUE | base64 -d > int_ca.crt`
+3. <span style="color:#ADFF2F">Rollout the Server certificate and key to all Ceph nodes</span>
+    - use the Ansible role "distribute_ceph_certs" from your Ansible directory
+        - `ansible-playbook -J -i inventory.yml -e op_mode=install playbooks/pb-distribute-ceph-certs.yml`
+4. <span style="color:#ADFF2F">Change Ceph settings for Grafana</span>
+    - use commands in your Ceph CLI from an Ceph admin host (e.g. hl-ceph-01)
+        - `cephadm shell`
+        - `cd ~` <-- this is where the playbook copied our certificates to
+        - `ceph config-key set mgr/cephadm/grafana_crt -i private-srv.crt`
+        - `ceph config-key set mgr/cephadm/grafana_key -i private-srv.key`
+        - `ceph orch restart grafana`
+5. <span style="color:#ADFF2F">Change Ceph settings for the Dashboard</span>
+    - use commands in your Ceph CLI from an Ceph admin host (e.g. hl-ceph-01)
+        - `cephadm shell`
+        - `cd ~` <-- this is where the playbook copied our certificates to
+        - `ceph dashboard set-ssl-certificate-key -i private-srv.key`
+        - `ceph dashboard set-ssl-certificate -i private-srv.crt`
+        - `ceph orch restart mgr`
+6. <span style="color:#ADFF2F">Add certificates to our browser</span>
+    - depending on your browser add your root_ca.crt & int_ca.crt to the trusted certificates
+        - it could be like: Settings > Security > Certificates > Add Trusted Sites
+        - after that you can delete the created files
 
