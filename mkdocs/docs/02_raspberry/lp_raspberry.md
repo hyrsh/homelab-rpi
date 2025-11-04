@@ -96,6 +96,13 @@ Here are some notes I keep if something draws my attention.
     - In the default configuration the SSDs would not be able to connect correctly and "dmesg" would throw errors about "over-current"
     - To fix this I added the line `usb_max_current_enable=1` in /boot/firmware/config.txt under the "[all]" section and rebooted
     - I did this to all Ceph node devices by hand since I do not want Ansible to mess with firmware configuration
+- Raspberry Pi's and their cgroup default
+    - the default settings of the RPIs do not enable cgroups for memory
+    - To fix this append this to your /boot/firmware/cmdline.txt
+        - `cgroup_memory=1 cgroup_enable=memory`
+    - My full file looks like that
+        - `console=serial0,115200 console=tty1 root=PARTUUID=5880af7a-02 rootfstype=ext4 fsck.repair=yes rootwait cgroup_memory=1 cgroup_enable=memory`
+    - Restart the RPI
 
 <hr>
 
