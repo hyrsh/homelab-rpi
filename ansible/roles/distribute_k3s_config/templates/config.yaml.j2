@@ -1,0 +1,15 @@
+write-kubeconfig-mode: "0644"
+tls-san:
+  - "{{ setupinfos.k3s.master.san_domain }}"
+  - "{{ setupinfos.lb_vip }}"
+flannel-backend: "none"
+disable-kube-proxy: true
+disable-network-policy: true
+{% if hostinfos[ansible_mutated_host].cluster_init == "yes" %}
+cluster-init: true
+{% else %}
+cluster_init: false
+{% endif %}
+disable:
+  - servicelb
+  - traefik

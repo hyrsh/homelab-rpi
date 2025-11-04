@@ -1,7 +1,10 @@
 hostinfos:
   hl_master_01:
+    cluster_init: "yes"
   hl_master_02:
+    cluster_init: "no"
   hl_master_03:
+    cluster_init: "no"
   hl_lb_01:
     wireguard_ip: "172.16.98.3"
     wireguard_listening_port: "55556"
@@ -13,30 +16,30 @@ hostinfos:
     wireguard_allowedips_peer: "172.16.99.0/24"
     kd_prio: "100"
   hl_worker_01:
+    active: "yes"
   hl_worker_02:
+    active: "yes"
   hl_worker_03:
+    active: "yes"
   hl_worker_04:
+    active: "yes"
   hl_worker_05:
+    active: "yes"
   hl_worker_06:
+    active: "yes"
   hl_worker_07:
+    active: "yes"
   hl_worker_08:
+    active: "yes"
   hl_worker_09:
+    active: "yes"
   hl_worker_10:
+    active: "yes"
   hl_ceph_01:
-    admin_node: yes
-    monitor_node: yes
   hl_ceph_02:
-    admin_node: no
-    monitor_node: no
   hl_ceph_03:
-    admin_node: no
-    monitor_node: no 
   hl_ceph_04:
-    admin_node: no
-    monitor_node: yes
   hl_ceph_05:
-    admin_node: yes
-    monitor_node: yes
 userinfos:
   allowed_ssh_users: "ansible-admin ansible"
 setupinfos:
@@ -51,3 +54,11 @@ setupinfos:
     - {domain: "homelab-rpi", ip: "192.168.1.230", info: "Homelab landing page", state: "down"}
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
+  k3s:
+    cilium_version: "v0.18.8"
+    cilium_arch: "arm64"
+    helm_version: "v3.19.0"
+    helm_arch: "arm64"
+    master:
+      san_domain: "k3s-master.hyrsh.io"
+      registration_host: "hl-master-01"

@@ -1,0 +1,14 @@
+- name: make sure directory exists
+  file:
+    path: "/etc/rancher/k3s"
+    state: directory
+  when: op_mode == "install" or op_mode == "init" or op_mode == "join-master"
+
+- name: get template to dir
+  template:
+    src: "templates/config.yaml.j2"
+    dest: "/etc/rancher/k3s/config.yaml"
+    mode: '0644'
+    owner: root
+    group: root
+  when: op_mode == "install" or op_mode == "init" or op_mode == "join-master"

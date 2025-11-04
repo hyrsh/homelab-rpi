@@ -1,0 +1,41 @@
+- name: get the cilium archive
+  unarchive:
+    src: "https://github.com/cilium/cilium-cli/releases/download/{{ setupinfos.k3s.cilium_version }}/cilium-linux-{{ setupinfos.k3s.cilium_arch }}.tar.gz"
+    dest: /tmp
+    remote_src: yes
+    mode: '0755'
+    owner: root
+    group: root
+  when: op_mode == "install"
+
+- name: copy cilium binary to PATH
+  copy:
+    src: /tmp/cilium
+    dest: /usr/local/bin/cilium
+    remote_src: yes
+    mode: '0755'
+    owner: root
+    group: root
+  when: op_mode == "install"
+
+- name: cleanup tmp
+  file:
+    path: /tmp/cilium
+    state: absent
+  when: op_mode == "install"
+
+- name: uninstall cilium
+  file:
+    src: /usr/local/bin/cilium
+    state: absent
+  when: op_mode == "uninstall"
+
+- name: deploy cilium to k8s
+  shell: "cilium install --set k8sServiceHost={{ setupinfos.lb_vip }} --set k8sServicePort=6443 --set kubeProxyReplacement=true"
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "deploy"
+    - ansible_host == setupinfos.k3s.master.registration_host

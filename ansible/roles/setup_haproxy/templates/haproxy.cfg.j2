@@ -69,6 +69,11 @@ frontend gateway_02
 {% endfor %}
   default_backend be_default
 
+frontend k8s_api
+  bind :6443
+  mode tcp
+  default_backend be_k8s_api
+
 {% for DO in setupinfos.haproxy_domains %}
 backend be_{{DO.domain}}
   mode http
@@ -91,3 +96,11 @@ backend be_default
   mode http
   http-request set-header Host m0rpheus.ch
   server ngx 127.0.0.1:444 ssl verify required ca-file {{setupinfos.lb_cert_dir}}/public-ca-bundle.crt
+
+backend be_k8s_api
+  mode tcp
+  tcp-check set-var(check.port) int(6443)
+  tcp-check connect port var(check.port)
+{% for HOST in groups["hl_master"] %}
+  server m{{loop.index0}} {{HOST}}:6443 check resolvers internal
+{% endfor %}

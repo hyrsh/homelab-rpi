@@ -1,0 +1,32 @@
+- name: get versioned helm release
+  unarchive:
+    src: "https://get.helm.sh/helm-{{ setupinfos.k3s.helm_version }}-linux-{{ setupinfos.k3s.helm_arch }}.tar.gz"
+    dest: /tmp
+    remote_src: yes
+    mode: '0755'
+    owner: root
+    group: root
+  when: op_mode == "install"
+
+- name: copy helm binary to PATH
+  copy:
+    src: /tmp/linux-arm64/helm
+    dest: /usr/local/bin/helm
+    remote_src: yes
+    mode: '0755'
+    owner: root
+    group: root
+  when: op_mode == "install"
+
+- name: cleanup tmp
+  file:
+    path: /tmp/linux-arm64
+    state: absent
+  when: op_mode == "install"
+  
+
+- name: uninstall helm
+  file:
+    path: "/usr/local/bin/helm"
+    state: absent
+  when: op_mode == "uninstall"
