@@ -34,6 +34,7 @@ nav:
   - Kubernetes:
       - Containers: 03_kubernetes/01_containers.md
       - Overview: 03_kubernetes/00_overview.md
+      - Setup: 03_kubernetes/02_setup.md
   - Material: 05_material/lp_material.md
   - TheBox: 06_thebox/lp_thebox.md
 

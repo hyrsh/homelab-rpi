@@ -182,8 +182,11 @@ The playbooks expect a certain structure of the used group_vars/all so here is t
 ```YAML
 hostinfos:
   hl_master_01:
+    cluster_init: "yes"
   hl_master_02:
+    cluster_init: "no"
   hl_master_03:
+    cluster_init: "no"
   hl_lb_01:
     wireguard_ip: "16.16.8.3"
     wireguard_listening_port: "1337"
@@ -195,15 +198,25 @@ hostinfos:
     wireguard_allowedips_peer: "12.16.10.0/24"
     kd_prio: "100"
   hl_worker_01:
+    active: "yes"
   hl_worker_02:
+    active: "yes"
   hl_worker_03:
+    active: "yes"
   hl_worker_04:
+    active: "yes"
   hl_worker_05:
+    active: "yes"
   hl_worker_06:
+    active: "yes"
   hl_worker_07:
+    active: "yes"
   hl_worker_08:
+    active: "yes"
   hl_worker_09:
+    active: "yes"
   hl_worker_10:
+    active: "yes"
   hl_ceph_01:
   hl_ceph_02:
   hl_ceph_03:
@@ -220,9 +233,17 @@ setupinfos:
   internal_domain: "mycoolinternaldomain.io"
   external_domain: "mycoolpublicdomain.nz"
   haproxy_domains:
-    - {domain: "myexposed-url", ip: "192.168.1.3", info: "Info to my exposed url", state: "down"} <-- state can be "up" or "down" for maintenance
+    - {domain: "myexposed-url", ip: "192.168.1.3", info: "Page Info", state: "down"} <-- state can be "up" or "down" for maintenance
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
+  k3s:
+    cilium_version: "v0.18.8"
+    cilium_arch: "arm64"
+    helm_version: "v3.19.0"
+    helm_arch: "arm64"
+    master:
+      san_domain: "k3s-master.hyrsh.io"
+      registration_host: "hl-master-01"
 ```
 
 <hr>

@@ -101,8 +101,9 @@ Here are some notes I keep if something draws my attention.
     - To fix this append this to your /boot/firmware/cmdline.txt
         - `cgroup_memory=1 cgroup_enable=memory`
     - My full file looks like that
-        - `console=serial0,115200 console=tty1 root=PARTUUID=5880af7a-02 rootfstype=ext4 fsck.repair=yes rootwait cgroup_memory=1 cgroup_enable=memory`
+        - `console=serial0,115200 console=tty1 root=PARTUUID=<UUID> rootfstype=ext4 fsck.repair=yes rootwait cgroup_memory=1 cgroup_enable=memory`
     - Restart the RPI
+    - I did this to all k8s nodes
 
 <hr>
 
