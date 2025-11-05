@@ -31,6 +31,8 @@ nav:
   - Ceph:
       - Overview: 04_ceph/01_overview.md
       - Setup: 04_ceph/02_setup.md
+      - Configuration: 04_ceph/03_config.md
+      - Upgrade: 04_ceph/04_upgrade.md
   - Kubernetes:
       - Containers: 03_kubernetes/01_containers.md
       - Overview: 03_kubernetes/00_overview.md

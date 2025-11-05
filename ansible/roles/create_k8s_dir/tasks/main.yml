@@ -1,0 +1,4 @@
+- name: create k8s main resource dir
+  file:
+    path: "{{ setupinfos.k3s.resource_dir }}"
+    state: directory

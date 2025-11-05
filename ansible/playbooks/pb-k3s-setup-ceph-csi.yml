@@ -1,0 +1,17 @@
+- hosts: hl_master
+  gather_facts: False
+  become: True
+  become_method: sudo
+  remote_user: ansible
+  vars_files:
+    - "vault/av_homelab"
+  roles:
+    - expose_ssh_keys
+    - create_k8s_dir
+    - setup_ceph_csi
+  handlers:
+  - name: h-clean-exposed-keys
+    delegate_to: localhost
+    file:
+      name: /tmp/ansible_exposed_keys
+      state: absent

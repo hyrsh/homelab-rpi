@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "ceph-csi-config"
+  namespace: ceph-mgmt
+data:
+  config.json: |-
+    [
+      {
+        "clusterID": "{{ vault.ceph.fsid }}",
+        "monitors": [
+{% for MON in setupinfos.ceph_monitor %}
+          "{{MON}}:6789"{{ "," if not loop.last }}
+{% endfor %}
+        ],
+        "cephFS": {
+          "subvolumeGroup": "k8s"
+        }
+      }
+    ]

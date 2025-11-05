@@ -47,6 +47,7 @@ setupinfos:
   lb_vip: "192.168.1.13"
   lb_cert_dir: "/etc/haproxy/own-certs"
   ceph_master: [ "hl-ceph-01", "hl-ceph-05" ]
+  ceph_monitor: [ "hl-ceph-01", "hl-ceph-02", "hl-ceph-05" ]
   ingress_nodes: [ "hl-worker-05", "hl-worker-10" ]
   internal_domain: "hyrsh.io"
   external_domain: "m0rpheus.ch"
@@ -59,6 +60,7 @@ setupinfos:
     cilium_arch: "arm64"
     helm_version: "v3.19.0"
     helm_arch: "arm64"
+    resource_dir: "/opt/k8s_resources"
     master:
       san_domain: "k3s-master.hyrsh.io"
       registration_host: "hl-master-01"
