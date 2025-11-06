@@ -47,17 +47,19 @@ setupinfos:
   lb_vip: "192.168.1.13"
   lb_cert_dir: "/etc/haproxy/own-certs"
   ceph_master: [ "hl-ceph-01", "hl-ceph-05" ]
-  ceph_monitor: [ "hl-ceph-01", "hl-ceph-02", "hl-ceph-05" ]
-  ingress_nodes: [ "hl-worker-05", "hl-worker-10" ]
+  ceph_monitor: [ "192.168.1.30", "192.168.1.31", "192.168.1.34" ]
   internal_domain: "hyrsh.io"
   external_domain: "m0rpheus.ch"
   haproxy_domains:
-    - {domain: "homelab-rpi", ip: "192.168.1.230", info: "Homelab landing page", state: "down"}
+    - {domain: "homelab-rpi", ip: [ "homelab-rpi.hyrsh.io:443" ], info: "Homelab landing page", state: "down"}
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
   k3s:
     cilium_version: "v0.18.8"
     cilium_arch: "arm64"
+    ingress_cert: "wildcard-hyrsh-io"
+    ingress_nodes: [ "hl-worker-05", "hl-worker-10" ]
+    ingress_instances: 2
     helm_version: "v3.19.0"
     helm_arch: "arm64"
     resource_dir: "/opt/k8s_resources"

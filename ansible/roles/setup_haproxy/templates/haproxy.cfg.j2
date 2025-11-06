@@ -61,10 +61,10 @@ frontend gateway_02
 {% for HD in vault.haproxy.hidden_domains %}
 {% if HD.state == "down" %}
   #acl acl_{{HD.domain}} hdr(host) -i {{HD.domain}}.{{setupinfos.internal_domain}} #state:{{HD.state}}
-  #use_backend be_{{HD.domain}} if acl_{{HD.domain}}
+  #use_backend be_h_{{HD.domain}} if acl_{{HD.domain}}
 {% else %}
   acl acl_{{HD.domain}} hdr(host) -i {{HD.domain}}.{{setupinfos.internal_domain}} #state:{{HD.state}}
-  use_backend be_{{HD.domain}} if acl_{{HD.domain}}
+  use_backend be_h_{{HD.domain}} if acl_{{HD.domain}}
 {% endif %}
 {% endfor %}
   default_backend be_default
@@ -78,18 +78,28 @@ frontend k8s_api
 backend be_{{DO.domain}}
   mode http
   http-request set-header Host {{DO.domain}}.{{setupinfos.internal_domain}}
-  server {{DO.domain}} {{DO.ip}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-ca-bundle.crt
+{% for DBI in DO.ip %}
+  server srv{{loop.index0}} {{DBI}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-ca-bundle.crt check resolvers internal
+{% endfor %}
 {% endfor %}
 
 {% for HDB in vault.haproxy.hidden_domains %}
-backend be_{{HDB.domain}}
+backend be_h_{{HDB.domain}}
   mode http
+{% if HDB.chk == "httpchk-200" %}
   option httpchk
   http-check expect status 200
+{% endif %}
   http-request set-header Host {{HDB.domain}}.{{setupinfos.internal_domain}}
+{% if HDB.ip[0] == "default" %}
+{% for HDBD in setupinfos.k3s.ingress_nodes %}
+  server srv{{loop.index0}} {{HDBD}}:443 ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-ca-bundle.crt check resolvers internal
+{% endfor %}
+{% else %}
 {% for HDBI in HDB.ip %}
   server srv{{loop.index0}} {{HDBI}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-ca-bundle.crt check resolvers internal
 {% endfor %}
+{% endif %}
 {% endfor %}
 
 backend be_default

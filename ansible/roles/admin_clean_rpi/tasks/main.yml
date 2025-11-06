@@ -72,3 +72,13 @@
     name: swap.target
     state: stopped
     enabled: false
+
+- name: get journald config to dir
+  copy:
+    src: "templates/journald.conf"
+    dest: "/etc/systemd/journald.conf"
+
+- name: restart journald
+  service:
+    name: systemd-journald
+    state: restarted

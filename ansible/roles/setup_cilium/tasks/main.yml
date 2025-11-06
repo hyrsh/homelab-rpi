@@ -30,6 +30,44 @@
     state: absent
   when: op_mode == "uninstall"
 
+- name: create tmp dir for values and resources
+  file:
+    path: /tmp/cilium-k8s
+    state: directory
+  when:
+    - op_mode == "install-ingress"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: get templates to dir
+  template:
+    src: "templates/{{ item }}.j2"
+    dest: "/tmp/cilium-k8s/{{ item }}"
+  when:
+    - op_mode == "install-ingress"
+    - ansible_host == setupinfos.k3s.master.registration_host
+  with_items:
+    - cilium-ip-pool.yml
+    - cilium-l2-announcement.yml
+    - values.yml
+
+- name: upgrade cilium with ingress settings
+  shell: cilium upgrade -f /tmp/cilium-k8s/values.yml
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "install-ingress"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: cleanup tmp dir for values and resources
+  file:
+    path: /tmp/cilium-k8s
+    state: absent
+  when:
+    - op_mode == "install-ingress"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
 - name: deploy cilium to k8s
   shell: "cilium install --set k8sServiceHost={{ setupinfos.lb_vip }} --set k8sServicePort=6443 --set kubeProxyReplacement=true"
   args:

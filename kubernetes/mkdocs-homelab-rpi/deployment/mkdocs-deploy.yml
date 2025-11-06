@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mkdocs-homelab-rpi
+  name: mkdocs-homelab-rpi
+  namespace: mkdocs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mkdocs-homelab-rpi
+  template:
+    metadata:
+      labels:
+        app: mkdocs-homelab-rpi
+    spec:
+      containers:
+      - image: squidfunk/mkdocs-material:9.6.17
+        name: mkdocs
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 2000
+          runAsGroup: 2000
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+          - name: data
+            mountPath: /docs
+      securityContext:
+        fsGroup: 2000
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mkdocs-homelab-rpi-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mkdocs-homelab-rpi-data
+  namespace: mkdocs
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: csi-cephfs-sc
+  volumeMode: Filesystem

@@ -1,0 +1,81 @@
+- name: create tmp dir for values and resources
+  file:
+    path: /tmp/nginx-ingress-k8s
+    state: directory
+  when:
+    - op_mode == "install" or op_mode == "update"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: copy private server cert to destination
+  copy:
+    content: "{{ vault.certs.sspki_srv_crt | b64decode }}"
+    dest: "/tmp/nginx-ingress-k8s/tls.crt"
+  when:
+    - op_mode == "install" or op_mode == "update"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: copy private server key to destination
+  copy:
+    content: "{{ vault.certs.sspki_srv_key | b64decode }}"
+    dest: "/tmp/nginx-ingress-k8s/tls.key"
+  when:
+    - op_mode == "install" or op_mode == "update"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: create ingress-nginx namespace
+  shell: if [ "$(kubectl get ns ingress-nginx --ignore-not-found | wc -l)" == "0" ]; then kubectl create ns ingress-nginx; fi
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "install" 
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: create secret with certificates
+  shell: "kubectl -n ingress-nginx delete secret {{ setupinfos.k3s.ingress_cert }} --ignore-not-found && kubectl -n ingress-nginx create secret tls {{ setupinfos.k3s.ingress_cert }} --cert=/tmp/nginx-ingress-k8s/tls.crt --key=/tmp/nginx-ingress-k8s/tls.key"
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "install" or op_mode == "update"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: get template to dir
+  template:
+    src: "templates/nginx-ingress-controller.yml.j2"
+    dest: /tmp/nginx-ingress-k8s/nginx-ingress-controller.yml
+  when:
+    - op_mode == "install" or op_mode == "update"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: create secret with certificates
+  shell: "kubectl label node {{ item }} ingress-instance=active"
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "install" or op_mode == "update"
+    - ansible_host == setupinfos.k3s.master.registration_host
+  with_items:
+    - "{{ setupinfos.k3s.ingress_nodes }}"
+
+- name: create ingress controller
+  shell: "kubectl -n ingress-nginx apply -f /tmp/nginx-ingress-k8s/nginx-ingress-controller.yml"
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "install" or op_mode == "update"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: cleanup tmp dir for values and resources
+  file:
+    path: /tmp/nginx-ingress-k8s
+    state: absent
+  when:
+    - op_mode == "install" or op_mode == "update"
+    - ansible_host == setupinfos.k3s.master.registration_host

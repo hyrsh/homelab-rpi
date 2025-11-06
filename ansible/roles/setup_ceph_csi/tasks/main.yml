@@ -1,3 +1,8 @@
+- name: remove directory to avoid old states
+  file:
+    path: "{{ setupinfos.k3s.resource_dir }}/ceph-csi"
+    state: absent
+
 - name: create ceph resource dir
   file:
     path: "{{ setupinfos.k3s.resource_dir }}/ceph-csi"
@@ -22,6 +27,16 @@
 
 - name: create ceph-mgmt namespace
   shell: if [ "$(kubectl get ns ceph-mgmt --ignore-not-found | wc -l)" == "0" ]; then kubectl create ns ceph-mgmt; fi
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "deploy"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: apply ceph csi objects to kubernetes
+  shell: kubectl -n ceph-mgmt apply -f "{{ setupinfos.k3s.resource_dir }}/ceph-csi/*"
   args:
     executable: /bin/bash
   environment:

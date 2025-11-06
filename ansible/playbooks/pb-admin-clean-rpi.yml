@@ -1,4 +1,4 @@
-- hosts: hl_ceph
+- hosts: all
   become: yes
   become_method: sudo
   remote_user: ansible-admin

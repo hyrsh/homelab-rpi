@@ -92,8 +92,8 @@ spec:
               mountPath: /etc/ceph-csi-config/
             - name: keys-tmp-dir
               mountPath: /tmp/csi/keys
-            - name: ceph-csi-encryption-kms-config
-              mountPath: /etc/ceph-csi-encryption-kms-config/
+            #- name: ceph-csi-encryption-kms-config
+            #  mountPath: /etc/ceph-csi-encryption-kms-config/
         - name: csi-provisioner
           image: registry.k8s.io/sig-storage/csi-provisioner:v5.1.0
           args:
