@@ -51,7 +51,7 @@ setupinfos:
   internal_domain: "hyrsh.io"
   external_domain: "m0rpheus.ch"
   haproxy_domains:
-    - {domain: "homelab-rpi", ip: [ "homelab-rpi.hyrsh.io:443" ], info: "Homelab landing page", state: "down"}
+    - {domain: "homelab-rpi", ip: [ "homelab-rpi.hyrsh.io:443" ], info: "Homelab landing page", state: "up"}
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
   k3s:

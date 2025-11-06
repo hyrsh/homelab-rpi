@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: updater-homelab-rpi
+  namespace: mkdocs
+spec:
+  template:
+    metadata:
+    spec:
+      imagePullSecrets:
+        - name: harbor-secret
+      containers:
+      - image: harbor.hyrsh.io/own-images/git-cloner:v1.0-arm64
+        env:
+          - name: REPOSITORY_NAME
+            value: "homelab-rpi"
+          - name: REPOSITORY_USER
+            value: "hyrsh"
+          - name: TOKEN_FILE
+            value: ""
+          - name: SUBPATH
+            value: "mkdocs"
+        name: cloner
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 2000
+          runAsGroup: 2000
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+          - name: data
+            mountPath: /data
+      securityContext:
+        fsGroup: 2000
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mkdocs-homelab-rpi-data
+      restartPolicy: Never

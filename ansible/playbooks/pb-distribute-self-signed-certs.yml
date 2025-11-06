@@ -1,0 +1,16 @@
+- hosts: hl_master, hl_worker
+  gather_facts: False
+  become: True
+  become_method: sudo
+  remote_user: ansible
+  vars_files:
+    - "vault/av_homelab"
+  roles:
+    - expose_ssh_keys
+    - distribute_self_signed_certs
+  handlers:
+  - name: h-clean-exposed-keys
+    delegate_to: localhost
+    file:
+      name: /tmp/ansible_exposed_keys
+      state: absent

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: editor
+  name: editor
+  namespace: cs2-mkdocs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: editor
+  template:
+    metadata:
+      labels:
+        app: editor
+    spec:
+      imagePullSecrets:
+        - name: harbor-secret
+      containers:
+      - image: harbor.hyrsh.io/internal/cs2-updater:1.0
+        #image: debian:13
+        command: ["/bin/bash", "-c", "sleep infinity"]
+        name: editor-material
+        volumeMounts:
+          - name: data
+            mountPath: /docs
+      securityContext:
+        fsGroup: 2000
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: cs2-mkdocs-data

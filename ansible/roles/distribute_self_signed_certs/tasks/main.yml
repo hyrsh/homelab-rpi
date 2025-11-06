@@ -1,0 +1,32 @@
+# contains our private CA chain int+root
+- name: create private ca bundle
+  copy:
+    content: "{{ vault.certs.sspki_int_crt | b64decode }}"
+    dest: "/usr/local/share/ca-certificates/private-ca-bundle.crt"
+    mode: '0644'
+  when: op_mode == "install"
+
+- name: append private root cert to bundle
+  lineinfile:
+    path: "/usr/local/share/ca-certificates/private-ca-bundle.crt"
+    line: "{{  vault.certs.sspki_root_crt | b64decode }}"
+    mode: '0644'
+  when: op_mode == "install"
+
+- name: create k3s dir
+  file:
+    path: /etc/rancher/k3s
+    state: directory
+  when: op_mode == "install"
+
+- name: copy registry config to dir
+  copy:
+    src: templates/registries.yaml.j2
+    dest: /etc/rancher/k3s/registries.yaml
+  when: op_mode == "install"
+
+- name: OS update of certificates
+  shell: update-ca-certificates
+  args:
+    executable: /bin/bash
+  when: op_mode == "install"
