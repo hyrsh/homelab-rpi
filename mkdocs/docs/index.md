@@ -4,6 +4,8 @@ This is a beginners guide to create a homelab using Raspberry Pi 5 SBC's to run 
 
 **Everything will be publicly usable for everyone.**
 
+> The repo: https://github.com/hyrsh/homelab-rpi
+
 Since the topic of Kubernetes kind of exploded since 2016 I wanted to provide a general base of knowledge and support to handle bare-metal installations.
 
 This homelab and its ideas can be extended to a full production-grade setup and I will mention the missing parts that we do not need in a homelab environment.
