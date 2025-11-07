@@ -2,6 +2,8 @@
 
 MKDocs is the software you see right now. It is a webserver with the ability to present markdown files in a nice and simple manner.
 
+<hr>
+
 ## Setup
 
 I added the deployment file under kubernetes/mkdocs-homelab-rpi/deployment/mkdocs-deploy.yml which is a pretty generic deployment. The trick is to have an updated job, that gets your content and puts it in the same directory your MKDocs expects it.

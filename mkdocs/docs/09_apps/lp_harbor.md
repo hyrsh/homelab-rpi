@@ -2,6 +2,8 @@
 
 Harbor is a container registry that you can host yourself. I use it for custom images and helm charts.
 
+<hr>
+
 ## Setup
 
 The setup of Harbor is done via Helm. I added the values.yml file with my settings under /kubernetes/helm-harbor so you can use it as reference.

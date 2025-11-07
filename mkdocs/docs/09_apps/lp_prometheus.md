@@ -2,6 +2,8 @@
 
 Prometheus is a metric scraper with a time-series database to store metrics about given endpoints.
 
+<hr>
+
 ## Setup
 
 The setup of Prometheus is done via Helm. I added the values.yml file with my settings under /kubernetes/helm-prometheus so you can use it as reference.
@@ -16,6 +18,7 @@ kubectl create ns prometheus
 
 helm -n prometheus install prometheus oci://ghcr.io/prometheus-community/charts/prometheus -f values.yml
 ```
+<hr>
 
 ## Troubleshooting
 
