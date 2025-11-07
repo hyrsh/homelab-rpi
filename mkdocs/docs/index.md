@@ -1,5 +1,10 @@
 # Homelab with RPI 5
 
+> Disclaimer:
+
+> - the documentation is about 75% ready and is still subject to change
+> - if you want something specific explained in more depth just open a github issue
+
 This is a beginners guide to create a homelab using Raspberry Pi 5 SBC's to run a stable Kubernetes cluster with Ceph storage.
 
 **Everything will be [publicly](https://github.com/hyrsh/homelab-rpi) usable for everyone.**
