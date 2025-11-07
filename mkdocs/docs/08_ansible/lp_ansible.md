@@ -20,6 +20,8 @@ I use a structure that is not the official and "correct" way, since the official
 
 My way is something I call "self-contained" Ansible. It does not rely on external or pre-configured roles and variables but has everything within one "main directory" to execute all respective playbooks (this is the name of the file that describes what Ansible should do). With this approach all my Ansible projects become portable and can be shared.
 
+I also do not enter variables per host in the inventory. I do this via the group_vars/all because I want all config in one place (even if the final file is large and messy).
+
 >*This information uses terms not yet explained so maybe come back to it later:*
 
 >There is one thing that is "unusual" in this setup. In all of my playbooks there is a role called ["expose_ssh_keys"](https://github.com/hyrsh/homelab-rpi/blob/main/ansible/roles/expose_ssh_keys/tasks/main.yml) and sadly it is necessary to add. This role converts the private ssh keys of the respective host (or group of hosts) that is called within a playbook from our vault to a file at "/tmp/ansible_exposed_keys/<HOST>.ssh_key". After the playbook run a post-run handler gets invoked to delete this directory so the keys do not exist on your machine anymore.
@@ -56,7 +58,7 @@ myblock1:
   myvar1: "hello"
 ```
 
-Ansible uses "variable sourcing" which is a way to consume custom configuration from a file, environment variable or extra-variable. The default path for ansible to look for such files is in the "group_vars" directory ([and many more places](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#understanding-variable-precedence), but we keep it simple for now).
+Ansible uses "variable sourcing" which is a way to consume custom configuration from a file, environment variables or extra-variables. The default path for ansible to look for such files is in the "group_vars" directory ([and many more places](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#understanding-variable-precedence), but we keep it simple for now).
 
 The variables shown in the */ansible/group_vars/all* file can be accessed with the "dot-notation" (e.g. myblock1.myvar1) representing grouping/hierarchical structures. This is important, since we can make our instructions (tasks in roles) highly dynamic (we want that!).
 
@@ -162,6 +164,39 @@ ansible-playbook -J playbook.yml
 ```
 
 In our playbook we included the vault file with "vars_files" by its relative path and extended our debug role with the variable "vault.mysecret". To execute this playbook we added the flag "-J" which is a shorthand flag for asking the vault password to decrypt it.
+
+<hr>
+
+### Inventory
+
+`File: /ansible/inventory.yml`
+```YAML
+[group1]
+host1
+host2
+host3
+
+[web]
+webserver1
+webserver2
+```
+
+The inventory file in Ansible is a control mechanism that can be used to group and address hosts.
+
+In this inventory we have two groups "group1" and "web". Names of the groups are completely arbitrary and can be treated as labels to execute a playbook on multiple hosts.
+
+`Example: /ansible/playbook.yml`
+```YAML
+- hosts: group1
+  roles:
+    - debug
+```
+`Run playbook with inventory`
+```shell
+ansible-playbook -i inventory.yml playbook.yml
+```
+
+This playbook would run on hosts "host1,host2,host3".
 
 <hr>
 

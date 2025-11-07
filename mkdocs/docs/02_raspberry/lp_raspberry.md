@@ -42,7 +42,7 @@ I used the official tool called ["Raspberry Pi Imager"](https://www.raspberrypi.
 
 <empty>
 
-> ⚠️ Production note:
+> &#9888 Production note:
 
 > The OS distribution of hosts is dependent on your setup and can range from [PXE](https://protechgurus.com/vmware-virtual-machine-using-pxe-boot-wds/) to [Golden Images](https://www.redhat.com/en/topics/linux/what-is-a-golden-image) to [Kickstart](https://en.wikipedia.org/wiki/Kickstart_(Linux)) deployments. The initial SSH access should not be a human entity but a robot account that automates user management later on via pipelines and/or IAM policies, rules, groups and domain connections
 
@@ -67,7 +67,7 @@ export SSHPRIV=/opt/mykeys/myuser.private
 ssh -i $SSHPRIV ansible-admin@myhost
 ```
 
-> ⚠️ Production note:
+> &#9888 Production note:
 
 > Users <span style="color:red"><b>must not</b></span> have direct access via SSH to machines running in any stage. The best practice is to setup a jumphost that requires the user to strongly authenticate (Domain + MFA) and is strictly regulated through corporate administration. On that jumphost only minimal permissions are granted and SSH connections per stage are only allowed from that source IP. Consider setting up multiple jumphosts per staged environment to address the "separation of concerns" concept and minimize the blast radius in case of a breach
 

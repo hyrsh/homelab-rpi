@@ -1,3 +1,6 @@
+kubelet-arg:
+  - "image-gc-high-threshold=50"
+  - "image-gc-low-threshold=45"
 write-kubeconfig-mode: "0644"
 tls-san:
   - "{{ setupinfos.k3s.master.san_domain }}"
