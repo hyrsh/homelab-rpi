@@ -37,6 +37,11 @@ nav:
       - Containers: 03_kubernetes/01_containers.md
       - Overview: 03_kubernetes/00_overview.md
       - Setup: 03_kubernetes/02_setup.md
+      - Apps:
+          - Harbor: 09_apps/lp_harbor.md
+          - Grafana: 09_apps/lp_grafana.md
+          - Prometheus: 09_apps/lp_prometheus.md
+          - MKDocs: 09_apps/lp_mkdocs.md
   - Material: 05_material/lp_material.md
   - TheBox: 06_thebox/lp_thebox.md
 
