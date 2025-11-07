@@ -33,7 +33,7 @@ cd /myapps/app1
 ```shell
 vim Dockerfile
 ```
-`Dockerfile`
+`Content of the Dockerfile`
 ```Dockerfile
 FROM scratch
 COPY ./mybinary /
@@ -44,7 +44,9 @@ CMD ["/mybinary]
 ```shell
 docker build -t myimage:1.0 .
 ```
+
 The "-t" flag determines how your image is named and the separator ":" is used to give our image a readable version "1.0".
+
 `Look in your local docker image registry for the image`
 ```shell
 docker images
@@ -54,3 +56,20 @@ myimage        1.0    59c8f13c04cd   10 seconds ago  5MB
 ```
 
 This image can now be uploaded to your personal DockerHub account or an alternative registry (e.g. Harbor, Artifactory, ACR, ECR, GCR). From there anyone running Docker can use that image to run your image on their host.
+
+`Example for uploading to my Harbor registry at https://harbor.hyrsh.io with podman`
+```shell
+podman login harbor.hyrsh.io
+
+podman tag myimage:1.0 harbor.hyrsh.io/my-images/myimage:1.0
+
+podman push harbor.hyrsh.io/my-images/myimage:1.0
+
+podman logout harbor.hyrsh.io
+```
+
+1. First we have to login to our registry (in my case I can use my credentials for Harbor)
+2. We have to change the image tag with "podman tag" to have a path were the image should be located in the registry
+    a. Here I use the path "my-images" (a project that I created in Harbor via the UI)
+3. We push the image to the registry
+4. We logout to clear our credentials for harbor.hyrsh.io
