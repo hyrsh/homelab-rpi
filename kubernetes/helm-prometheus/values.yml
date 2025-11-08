@@ -199,7 +199,7 @@ server:
     repository: quay.io/prometheus/prometheus
     #repository: prom/prometheus
     # if not set appVersion field from Chart.yaml is used
-    tag: "v3.7.3"
+    tag: ""
     # When digest is set to a non-empty value, images will be pulled by digest (regardless of tag value).
     digest: ""
     pullPolicy: IfNotPresent
@@ -228,7 +228,7 @@ server:
 
   ## External URL which can access prometheus
   ## Maybe same with Ingress host name
-  baseURL: "prometheus.hyrsh.io"
+  baseURL: ""
 
   ## Additional server container environment variables
   ##
@@ -851,6 +851,34 @@ serverFiles:
       - /etc/config/alerts
 
     scrape_configs:
+      - job_name: hl-lb-01
+        static_configs:
+        - targets:
+          - 192.168.1.210:9100
+      - job_name: hl-lb-02
+        static_configs:
+        - targets:
+          - 192.168.1.211:9100
+      - job_name: hl-ceph-01
+        static_configs:
+        - targets:
+          - 192.168.1.30:9100
+      - job_name: hl-ceph-02
+        static_configs:
+        - targets:
+          - 192.168.1.31:9100
+      - job_name: hl-ceph-03
+        static_configs:
+        - targets:
+          - 192.168.1.32:9100
+      - job_name: hl-ceph-04
+        static_configs:
+        - targets:
+          - 192.168.1.33:9100
+      - job_name: hl-ceph-05
+        static_configs:
+        - targets:
+          - 192.168.1.34:9100
       - job_name: prometheus
         static_configs:
           - targets:

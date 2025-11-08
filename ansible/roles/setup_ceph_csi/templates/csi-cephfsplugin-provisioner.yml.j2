@@ -43,10 +43,19 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       serviceAccountName: cephfs-csi-provisioner
       priorityClassName: system-cluster-critical
+      nodeSelector:
+        type: worker
       containers:
         - name: csi-cephfsplugin
           # for stable functionality replace canary with latest release version
           image: quay.io/cephcsi/cephcsi:v3.15.0-arm64
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1024Mi
           args:
             - "--nodeid=$(NODE_ID)"
             - "--type=cephfs"
@@ -96,6 +105,13 @@ spec:
             #  mountPath: /etc/ceph-csi-encryption-kms-config/
         - name: csi-provisioner
           image: registry.k8s.io/sig-storage/csi-provisioner:v5.1.0
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1024Mi
           args:
             - "--csi-address=$(ADDRESS)"
             - "--v=1"
@@ -123,6 +139,13 @@ spec:
               mountPath: /csi
         - name: csi-attacher
           image: registry.k8s.io/sig-storage/csi-attacher:v4.8.0
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1024Mi
           args:
             - "--v=1"
             - "--csi-address=$(ADDRESS)"
@@ -146,6 +169,13 @@ spec:
               mountPath: /csi
         - name: csi-resizer
           image: registry.k8s.io/sig-storage/csi-resizer:v1.13.1
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1024Mi
           args:
             - "--csi-address=$(ADDRESS)"
             - "--v=1"
@@ -172,6 +202,13 @@ spec:
               mountPath: /csi
         - name: csi-snapshotter
           image: registry.k8s.io/sig-storage/csi-snapshotter:v8.2.0
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1024Mi
           args:
             - "--csi-address=$(ADDRESS)"
             - "--v=1"
@@ -197,6 +234,13 @@ spec:
               mountPath: /csi
         - name: liveness-prometheus
           image: quay.io/cephcsi/cephcsi:v3.15.0-arm64
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1024Mi
           args:
             - "--type=liveness"
             - "--endpoint=$(CSI_ENDPOINT)"

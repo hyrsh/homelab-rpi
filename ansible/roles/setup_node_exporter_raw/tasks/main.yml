@@ -1,0 +1,47 @@
+- name: create prometheus directory
+  file:
+    path: /opt/prometheus
+    state: directory
+  when: op_mode == "install"
+
+- name: get node-exporter binary
+  unarchive:
+    src: "https://github.com/prometheus/node_exporter/releases/download/v1.10.2/node_exporter-1.10.2.linux-arm64.tar.gz"
+    dest: /opt/prometheus
+    remote_src: yes
+  when: op_mode == "install"
+
+- name: copy binary to dir
+  copy:
+    src: /opt/prometheus/node_exporter-1.10.2.linux-arm64/node_exporter
+    dest: /opt/prometheus/node-exporter
+    remote_src: yes
+    mode: '0755'
+    owner: root
+    group: root
+  when: op_mode == "install"
+
+- name: cleanup tarball dir
+  file:
+    path: /opt/prometheus/node_exporter-1.10.2.linux-arm64
+    state: absent
+  when: op_mode == "install"
+
+- name: get systemd unit to dir
+  template:
+    src: "templates/node-exporter.service.j2"
+    dest: /etc/systemd/system/node-exporter.service
+  when: op_mode == "install"
+
+- name: start node exporter
+  service:
+    name: node-exporter
+    state: restarted
+    enabled: yes
+  when: op_mode == "install"
+
+- name: cleanup directory
+  file:
+    path: /opt/prometheus
+    state: absent
+  when: op_mode == "uninstall"
