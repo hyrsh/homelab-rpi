@@ -286,11 +286,20 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/allow-credentials: "true"
-    nginx.ingress.kubernetes.io/cors-allow-headers: X-Forwarded-For, Origin, Accept, Authorization, Content-Type
+    nginx.ingress.kubernetes.io/cors-allow-headers: X-Forwarded-Host, X-Forwarded-For, Origin, Accept, Authorization, Content-Type, Host
     nginx.ingress.kubernetes.io/cors-allow-methods: GET, PUT, POST, DELETE, UPDATE, OPTIONS
     nginx.ingress.kubernetes.io/cors-allow-origin: https://grafana.hyrsh.io, https://grafana.m0rpheus.ch
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '3600'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '3600'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '3600'
+    nginx.ingress.kubernetes.io/enable-websocket: "true"
+    nginx.ingress.kubernetes.io/proxy-buffering: 'off'
+    nginx.ingress.kubernetes.io/proxy-request-buffering: 'off'
+    #nginx.ingress.kubernetes.io/configuration-snippet: |
+    #  proxy_set_header Upgrade $http_upgrade;
+    #  proxy_set_header Connection "Upgrade";
   labels: {}
   path: /
 
@@ -894,6 +903,15 @@ grafana.ini:
     url: https://grafana.net
   server:
     domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ tpl (.Values.ingress.hosts | first) . }}{{ else }}''{{ end }}"
+    root_url: "https://grafana.hyrsh.io"
+  security:
+    csrf_trusted_domains: "grafana.m0rpheus.ch, grafana.hyrsh.io"
+    csrf_trusted_origins: "https://grafana.m0rpheus.ch, https://grafana.hyrsh.io"
+    csrf_additional_headers: X-Forwarded-Host
+    allow_embedding: true
+  live:
+    allowed_origins: "wss://grafana.m0rpheus.ch, https://grafana.m0rpheus.ch, https://grafana.hyrsh.io"
+    max_connections: 100
 ## grafana Authentication can be enabled with the following values on grafana.ini
  # server:
       # The full public facing url you use in browser, used for redirects and emails
