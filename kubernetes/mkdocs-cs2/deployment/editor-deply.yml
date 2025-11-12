@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: editor
+  name: editor
+  namespace: mkdocs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: editor
+  template:
+    metadata:
+      labels:
+        app: editor
+    spec:
+      imagePullSecrets:
+        - name: harbor-secret
+      containers:
+      - image: harbor.hyrsh.io/own-images/git-cloner:v1.1-arm64
+        #image: debian:13
+        command: ["/bin/bash", "-c", "sleep infinity"]
+        name: editor-material
+        volumeMounts:
+          - name: data
+            mountPath: /docs
+          - name: secret
+            mountPath: /sec/token
+      securityContext:
+        fsGroup: 2000
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mkdocs-cs2-data
+        - name: secret
+          secret:
+            secretName: mkdocs-cs2

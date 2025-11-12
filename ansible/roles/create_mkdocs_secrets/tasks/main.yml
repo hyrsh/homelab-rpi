@@ -1,0 +1,9 @@
+- name: create cs2 token secret
+  shell: "kubectl -n mkdocs delete secret mkdocs-cs2 --ignore-not-found && kubectl -n mkdocs create secret generic mkdocs-cs2 --from-literal=key={{ vault.mkdocs.cs2 }}"
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "deploy"
+    - ansible_host == setupinfos.k3s.master.registration_host

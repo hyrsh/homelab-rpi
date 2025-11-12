@@ -51,8 +51,9 @@ setupinfos:
   internal_domain: "hyrsh.io"
   external_domain: "m0rpheus.ch"
   haproxy_domains:
-    - {domain: "homelab-rpi", ip: [ "homelab-rpi.hyrsh.io:443" ], info: "Homelab landing page", state: "up"}
-    - {domain: "grafana", ip: [ "grafana.hyrsh.io:443" ], info: "Metric visualization", state: "up"}
+    - {domain: "homelab-rpi", ip: [ "homelab-rpi.hyrsh.io:443" ], info: "Homelab Landing Page", state: "up"}
+    - {domain: "grafana", ip: [ "grafana.hyrsh.io:443" ], info: "Metric Visualization", state: "up"}
+    - {domain: "cs2", ip: [ "cs2.hyrsh.io:443" ], info: "Counter-Strike 2 Guides", state: "up"}
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
   k3s:

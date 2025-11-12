@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: updater-homelab-rpi
+  name: updater-cs2
   namespace: mkdocs
 spec:
   template:
@@ -13,13 +13,13 @@ spec:
       - image: harbor.hyrsh.io/own-images/git-cloner:v1.2-arm64
         env:
           - name: REPOSITORY_NAME
-            value: "homelab-rpi"
+            value: "cs2-mkdocs"
           - name: REPOSITORY_USER
             value: "hyrsh"
           - name: TOKEN_FILE
-            value: ""
+            value: "/sec/token/key"
           - name: SUBPATH
-            value: "mkdocs"
+            value: "documents"
         name: cloner
         securityContext:
           runAsNonRoot: true
@@ -33,10 +33,15 @@ spec:
         volumeMounts:
           - name: data
             mountPath: /data
+          - name: secret
+            mountPath: /sec/token
       securityContext:
         fsGroup: 2000
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: mkdocs-homelab-rpi-data
+            claimName: mkdocs-cs2-data
+        - name: secret
+          secret:
+            secretName: mkdocs-cs2
       restartPolicy: Never
