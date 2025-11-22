@@ -57,14 +57,14 @@ This does imply that the API server (and the database it uses to store all infor
 
 All Kubernetes flavours have the same order of bootstrapping:
 
-1) Setup the database with its certificates (here we use ETCD)
+1. Setup the database with its certificates (here we use ETCD)
     - Cluster the database if you want to go for a HA setup
-2) Setup the Control Plane (API Server, Controller Manager, Scheduler)
+2. Setup the Control Plane (API Server, Controller Manager, Scheduler)
     - If clustered, do this on all master nodes with respective configs
     - If you do want the Control Plane to carry workloads also install the kubelet
     - If you don't want to use a kube-proxy replacement, install kube-proxy
-3) Setup worker nodes (kubelet, optional kube-proxy)
-4) Join worker nodes to the Control Plane
+3. Setup worker nodes (kubelet, optional kube-proxy)
+4. Join worker nodes to the Control Plane
     - If done manually you have to approve the CSR on a master node for each worker
 
 You can run Kubernetes with only one master node that carries the Control Plane (API Server, Controller Manager, Scheduler) and the worker components (kubelet, optional kube-proxy).
@@ -271,6 +271,29 @@ users:
 - name: default #reference to the kubeconfig user --> not the RBAC service account
   user:
     token: <redacted> #<----------- TOKEN GOES HERE
+```
+
+Now you can use your kubeconfig on your Ansible workstation.
+
+```shell
+hyrsh@workstation:~# kubectl get nodes
+```
+`Output`
+```YAML
+NAME           STATUS   ROLES                       AGE   VERSION
+hl-master-01   Ready    control-plane,etcd,master   17d   v1.33.5+k3s1
+hl-master-02   Ready    control-plane,etcd,master   17d   v1.33.5+k3s1
+hl-master-03   Ready    control-plane,etcd,master   17d   v1.33.5+k3s1
+hl-worker-01   Ready    <none>                      17d   v1.33.5+k3s1
+hl-worker-02   Ready    <none>                      17d   v1.33.5+k3s1
+hl-worker-03   Ready    <none>                      17d   v1.33.5+k3s1
+hl-worker-04   Ready    <none>                      17d   v1.33.5+k3s1
+hl-worker-05   Ready    <none>                      17d   v1.33.5+k3s1
+hl-worker-06   Ready    <none>                      17d   v1.33.5+k3s1
+hl-worker-07   Ready    <none>                      17d   v1.33.5+k3s1
+hl-worker-08   Ready    <none>                      17d   v1.33.5+k3s1
+hl-worker-09   Ready    <none>                      17d   v1.33.5+k3s1
+hl-worker-10   Ready    <none>                      17d   v1.33.5+k3s1
 ```
 
 <hr>
