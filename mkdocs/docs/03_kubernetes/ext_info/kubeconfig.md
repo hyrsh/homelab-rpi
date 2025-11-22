@@ -4,6 +4,14 @@ The admin config from k3s has (like all admin configs) a certificate instead of 
 
 So the consequence is that if it leaks you have to recreate the k8s API server certificate which basically means you have to rebuild your cluster or precisely change the current certificate in use.
 
+To avoid that I like to create RBAC service accounts and tokens that don't expire. Since I do not have any OIDC provider up & running (yet) this is most basic access that can be easily revoked by simply deleting the secret that holds the token.
+
+This is considered bad practice in production so keep that in mind and read up on the [authentication methods](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#authentication-methods)!
+
+## Manually Change The API Server Certificate
+
+**This is a dangerous operation!**
+
 To change the certificate in a running cluster we have to consider a few things:
 
 - All system components require the public CA of the API server
