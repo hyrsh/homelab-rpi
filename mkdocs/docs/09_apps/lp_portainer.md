@@ -1,6 +1,6 @@
 ## Info
 
-[CloudNativePG (CNPG)](https://cloudnative-pg.io/documentation/1.27/) is a management tool with a web ui for Kubernetes clusters.
+[Portainer](https://docs.portainer.io/start/install-ce/server/kubernetes/baremetal) is a management tool with a web ui for Kubernetes clusters.
 
 It is integrated with Helm and also provides further features such as application updates via UI or a web-based kubectl shell.
 
