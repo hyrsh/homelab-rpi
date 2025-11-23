@@ -43,6 +43,7 @@ nav:
           - Prometheus: 09_apps/lp_prometheus.md
           - MKDocs: 09_apps/lp_mkdocs.md
           - CNPG: 09_apps/lp_cnpg.md
+          - Portainer (WebUI): 09_apps/lp_portainer.md
   - Material: 05_material/lp_material.md
   - TheBox: 06_thebox/lp_thebox.md
 
