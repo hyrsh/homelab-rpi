@@ -264,18 +264,22 @@ setupinfos:
   lb_vip: "192.168.1.13"
   lb_cert_dir: "/etc/haproxy/own-certs"
   ceph_master: [ "hl-ceph-01", "hl-ceph-05" ]
-  ingress_nodes: [ "hl-worker-05", "hl-worker-10" ]
-  internal_domain: "mycoolinternaldomain.io"
-  external_domain: "mycoolpublicdomain.nz"
+  ceph_monitor: [ "192.168.1.30", "192.168.1.31", "192.168.1.34" ]
+  internal_domain: "hyrsh.io"
+  external_domain: "m0rpheus.ch"
   haproxy_domains:
-    - {domain: "myexposed-url", ip: "192.168.1.3", info: "Page Info", state: "down"} <-- state can be "up" or "down" for maintenance
+    - {domain: "homelab-rpi", ip: [ "homelab-rpi.hyrsh.io:443" ], info: "Homelab Landing Page", state: "up"}
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
   k3s:
     cilium_version: "v0.18.8"
     cilium_arch: "arm64"
+    ingress_cert: "wildcard-hyrsh-io"
+    ingress_nodes: [ "hl-worker-05", "hl-worker-10" ]
+    ingress_instances: 2
     helm_version: "v3.19.0"
     helm_arch: "arm64"
+    resource_dir: "/opt/k8s_resources"
     master:
       san_domain: "k3s-master.hyrsh.io"
       registration_host: "hl-master-01"
@@ -361,7 +365,18 @@ vault:
    ssh_key_private: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
    ssh_key_public: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
    fsid: "coolFSIDofCeph" #raw
+   client_k8scephfs_key: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
   haproxy:
     hidden_domains:
-      - {domain: "mycooldomain", ip: ["192.168.1.2:8443"], info: "My coold site", state: "up"}
+      - {domain: "mycooldomain", ip: ["default"], info: "My coold site", state: "up", chk: "none", origin: "no"}
+      - {domain: "ceph", ip: ["ceph-mgr0.hyrsh.io:8443","ceph-mgr1.hyrsh.io:8443"], info: "Ceph Dashboard", state: "up", chk: "httpchk-200", origin: "no"}
+  mkdocs:
+    cs2: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+  gitlab:
+    app_user_pw: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    app_user_name: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    superuser_pw: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    superuser_name: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    cephrgw_key_id: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
+    cephrgw_secret_key: "Q29vbCBiYXNlNjQgZW5jb2RlZCBzdHJpbmc=" #b64
 ```

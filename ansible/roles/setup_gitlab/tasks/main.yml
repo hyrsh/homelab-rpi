@@ -1,0 +1,41 @@
+- name: remove directory to avoid old states
+  file:
+    path: "{{ setupinfos.k3s.resource_dir }}/gitlab"
+    state: absent
+
+- name: create gitlab resource dir
+  file:
+    path: "{{ setupinfos.k3s.resource_dir }}/gitlab"
+    state: directory
+
+- name: get templates to dir
+  template:
+    src: "templates/{{ item }}.j2"
+    dest: "{{ setupinfos.k3s.resource_dir }}/gitlab/{{ item }}"
+    mode: '0600'
+    group: root
+    owner: root
+  with_items:
+    - gitlab-db-cluster.yml
+    - gitlab-redis.yml
+    - values.yml
+
+- name: create gitlab namespace
+  shell: if [ "$(kubectl get ns gitlab --ignore-not-found | wc -l)" == "0" ]; then kubectl create ns gitlab; fi
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "deploy"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: apply gitlab objects to kubernetes
+  shell: kubectl -n gitlab apply -f "{{ setupinfos.k3s.resource_dir }}/gitlab/*"
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "deploy"
+    - ansible_host == setupinfos.k3s.master.registration_host
