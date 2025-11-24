@@ -36,6 +36,7 @@ nav:
   - Kubernetes:
       - Containers: 03_kubernetes/01_containers.md
       - Overview: 03_kubernetes/00_overview.md
+      - Design: 03_kubernetes/03_design.md
       - Setup: 03_kubernetes/02_setup.md
       - Apps:
           - Harbor: 09_apps/lp_harbor.md
