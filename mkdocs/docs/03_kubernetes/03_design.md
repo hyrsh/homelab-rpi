@@ -13,7 +13,7 @@ The API server does handle all requests and writes the given state to the core d
 `Idempotency, e.g. trying to create the same namespace twice`
 ```shell
 kubectl create ns mynamespace
-namespace/gitlab created
+namespace/mynamespace created
 kubectl create ns mynamespace
 Error from server (AlreadyExists): namespaces "mynamespace" already exists
 ```
