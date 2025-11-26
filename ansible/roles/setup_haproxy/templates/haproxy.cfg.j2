@@ -55,6 +55,9 @@ frontend gateway_01
 
 frontend gateway_02
   bind :443 ssl crt {{setupinfos.lb_cert_dir}}/private-server-bundle.pem
+  stick-table  type ipv6  size 100k  expire 30s  store http_req_rate(10s)
+  http-request track-sc0 src
+  http-request deny deny_status 429 if { sc_http_req_rate(0) gt 80 }
   mode http
   maxconn {{ setupinfos.max_connections_haproxy }}
   timeout client 10000
