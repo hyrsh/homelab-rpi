@@ -10,11 +10,23 @@ body {
   background-size: contain;
   background-position: center;
 }
-p, h1 {
+p {
+  color: orange;
+  text-align: center;
+  font-size: 32px;
+}
+h1 {
   color: lightblue;
   text-align: center;
   size: 48px;
   background-color: black;
+  vertical-align: middle;
+}
+h2 {
+  color: lightblue;
+  text-align: center;
+  size: 32px;
+  background-color: rgba(50, 50, 50, 0.9);
   vertical-align: middle;
 }
 table {
@@ -41,11 +53,24 @@ a:link {
   height: 90vh;
   align-content: center; /* vertical centering*/
 }
+.banner {
+  Width: 80vw;
+  Height: max-content;
+  border: solid;
+  border-color: orange;
+  border-radius: 1rem;
+  border-width: 2px;
+  margin: auto;
+  background-color: rgba(50, 50, 50, 0.9);
+  align-content: center;
+}
 </style>
 <title>m0rpheus</title>
 </head>
 <body>
   <div class="section" id="section1">
+    <h1 style="color:orange;">[INFO]</h1>
+    <div class="banner"><p>{{setupinfos.gen_infos}}</p></div>
     <h1>[ LINKS & STATES ]</h1>
     <table>
       <tr>

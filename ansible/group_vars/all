@@ -50,10 +50,12 @@ setupinfos:
   ceph_monitor: [ "192.168.1.30", "192.168.1.31", "192.168.1.34" ]
   internal_domain: "hyrsh.io"
   external_domain: "m0rpheus.ch"
+  gen_infos: "CCTV is down until authorization is active."
   haproxy_domains:
     - {domain: "homelab-rpi", ip: [ "homelab-rpi.hyrsh.io:443" ], info: "Homelab Landing Page", state: "up"}
     - {domain: "grafana", ip: [ "grafana.hyrsh.io:443" ], info: "Metric Visualization", state: "up"}
     - {domain: "cs2", ip: [ "cs2.hyrsh.io:443" ], info: "Counter-Strike 2 Guides", state: "up"}
+    - {domain: "cctv", ip: [ "cctv.hyrsh.io:443" ], info: "Watch the Cloud via CCTV", state: "down"}
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
   k3s:

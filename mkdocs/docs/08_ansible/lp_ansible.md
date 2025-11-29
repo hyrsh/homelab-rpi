@@ -267,6 +267,7 @@ setupinfos:
   ceph_monitor: [ "192.168.1.30", "192.168.1.31", "192.168.1.34" ]
   internal_domain: "hyrsh.io"
   external_domain: "m0rpheus.ch"
+  gen_infos: "Your custom info message."
   haproxy_domains:
     - {domain: "homelab-rpi", ip: [ "homelab-rpi.hyrsh.io:443" ], info: "Homelab Landing Page", state: "up"}
   max_connections_haproxy: "100"
