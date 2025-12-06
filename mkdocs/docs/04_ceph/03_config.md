@@ -73,3 +73,70 @@ You can see the new created storage pools under the "Pools" section:
 ![image](assets/ceph_pool_autoscale.jpg)
 
 <hr>
+
+## Creating The Ceph RGW
+
+The creation of the RADOS gateway, at least on my behalf, is tied to selected nodes to distribute load across them.
+
+This is done via the cephadm-shell.
+
+`Set arbitrary label to the nodes`
+```shell
+ceph orch host label add hl-ceph-03 rgw
+ceph orch host label add hl-ceph-04 rgw
+```
+The setup of the RGW is done via a TLS YAML file (see next chapter).
+
+<hr>
+
+### TLS Setup
+
+The TLS setup on Squid (v19) was **not** like described in the documentation:
+
+  - the field "certificate_source: inline" was not recognized
+  - the "certmgr" module to manually setup the certificates was non-existent
+  - the fields "ssl_cert" and "ssl_key" were not recognized
+  - the default RGW setup command did start the services but **not** the listening ports (I checked the machines with ss -lptn)
+    - cmd: ceph orch apply rgw rgw01 '--placement=label:rgw count-per-host:1' --port=1337
+    - after that I tried to apply the YAML file but it did not work properly
+
+So I had to do some digging and found a valid YAML specification to get the RGW up and running.
+
+`inline-certs.yml`
+```YAML
+service_type: rgw
+service_id: rgw01
+placement:
+  label: rgw
+  count_per_host: 1
+spec:
+  ssl: true
+  rgw_frontend_port: 1337
+  rgw_frontend_ssl_certificate: |
+    -----BEGIN PRIVATE KEY-----
+    PEM DATA
+    -----END PRIVATE KEY-----
+    -----BEGIN CERTIFICATE-----
+    PEM DATA
+    -----END CERTIFICATE-----
+```
+
+In this case our RGW will be called "rgw01" our orchestrator service therefore is "rgw.rgw01" and we used the labels give to our nodes to distribute the daemons.
+
+The certificates I used are my private PKI ones.
+
+<hr>
+
+### Ingress Traffic Setup
+
+I did not use the traditional traffic setup for HA as desrcibed in the docs of Ceph because I already have that kind of setup running for the whole cluster.
+
+All I did was to assign a hostname to my chosen nodes (hl-ceph-03 and hl-ceph-04) and created a DNS entry on my router for a general point of connection (cephrgw.hyrsh.io) for all my object storage clients. The HAProxy configuration was set accordingly.
+
+<hr>
+
+### RGW Pool Creation
+
+WIP
+
+<hr>
