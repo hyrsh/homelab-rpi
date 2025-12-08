@@ -23,17 +23,17 @@ ceph osd pool create k8s_metadata 256 256 replicated --autoscale-mode=on
 
 Our name of the pool is "k8s_metadata" and it has initially 256 placement groups with the possibility to expand this number when storage grows. As this time of writing only replicated metadata pools are possible (erasure coded pools would be nicer).
 
-To set the size we can start with 20GB.
+To set the size we can use the "set-quota" command (e.g. here we set the size to 20GB, units are in bytes).
 
 ```shell
 ceph osd pool set-quota k8s_metadata max_bytes 20000000000
 ```
 
-> Information:
+> The set-quota command can always be used to expand or shrink osd pools
 
-> - The set-quota command can always be used to expand or shrink osd pools
+Now we have to create a pool that holds our actual data. Here we set the size to 250GB.
 
-Now we have to create a pool that holds our actual data. For the start we set the size to 250GB.
+> The bulk flag is about [placement-group scaling](https://docs.ceph.com/en/latest/rados/operations/placement-groups/#managing-pools-that-are-flagged-with-bulk) of a pool.
 
 ```shell
 ceph osd pool create k8s_data 256 256 replicated --autoscale-mode=on
@@ -125,6 +125,13 @@ In this case our RGW will be called "rgw01" our orchestrator service therefore i
 
 The certificates I used are my private PKI ones.
 
+Since we used self-signed certificates on the RGW instances we need to disable the check from the dashboard:
+```shell
+ceph dashboard set-rgw-api-ssl-verify False
+```
+
+See the [explanation of enabling the RGW frontend](https://documentation.suse.com/ses/7.1/html/ses-all/dashboard-initial-configuration.html#dashboard-ogw-enabling) and read through it.
+
 <hr>
 
 ### Ingress Traffic Setup
@@ -137,6 +144,73 @@ All I did was to assign a hostname to my chosen nodes (hl-ceph-03 and hl-ceph-04
 
 ### RGW Pool Creation
 
-WIP
+At first we have to create a rule on how data is stored in our RGW bucket.
+
+> These rules are set via [CRUSH rule profiles](https://docs.ceph.com/en/latest/rados/operations/crush-map/#creating-a-rule-for-an-erasure-coded-pool)
+
+`Enter cephadm shell`
+`Check current profiles`
+```shell
+ceph osd erasure-code-profile ls
+```
+`Create a new profile`
+```shell
+ceph osd erasure-code-profile set ecprofile k=2 m=2 plugin=jerasure technique=reed_sol_van crush-failure-domain=host
+```
+
+This profile is not very different from the default one but I wanted the failure domain to honor hosts.
+
+`Create new pool with the profile`
+```shell
+ceph osd pool create rgwdata 256 256 erasure ecprofile --autoscale-mode=on --bulk
+```
+`Associate the new pool with the RGW`
+```shell
+ceph osd pool application enable rgwdata rgw
+```
+`Restart your RGW`
+```shell
+ceph orch daemon restart rgw.rgw01.hl-ceph-03.ckkjud
+ceph orch daemon restart rgw.rgw01.hl-ceph-04.dlnykt
+```
+
+Your services and their names can be found using "ceph orch ps".
+
+`ceph orch ps`
+```shell
+NAME                          HOST        PORTS             STATUS      
+alertmanager.hl-ceph-01       hl-ceph-01  *:9093,9094       running (4w)
+crash.hl-ceph-01              hl-ceph-01                    running (4w)
+crash.hl-ceph-02              hl-ceph-02                    running (4w)
+crash.hl-ceph-03              hl-ceph-03                    running (4w)
+crash.hl-ceph-04              hl-ceph-04                    running (4w)
+crash.hl-ceph-05              hl-ceph-05                    running (4w)
+grafana.hl-ceph-01            hl-ceph-01  *:3000            running (4w)
+mds.k8s_fs.hl-ceph-02.twizai  hl-ceph-02                    running (4w)
+mds.k8s_fs.hl-ceph-05.bzdcnu  hl-ceph-05                    running (4w)
+mgr.hl-ceph-03.vaogpo         hl-ceph-03  *:8443,9283,8765  running (4w)
+mgr.hl-ceph-04.djedoy         hl-ceph-04  *:8443,9283,8765  running (4w)
+mon.hl-ceph-01                hl-ceph-01                    running (4w)
+mon.hl-ceph-02                hl-ceph-02                    running (4w)
+mon.hl-ceph-05                hl-ceph-05                    running (4w)
+node-exporter.hl-ceph-01      hl-ceph-01  *:9100            running (4w)
+node-exporter.hl-ceph-02      hl-ceph-02  *:9100            running (4w)
+node-exporter.hl-ceph-03      hl-ceph-03  *:9100            running (4w)
+node-exporter.hl-ceph-04      hl-ceph-04  *:9100            running (4w)
+node-exporter.hl-ceph-05      hl-ceph-05  *:9100            running (4w)
+osd.0                         hl-ceph-01                    running (4w)
+osd.1                         hl-ceph-01                    running (4w)
+osd.2                         hl-ceph-02                    running (4w)
+osd.3                         hl-ceph-02                    running (4w)
+osd.4                         hl-ceph-03                    running (4w)
+osd.5                         hl-ceph-03                    running (4w)
+osd.6                         hl-ceph-04                    running (4w)
+osd.7                         hl-ceph-04                    running (4w)
+osd.8                         hl-ceph-05                    running (4w)
+osd.9                         hl-ceph-05                    running (4w)
+prometheus.hl-ceph-01         hl-ceph-01  *:9095            running (4w)
+rgw.rgw01.hl-ceph-03.ckkjud   hl-ceph-03  *:1337            running (2d)
+rgw.rgw01.hl-ceph-04.dlnykt   hl-ceph-04  *:1337            running (2d)
+```
 
 <hr>

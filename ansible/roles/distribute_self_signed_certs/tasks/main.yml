@@ -4,14 +4,14 @@
     content: "{{ vault.certs.sspki_int_crt | b64decode }}"
     dest: "/usr/local/share/ca-certificates/private-ca-bundle.crt"
     mode: '0644'
-  when: op_mode == "install"
+  when: op_mode == "install-certs" or op_mode == "install"
 
 - name: append private root cert to bundle
   lineinfile:
     path: "/usr/local/share/ca-certificates/private-ca-bundle.crt"
     line: "{{  vault.certs.sspki_root_crt | b64decode }}"
     mode: '0644'
-  when: op_mode == "install"
+  when: op_mode == "install-certs" or op_mode == "install"
 
 - name: create k3s dir
   file:
@@ -29,4 +29,4 @@
   shell: update-ca-certificates
   args:
     executable: /bin/bash
-  when: op_mode == "install"
+  when: op_mode == "install-certs" or op_mode == "install"
