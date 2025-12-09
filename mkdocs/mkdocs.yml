@@ -45,6 +45,7 @@ nav:
           - MKDocs: 09_apps/lp_mkdocs.md
           - CNPG: 09_apps/lp_cnpg.md
           - Portainer (WebUI): 09_apps/lp_portainer.md
+          - Jellyfin: 09_apps/lp_jellyfin.md
   - Material: 05_material/lp_material.md
   - TheBox: 06_thebox/lp_thebox.md
   - Outages: 10_outages/lp_outages.md
