@@ -183,6 +183,25 @@
   notify: "h-restart-nginx"
   when: op_mode == "install" or op_mode == "update-config"
 
+- name: create custom error pages dir
+  file:
+    path: /etc/haproxy/errorpages
+    state: directory
+  when: op_mode == "install" or op_mode == "update-config"
+
+- name: get errorpages to directory
+  template:
+    src: "templates/{{ item }}.j2"
+    dest: "/etc/haproxy/errorpages/{{ item }}"
+    mode: '0644'
+    owner: haproxy
+    group: haproxy
+  changed_when: True
+  notify: "h-restart-nginx"
+  when: op_mode == "install" or op_mode == "update-config"
+  with_items:
+    - "err_429.http"
+
 - name: deinstall packages
   package:
     name: "{{ item }}"

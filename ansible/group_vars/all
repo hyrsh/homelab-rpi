@@ -56,6 +56,7 @@ setupinfos:
     - {domain: "grafana", ip: [ "grafana.hyrsh.io:443" ], info: "Metric Visualization", state: "up"}
     - {domain: "cs2", ip: [ "cs2.hyrsh.io:443" ], info: "Counter-Strike 2 Guides", state: "up"}
     - {domain: "cctv", ip: [ "cctv.hyrsh.io:443" ], info: "Watch the Cloud via CCTV", state: "down"}
+    - {domain: "jellyfin", ip: [ "jellyfin.hyrsh.io:443" ], info: "Home Cinema (friends only)", state: "up"}
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
   k3s:

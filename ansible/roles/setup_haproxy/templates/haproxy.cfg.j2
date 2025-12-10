@@ -26,6 +26,9 @@ defaults
         timeout client  10000
         timeout server  10000
 
+http-errors custom
+  errorfile 429 /etc/haproxy/errorpages/err_429.http
+
 resolvers internal
   nameserver home {{ setupinfos.local_dns }}:53
 
@@ -39,7 +42,10 @@ frontend stats
 
 frontend gateway_01
   bind {{ hostinfos[ansible_mutated_host].wireguard_ip }}:443 ssl crt {{setupinfos.lb_cert_dir}}/public-server-bundle.pem
+  stick-table  type ipv6  size 100k  expire 30s  store http_req_rate(10s)
   mode http
+  http-request track-sc0 src
+  http-request deny deny_status 429 if { sc_http_req_rate(0) gt 120 }
   maxconn {{ setupinfos.max_connections_haproxy }}
   timeout client 10000
 {% for DOM in setupinfos.haproxy_domains %}
@@ -51,13 +57,11 @@ frontend gateway_01
   use_backend be_{{DOM.domain}} if acl_{{DOM.domain}}
 {% endif %}
 {% endfor %}
+  errorfiles custom
   default_backend be_default
 
 frontend gateway_02
   bind :443 ssl crt {{setupinfos.lb_cert_dir}}/private-server-bundle.pem
-  stick-table  type ipv6  size 100k  expire 30s  store http_req_rate(10s)
-  http-request track-sc0 src
-  http-request deny deny_status 429 if { sc_http_req_rate(0) gt 80 }
   mode http
   maxconn {{ setupinfos.max_connections_haproxy }}
   timeout client 10000
@@ -70,6 +74,7 @@ frontend gateway_02
   use_backend be_h_{{HD.domain}} if acl_{{HD.domain}}
 {% endif %}
 {% endfor %}
+  errorfiles custom
   default_backend be_default
 
 frontend k8s_api
