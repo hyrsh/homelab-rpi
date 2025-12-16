@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: haproxy-kubernetes-ingress
+  namespace: ingress-haproxy
+data:
+  ssl-redirect: "true"
+  ssl-certificate: "ingress-haproxy/tls-secret"

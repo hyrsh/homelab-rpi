@@ -1,6 +1,6 @@
 - name: create tmp dir for values and resources
   file:
-    path: /tmp/nginx-ingress-k8s
+    path: /tmp/haproxy-ingress-k8s
     state: directory
   when:
     - op_mode == "install" or op_mode == "update"
@@ -9,7 +9,7 @@
 - name: copy private server cert to destination
   copy:
     content: "{{ vault.certs.sspki_srv_crt | b64decode }}"
-    dest: "/tmp/nginx-ingress-k8s/tls.crt"
+    dest: "/tmp/haproxy-ingress-k8s/tls.crt"
   when:
     - op_mode == "install" or op_mode == "update"
     - ansible_host == setupinfos.k3s.master.registration_host
@@ -17,13 +17,13 @@
 - name: copy private server key to destination
   copy:
     content: "{{ vault.certs.sspki_srv_key | b64decode }}"
-    dest: "/tmp/nginx-ingress-k8s/tls.key"
+    dest: "/tmp/haproxy-ingress-k8s/tls.key"
   when:
     - op_mode == "install" or op_mode == "update"
     - ansible_host == setupinfos.k3s.master.registration_host
 
-- name: create ingress-nginx namespace
-  shell: if [ "$(kubectl get ns ingress-nginx --ignore-not-found | wc -l)" == "0" ]; then kubectl create ns ingress-nginx; fi
+- name: create ingress-haproxy namespace
+  shell: if [ "$(kubectl get ns ingress-haproxy --ignore-not-found | wc -l)" == "0" ]; then kubectl create ns ingress-haproxy; fi
   args:
     executable: /bin/bash
   environment:
@@ -33,7 +33,7 @@
     - ansible_host == setupinfos.k3s.master.registration_host
 
 - name: create secret with certificates
-  shell: "kubectl -n ingress-nginx delete secret {{ setupinfos.k3s.ingress_cert }} --ignore-not-found && kubectl -n ingress-nginx create secret tls {{ setupinfos.k3s.ingress_cert }} --cert=/tmp/nginx-ingress-k8s/tls.crt --key=/tmp/nginx-ingress-k8s/tls.key"
+  shell: "kubectl -n ingress-haproxy delete secret {{ setupinfos.k3s.ingress_cert }} --ignore-not-found && kubectl -n ingress-haproxy create secret tls {{ setupinfos.k3s.ingress_cert }} --cert=/tmp/haproxy-ingress-k8s/tls.crt --key=/tmp/haproxy-ingress-k8s/tls.key"
   args:
     executable: /bin/bash
   environment:
@@ -44,14 +44,14 @@
 
 - name: get template to dir
   template:
-    src: "templates/nginx-ingress-controller.yml.j2"
-    dest: /tmp/nginx-ingress-k8s/nginx-ingress-controller.yml
+    src: "templates/haproxy-ingress-controller.yml.j2"
+    dest: /tmp/haproxy-ingress-k8s/haproxy-ingress-controller.yml
   when:
     - op_mode == "install" or op_mode == "update"
     - ansible_host == setupinfos.k3s.master.registration_host
 
 - name: label ingress nodes
-  shell: "kubectl label node {{ item }} ingress-instance=active"
+  shell: "kubectl label node {{ item }} ingress-haproxy=active"
   args:
     executable: /bin/bash
   environment:
@@ -60,10 +60,10 @@
     - op_mode == "install" or op_mode == "update"
     - ansible_host == setupinfos.k3s.master.registration_host
   with_items:
-    - "{{ setupinfos.k3s.ingress_nodes }}"
+    - "{{ setupinfos.k3s.haproxy_ingress_nodes }}"
 
 - name: create ingress controller
-  shell: "kubectl -n ingress-nginx apply -f /tmp/nginx-ingress-k8s/nginx-ingress-controller.yml"
+  shell: "kubectl -n ingress-haproxy apply -f /tmp/haproxy-ingress-k8s/haproxy-ingress-controller.yml"
   args:
     executable: /bin/bash
   environment:
@@ -74,7 +74,7 @@
 
 - name: cleanup tmp dir for values and resources
   file:
-    path: /tmp/nginx-ingress-k8s
+    path: /tmp/haproxy-ingress-k8s
     state: absent
   when:
     - op_mode == "install" or op_mode == "update"
