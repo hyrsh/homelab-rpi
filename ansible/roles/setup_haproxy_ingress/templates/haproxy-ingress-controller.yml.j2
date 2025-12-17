@@ -138,7 +138,7 @@ metadata:
   name: haproxy-kubernetes-ingress
   namespace: ingress-haproxy
 spec:
-  replicas: "{{ setupinfos.k3s.ingress_instances }}"
+  replicas: {{ setupinfos.k3s.ingress_instances }}
   selector:
     matchLabels:
       run: haproxy-ingress
@@ -148,6 +148,7 @@ spec:
         run: haproxy-ingress
     spec:
       serviceAccountName: haproxy-kubernetes-ingress
+      hostNetwork: true
       nodeSelector:
         ingress-haproxy: active
       containers:
@@ -155,11 +156,14 @@ spec:
         image: haproxytech/kubernetes-ingress
         args:
           - --configmap=ingress-haproxy/haproxy-kubernetes-ingress
+          - --https-bind-port=443
+          - --http-bind-port=80
+          - --ingress.class=haproxy-ic
         securityContext:
-          runAsNonRoot: true
-          allowPrivilegeEscalation: false
-          runAsUser:  1000
-          runAsGroup: 1000
+          runAsNonRoot: false
+          allowPrivilegeEscalation: true
+          runAsUser:  0
+          runAsGroup: 0
           capabilities:
             drop:
               - ALL
@@ -179,10 +183,8 @@ spec:
             path: /healthz
             port: 1042
         ports:
-        - name: http
-          containerPort: 8080
         - name: https
-          containerPort: 8443
+          containerPort: 443
           hostPort: 443
         - name: stat
           containerPort: 1024
@@ -213,11 +215,11 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 8080
+    targetPort: 80
   - name: https
     port: 443
     protocol: TCP
-    targetPort: 8443
+    targetPort: 443
   - name: stat
     port: 1024
     protocol: TCP

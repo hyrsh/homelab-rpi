@@ -44,11 +44,15 @@
 
 - name: get template to dir
   template:
-    src: "templates/haproxy-ingress-controller.yml.j2"
-    dest: /tmp/haproxy-ingress-k8s/haproxy-ingress-controller.yml
+    src: "templates/{{ item }}.j2"
+    dest: "/tmp/haproxy-ingress-k8s/{{ item }}"
   when:
     - op_mode == "install" or op_mode == "update"
     - ansible_host == setupinfos.k3s.master.registration_host
+  with_items:
+    - haproxy-ingress-controller.yml
+    - haproxy-ingress-cm.yml
+    - haproxy-ingress-class.yml
 
 - name: label ingress nodes
   shell: "kubectl label node {{ item }} ingress-haproxy=active"
@@ -63,7 +67,7 @@
     - "{{ setupinfos.k3s.haproxy_ingress_nodes }}"
 
 - name: create ingress controller
-  shell: "kubectl -n ingress-haproxy apply -f /tmp/haproxy-ingress-k8s/haproxy-ingress-controller.yml"
+  shell: "kubectl -n ingress-haproxy apply -f /tmp/haproxy-ingress-k8s/{{ item }}"
   args:
     executable: /bin/bash
   environment:
@@ -71,6 +75,10 @@
   when:
     - op_mode == "install" or op_mode == "update"
     - ansible_host == setupinfos.k3s.master.registration_host
+  with_items:
+    - haproxy-ingress-controller.yml
+    - haproxy-ingress-cm.yml
+    - haproxy-ingress-class.yml
 
 - name: cleanup tmp dir for values and resources
   file:

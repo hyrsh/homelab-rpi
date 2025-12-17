@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server
+  namespace: argocd
+  annotations:
+     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+     #haproxy.org/ssl-passthrough: "true"
+     #haproxy.org/server-ssl: "true"
+     #haproxy.org/server-proto: "h2"
+     #haproxy.org/send-proxy-protocol: proxy-v2-ssl-cn
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: argocd.hyrsh.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: argocd-server
+            port:
+              number: 443
+        path: /
+        pathType: Prefix

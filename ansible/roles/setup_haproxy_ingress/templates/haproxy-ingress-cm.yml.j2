@@ -5,4 +5,4 @@ metadata:
   namespace: ingress-haproxy
 data:
   ssl-redirect: "true"
-  ssl-certificate: "ingress-haproxy/tls-secret"
+  ssl-certificate: "ingress-haproxy/{{ setupinfos.k3s.ingress_cert }}"
