@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  password: {{ unit_info_pw }}
+  username: {{ unit_info_usr }}
+kind: Secret
+metadata:
+  name: {{ unit }}-user
+  namespace: {{ unit_info_ns }}
+type: kubernetes.io/basic-auth

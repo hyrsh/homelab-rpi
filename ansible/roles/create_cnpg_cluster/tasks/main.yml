@@ -1,0 +1,68 @@
+- name: Failsafe
+  fail:
+    msg: "Unit is not set!"
+  when: unit == ""
+
+- name: create tmp dir for values and resources
+  file:
+    path: /tmp/cnpg-res-k8s
+    state: directory
+  when:
+    - op_mode == "install" or op_mode == "update"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: set fact per unit
+  set_fact:
+    unit_info_usr: "{{ vault.cnpg.keycloak.appuser }}"
+    unit_info_pw: "{{ vault.cnpg.keycloak.appuser_pw }}"
+    unit_info_ns: "{{ vault.cnpg.keycloak.namespace }}"
+    unit_info_s_usr: "{{ vault.cnpg.keycloak.superuser }}"
+    unit_info_s_pw: "{{ vault.cnpg.keycloak.superuser_pw }}"
+  when: 
+    - op_mode == "install"
+    - unit == "keycloak"
+
+- name: get templates to dir
+  template:
+    src: "templates/{{ item }}.j2"
+    dest: "/tmp/cnpg-res-k8s/{{ item }}"
+    mode: '0600'
+    group: root
+    owner: root
+  with_items:
+    - user.yml
+    - superuser.yml
+    - db-cluster.yml
+  when:
+    - op_mode == "install"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: "create namespace for {{ unit }}"
+  shell: if [ "$(kubectl get ns {{ unit }} --ignore-not-found | wc -l)" == "0" ]; then kubectl create ns "{{ unit }}"; fi
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "install"
+    - unit == "keycloak"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: "create resources for {{ unit }}"
+  shell: kubectl -n "{{ unit }}" apply -f /tmp/cnpg-res-k8s 
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "install"
+    - unit == "keycloak"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: cleanup tmp dir for values and resources
+  file:
+    path: /tmp/cnpg-res-k8s
+    state: absent
+  when:
+    - op_mode == "install" or op_mode == "update"
+    - ansible_host == setupinfos.k3s.master.registration_host
