@@ -84,23 +84,24 @@ spec:
           {{- tpl . $ | nindent 12 }}
           {{- end }}
           env:
-            {{- if .Values.postgresql.enabled }}
-            - name: DB_VENDOR
+            - name: KC_DB_VENDOR
               value: postgres
-            - name: DB_ADDR
-              value: {{ include "keycloak.postgresql.fullname" . }}
-            - name: DB_PORT
+            - name: KC_DB_URL
+              value: {{ .Values.postgresql.postgresqlAddr }}
+            - name: KC_DB_PORT
               value: {{ .Values.postgresql.service.port | quote }}
-            - name: DB_DATABASE
+            - name: KC_DB_DATABASE
               value: {{ .Values.postgresql.postgresqlDatabase | quote }}
-            - name: DB_USER
-              value: {{ .Values.postgresql.postgresqlUsername | quote }}
-            - name: DB_PASSWORD
+            - name: KC_DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "keycloak.postgresql.fullname" . }}
-                  key: postgresql-password
-            {{- end }}
+                  name: {{ .Values.postgresql.postgresqlUsernameSecret }}
+                  key: {{ .Values.postgresql.postgresqlUsernameKey }}
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgresql.postgresqlSecretName }}
+                  key: {{ .Values.postgresql.postgresqlSecretKey }}
             {{- with .Values.extraEnv }}
             {{- tpl . $ | nindent 12 }}
             {{- end }}

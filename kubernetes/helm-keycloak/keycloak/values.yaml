@@ -384,7 +384,7 @@ pgchecker:
 
 postgresql:
   # If `true`, the Postgresql dependency is enabled
-  enabled: true
+  enabled: false
   # PostgreSQL User to create
   postgresqlUsername: keycloak
   # PostgreSQL Password for the new user

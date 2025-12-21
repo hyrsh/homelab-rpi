@@ -108,10 +108,41 @@ clusterDomain: cluster.local
 command: []
 
 ## Overrides the default args for the Keycloak container
-args: []
+args:
+  - start
+  - --http-enabled=true
+  - --hostname-strict=false
+  - --db=postgres
+  - --db-url=jdbc:postgresql://keycloak-db-cluster-rw.keycloak.svc.cluster.local:5432/keycloak
+#  - --db-username=$DB_USER
+#  - --db-password=$DB_PASSWORD
+
+postgresql:
+  enabled: false
+  postgresqlAddr: jdbc:postgresql://keycloak-db-cluster-rw.keycloak.svc.cluster.local:5432/keycloak
+  service:
+    port: 5432
+  postgresqlDatabase: "keycloak"
+  postgresqlUsernameSecret: "keycloak-superuser"
+  postgresqlUsernameKey: "username"
+  postgresqlSecretName: "keycloak-superuser"
+  postgresqlSecretKey: "password"
+
 
 # Additional environment variables for Keycloak
-extraEnv: ""
+extraEnv:
+ # - name: DB_URL
+ #   value: jdbc:postgresql://keycloak-db-cluster-rw.keycloak.svc.cluster.local:5432/keycloak
+ # - name: DB_USERNAME
+ #   valueFrom:
+ #     secretKeyRef:
+ #       name: keycloak-user
+ #       key: username
+ # - name: DB_PASSWORD
+ #   valueFrom:
+ #     secretKeyRef:
+ #       name: keycloak-user
+ #       key: password
   # - name: KC_LOG_LEVEL
   #   value: DEBUG
 
@@ -289,11 +320,10 @@ ingress:
   servicePort: http
   # Ingress annotations
   annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    #nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     ## Resolve HTTP 502 error using ingress-nginx:
     ## See https://www.ibm.com/support/pages/502-error-ingress-keycloak-response
-    # nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
-
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
   # Additional Ingress labels
   labels: {}
    # List of rules for the Ingress
@@ -303,7 +333,7 @@ ingress:
       host: "keycloak.hyrsh.io"
       # Paths for the host
       paths:
-        - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
+        - path: "{{ tpl .Values.http.relativePath $ | trimSuffix \"/\" }}/"
           pathType: Prefix
   # TLS configuration
   tls: []
@@ -319,8 +349,8 @@ ingress:
     ingressClassName: "nginx"
     # Ingress annotations for console ingress only
     # Useful to set nginx.ingress.kubernetes.io/whitelist-source-range particularly
-    annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    annotations: {}
+    #  nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # Additional Ingress labels for console path only
     labels: {}
     rules:
@@ -329,7 +359,7 @@ ingress:
         host: "keycloak-admin.hyrsh.io"
         # Paths for the host
         paths:
-          - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/admin'
+          - path: "{{ tpl .Values.http.relativePath $ | trimSuffix \"/\" }}/admin"
             pathType: Prefix
 
     # Console TLS configuration
@@ -413,9 +443,9 @@ database:
   existingSecret: "keycloak-user"
   existingSecretKey: "password"
   # E.g. dev-file, dev-mem, mariadb, mssql, mysql, oracle or postgres
-  vendor: postgres
-  hostname: keycloak-db-cluster-rw.keycloak.svc.cluster.local
-  port: 5432
+  vendor:
+  hostname:
+  port:
   database:
   username:
   password:
