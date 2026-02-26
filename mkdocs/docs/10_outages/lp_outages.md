@@ -10,7 +10,7 @@
 |Interrupt ID|Affected devices|Service state|
 |-|-|-|
 |1|10x (2x master, 5x worker, 1x LB, 2x Ceph)|Full blackout|
-|2|all|Unaffected|
+|2|all|Up & Running but not reachable|
 
 ## Behaviour
 
