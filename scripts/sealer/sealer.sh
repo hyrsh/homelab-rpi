@@ -1,5 +1,6 @@
 #!/bin/bash
 
+### DEFAULTS
 # tested age version
 tested_version="v1.3.1"
 # path to age ident file (e.g. you can generate one with age-keygen | age -p > age-ident)
@@ -8,6 +9,44 @@ age_ident_file=$(pwd)/age-ident
 enc_dir="$(pwd)/myfiles"
 # placeholder public key
 pub_key="none"
+# placeholder action
+enc_action="none"
+# logo print
+logo_only="false"
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    -d|--directory)
+      shift
+      enc_dir=$1
+      shift
+      ;;
+    -a|--action)
+      shift
+      enc_action=$1
+      shift
+      ;;
+    -i|--identfile)
+      shift
+      age_ident_file=$1
+      shift
+      ;;
+    -l|--logo)
+      shift
+      logo_only="true"
+      shift
+      ;;
+    -h|--help)
+      help
+      ;;
+    *)
+      echo -n "$1 "
+      shift
+      echo "$1 not found!"
+      shift
+      ;;
+  esac
+done
 
 echo -e "\e[36;1m"
 echo -e "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
@@ -46,10 +85,14 @@ echo -e "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘�
 echo -e "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠓⠋⠀⠀Sealer V1⠀⠀⠀⠀⠀⠀⠀"⠀
 echo -e "\e[0;0m"
 
-enc_action="none"
+if [ "$logo_only" == "true" ]; then
+  exit 0
+fi
+
 c_red="\e[31;1m"
 c_green="\e[32;1m"
 c_yellow="\e[33;1m"
+c_cyan="\e[36;1m"
 c_clear="\e[0;0m"
 
 mockingbird() {
@@ -58,6 +101,28 @@ mockingbird() {
 
 parrot() {
   echo -e "${c_green}[+] ${1}${c_clear}"
+}
+
+help() {
+  echo -en "${c_cyan}"
+  echo -e "Flags:"
+  echo -e "------"
+  echo -e " -d|--directory  Target directory of files to en/decrypt (default pwd/myfiles)"
+  echo -e " -a|--action     Action to perform (seal/unseal) (default none)"
+  echo -e " -i|--identfile  Path to age ident file (default pwd/age-ident)"
+  echo -e " -h|--help       Displays this help"
+  echo -e ""
+  echo -e "Usage:"
+  echo -e "------"
+  echo -e " - e.g. ./sealer.sh -d ./mydir -a seal -i ./myident"
+  echo -e " - e.g. ./sealer.sh -d ./mydir -a unseal -i ./myident"
+  echo -e ""
+  echo -e "Info:"
+  echo -e "-----"
+  echo -e " - if you do not have an ident file it will be created on first use (don't lose it)"
+
+  echo -en "${c_clear}"
+  exit 0
 }
 
 unsealSafeCheckDir() {
@@ -150,8 +215,6 @@ unsealDir() {
   parrot "Cleaned up $idf"
 }
 
-
-
 mockingbird $(which -s age && echo $?) "age-binary"
 parrot "age binary exists"
 
@@ -161,35 +224,6 @@ if [ "$age_ver" != "$tested_version" ]; then
   exit 1
 fi
 parrot "age binary has correct version ($tested_version)"
-
-while [ $# -gt 0 ]; do
-  case $1 in
-    -d|--directory)
-      shift
-      enc_dir=$1
-      shift
-      ;;
-    -a|--action)
-      shift
-      enc_action=$1
-      shift
-      ;;
-    -i|--identfile)
-      shift
-      age_ident_file=$1
-      shift
-      ;;
-    -h|-help)
-      help
-      ;;
-    *)
-      echo -n "$1 "
-      shift
-      echo "$1 not found!"
-      shift
-      ;;
-  esac
-done
 
 # create ident file if non-existent
 if [ ! -f $age_ident_file ]; then
