@@ -26,16 +26,38 @@ logo_only="false"
 
 # update self
 update() {
- cd $update_path
- ret=$(curl -w "%{http_code}\n" -LOs $update_url)
+ echo -e "\e[32;m[+] Updating to $update_path/sealer\e[0;0m"
+ ret=$(curl -w "%{http_code}\n" -LOs $update_url > $update_path)
  if [ $ret -ne 200 ]; then
    exit 1
  fi
- chmod +x sealer.sh
- mv sealer.sh sealer
+ chmod +x $update_path/sealer.sh
+ mv $update_path/sealer.sh $update_path/sealer
  echo -e "\e[32;m[+] Updated script from:"
  echo -e "[>] URL: ${update_url}\e[0;0m"
  exit 0
+}
+
+help() {
+  echo -en "${c_cyan}"
+  echo -e "Flags:"
+  echo -e "------"
+  echo -e " -d|--directory  Target directory of files to en/decrypt (default pwd/myfiles)"
+  echo -e " -a|--action     Action to perform (seal/unseal) (default none)"
+  echo -e " -i|--identfile  Path to age ident file (default pwd/age-ident)"
+  echo -e " -h|--help       Displays this help"
+  echo -e ""
+  echo -e "Usage:"
+  echo -e "------"
+  echo -e " - e.g. ./sealer.sh -d ./mydir -a seal -i ./myident"
+  echo -e " - e.g. ./sealer.sh -d ./mydir -a unseal -i ./myident"
+  echo -e ""
+  echo -e "Info:"
+  echo -e "-----"
+  echo -e " - if you do not have an ident file it will be created on first use (don't lose it)"
+
+  echo -en "${c_clear}"
+  exit 0
 }
 
 while [ $# -gt 0 ]; do
@@ -69,6 +91,7 @@ while [ $# -gt 0 ]; do
       ;;
     -h|--help)
       help
+      exit 0 #failsafe (dumb ik)
       ;;
     *)
       echo -n "$1 "
@@ -132,28 +155,6 @@ mockingbird() {
 
 parrot() {
   echo -e "${c_green}[+] ${1}${c_clear}"
-}
-
-help() {
-  echo -en "${c_cyan}"
-  echo -e "Flags:"
-  echo -e "------"
-  echo -e " -d|--directory  Target directory of files to en/decrypt (default pwd/myfiles)"
-  echo -e " -a|--action     Action to perform (seal/unseal) (default none)"
-  echo -e " -i|--identfile  Path to age ident file (default pwd/age-ident)"
-  echo -e " -h|--help       Displays this help"
-  echo -e ""
-  echo -e "Usage:"
-  echo -e "------"
-  echo -e " - e.g. ./sealer.sh -d ./mydir -a seal -i ./myident"
-  echo -e " - e.g. ./sealer.sh -d ./mydir -a unseal -i ./myident"
-  echo -e ""
-  echo -e "Info:"
-  echo -e "-----"
-  echo -e " - if you do not have an ident file it will be created on first use (don't lose it)"
-
-  echo -en "${c_clear}"
-  exit 0
 }
 
 unsealSafeCheckDir() {
