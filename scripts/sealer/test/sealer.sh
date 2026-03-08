@@ -1,19 +1,10 @@
 #!/bin/bash
 
 ### DEFAULTS
-# update URL from github and path of local script
-update_url="https://raw.githubusercontent.com/hyrsh/homelab-rpi/refs/heads/main/scripts/sealer/sealer.sh"
-update_path=$0
-sealer_version="v1.1"
 # tested age version
 tested_version="v1.3.1"
 # path to age ident file (e.g. you can generate one with age-keygen | age -p > age-ident)
 age_ident_file=$(pwd)/age-ident
-# check ENV var for age ident file
-if [ "$AGEIDENTF" != "" ]; then
-  age_ident_file=$AGEIDENTF
-  echo -e "\e[32;1m[+] Found entry in AGEIDENTF variable!\e[0;0m"
-fi
 # directories for encryption targets
 enc_dir="$(pwd)/myfiles"
 # placeholder public key
@@ -22,20 +13,6 @@ pub_key="none"
 enc_action="none"
 # logo print
 logo_only="false"
-
-# update self
-update() {
- cd $update_path
- ret=$(curl -w "%{http_code}\n" -LOs $update_url)
- if [ $ret -ne 200 ]; then
-   exit 1
- fi
- chmod +x sealer.sh
- mv sealer.sh sealer
- echo -e "\e[32;m[+] Updated script from:"
- echo -e "[>] URL: ${update_url}\e[0;0m"
- exit 0
-}
 
 while [ $# -gt 0 ]; do
   case $1 in
@@ -58,13 +35,6 @@ while [ $# -gt 0 ]; do
       shift
       logo_only="true"
       shift
-      ;;
-    -u|--update)
-      cd $update_path
-      curl -LOs $update_url
-      echo "[+] Updated script from:"
-      echo "[>] URL: $update_url"
-      exit 0
       ;;
     -h|--help)
       help
@@ -112,7 +82,7 @@ echo -e "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠�
 echo -e "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠋⠀⠀⠀⠀⠀⠀⠀"⠀
 echo -e "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡇⠀⠀⠀⠀⢀⣀⣀⣀⡤⠤⠚⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀"⠀
 echo -e "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⡄⠀⣴⠟⠋⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"⠀
-echo -e "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠓⠋⠀⠀Sealer $sealer_version"⠀
+echo -e "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠓⠋⠀⠀Sealer V1⠀⠀⠀⠀⠀⠀⠀"⠀
 echo -e "\e[0;0m"
 
 if [ "$logo_only" == "true" ]; then
