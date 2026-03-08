@@ -194,8 +194,8 @@ sealDir() {
     exit 1
   fi
   
+  parrot "Using ident file: $age_ident_file"
   for F in $(ls -l | awk '{print $NF}' | sed "1d"); do
-    parrot "Using ident file: $age_ident_file"
     age -r $pub_key $F > ${F}.age
     ret=$(echo $?)
     if [ $ret -eq 0 ]; then
@@ -227,8 +227,8 @@ unsealDir() {
     exit 1
   fi
   
+  parrot "Using ident file: ${idf}"
   for F in $(ls -l $d | awk '{print $NF}' | sed "1d"); do
-    parrot "Using ident file: ${idf}"
     fname=$(echo $F | sed "s/\.age//g")
     age -d -i $idf $d/$F > $d/${fname}
     ret=$(echo $?)
