@@ -4,6 +4,7 @@
 # update URL from github and path of local script
 update_url="https://raw.githubusercontent.com/hyrsh/homelab-rpi/refs/heads/main/scripts/sealer/sealer.sh"
 update_path=$0
+# current sealer version
 sealer_version="v1.1"
 # tested age version
 tested_version="v1.3.1"
