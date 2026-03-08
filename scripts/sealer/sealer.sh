@@ -5,16 +5,11 @@
 update_url="https://raw.githubusercontent.com/hyrsh/homelab-rpi/refs/heads/main/scripts/sealer/sealer.sh"
 update_path=$0
 # current sealer version
-sealer_version="v1.1"
+sealer_version="v1.2"
 # tested age version
 tested_version="v1.3.1"
 # path to age ident file (e.g. you can generate one with age-keygen | age -p > age-ident)
 age_ident_file=$(pwd)/age-ident
-# check ENV var for age ident file
-if [ "$AGEIDENTF" != "" ]; then
-  age_ident_file=$AGEIDENTF
-  echo -e "\e[32;1m[+] Found entry in AGEIDENTF variable!\e[0;0m"
-fi
 # directories for encryption targets
 enc_dir="$(pwd)/myfiles"
 # placeholder public key
@@ -23,16 +18,21 @@ pub_key="none"
 enc_action="none"
 # logo print
 logo_only="false"
+# colors
+c_red="\e[31;1m"
+c_green="\e[32;1m"
+c_yellow="\e[33;1m"
+c_cyan="\e[36;1m"
+c_clear="\e[0;0m"
 
 # update self
 update() {
- echo -e "\e[32;m[+] Updating to $update_path/sealer\e[0;0m"
- ret=$(curl -w "%{http_code}\n" -LOs $update_url > $update_path)
- if [ $ret -ne 200 ]; then
-   exit 1
- fi
- chmod +x $update_path/sealer.sh
- mv $update_path/sealer.sh $update_path/sealer
+ echo -e "\e[32;m[+] Updating to $update_path\e[0;0m"
+ wdir=$(echo $update_path | sed "s@/sealer@@g")
+ curl -LOs $update_url
+ mv sealer.sh $wdir/sealer.sh
+ chmod +x $wdir/sealer.sh
+ mv $wdir/sealer.sh $update_path
  echo -e "\e[32;m[+] Updated script from:"
  echo -e "[>] URL: ${update_url}\e[0;0m"
  exit 0
@@ -46,6 +46,8 @@ help() {
   echo -e " -a|--action     Action to perform (seal/unseal) (default none)"
   echo -e " -i|--identfile  Path to age ident file (default pwd/age-ident)"
   echo -e " -h|--help       Displays this help"
+  echo -e " -u|--update     Updates the script from GitHub"
+  echo -e " -v|--version    Print the version of the script"
   echo -e ""
   echo -e "Usage:"
   echo -e "------"
@@ -83,10 +85,11 @@ while [ $# -gt 0 ]; do
       shift
       ;;
     -u|--update)
-      cd $update_path
-      curl -LOs $update_url
-      echo "[+] Updated script from:"
-      echo "[>] URL: $update_url"
+      update
+      exit 0 #failsafe (dumb ik)
+      ;;
+    -v|--version)
+      echo "$sealer_version"
       exit 0
       ;;
     -h|--help)
@@ -143,11 +146,11 @@ if [ "$logo_only" == "true" ]; then
   exit 0
 fi
 
-c_red="\e[31;1m"
-c_green="\e[32;1m"
-c_yellow="\e[33;1m"
-c_cyan="\e[36;1m"
-c_clear="\e[0;0m"
+# check ENV var for age ident file
+if [ "$AGEIDENTF" != "" ]; then
+  age_ident_file=$AGEIDENTF
+  echo -e "\e[32;1m[+] Found entry in AGEIDENTF variable!\e[0;0m"
+fi
 
 mockingbird() {
   if [ $1 -eq 1 ]; then echo -e "${c_red}[!] st00pid! ($2 unknown)${c_clear}"; exit 1; fi
