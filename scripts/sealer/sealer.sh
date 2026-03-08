@@ -5,7 +5,7 @@
 update_url="https://raw.githubusercontent.com/hyrsh/homelab-rpi/refs/heads/main/scripts/sealer/sealer.sh"
 update_path=$0
 # current sealer version
-sealer_version="v1.2"
+sealer_version="v1.3"
 # tested age version
 tested_version="v1.3.1"
 # path to age ident file (e.g. you can generate one with age-keygen | age -p > age-ident)
@@ -233,7 +233,7 @@ unsealDir() {
     age -d -i $idf $d/$F > $d/${fname}
     ret=$(echo $?)
     if [ $ret -eq 0 ]; then
-      parrot "decrypted file $d/$F to $d/${fname}"
+      parrot "decrypted file ${d}$F to ${d}${fname}"
       rm $d/$F
     else
       echo -e "${c_red}[!] Error on decryption attempt!${c_clear}"
