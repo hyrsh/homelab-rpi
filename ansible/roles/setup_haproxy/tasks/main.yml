@@ -46,7 +46,7 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 - name: append public ca bundle to public server cert to create full chain
   lineinfile:
@@ -65,7 +65,7 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 # contains the CA chain of our public server certificate
 - name: copy public ca bundle
@@ -75,7 +75,7 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 # contains key and cert of our public server certificate for external access hosted by HAProxy
 - name: copy public server cert to destination
@@ -85,7 +85,7 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 - name: append public server key to cert
   lineinfile:
@@ -94,7 +94,7 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 # contains key and cert of our private server certificate for external access hosted by HAProxy
 - name: copy private server cert to destination
@@ -104,7 +104,7 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 - name: append public server key to cert
   lineinfile:
@@ -113,7 +113,7 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 # contains our private CA chain int+root
 - name: create private ca bundle
@@ -123,7 +123,7 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 - name: append private root cert to bundle
   lineinfile:
@@ -132,7 +132,7 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs" 
 
 - name: copy private bundle to HAProxy dir
   copy:
@@ -142,13 +142,13 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 - name: OS update of certificates
   shell: update-ca-certificates
   args:
     executable: /bin/bash
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 - name: get config template to directory
   template:
