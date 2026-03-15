@@ -47,6 +47,10 @@ nav:
           - Portainer (WebUI): 09_apps/lp_portainer.md
           - Jellyfin: 09_apps/lp_jellyfin.md
           - Kyverno: 09_apps/lp_kyverno.md
+  - Scripts:
+      - Sealer:
+          - Overview: 11_scripts/lp_sealer.md
+          - Setup: 11_scripts/sealer_setup.md
   - Material: 05_material/lp_material.md
   - TheBox: 06_thebox/lp_thebox.md
   - Outages: 10_outages/lp_outages.md
