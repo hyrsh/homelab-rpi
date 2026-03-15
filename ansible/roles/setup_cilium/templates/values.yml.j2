@@ -16,15 +16,10 @@ k8sClientRateLimit:
 operator:
   replicas: 2
   rollOutPods: true
+  nodeSelector:
+    type: worker
 
 rollOutCiliumPods: true
 
 ingressController:
-  defaultSecretNamespace: {{ setupinfos.k3s.cilium_ingress_sec_ns }}
-  defaultSecretName: {{ setupinfos.k3s.cilium_ingress_cert }}
   enabled: false
-  default: false
-  loadbalancerMode: shared
-  service:
-    annotations:
-      io.cilium/lb-ipam-ips: {{ setupinfos.k3s.cilium_ingress_ip }}

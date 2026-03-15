@@ -517,6 +517,9 @@ config: {
 # -- Additional storage [volumes](https://kubernetes.io/docs/concepts/storage/volumes/).
 # See the [API reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#volumes-1) for details.
 volumes:
+  - name: home
+    persistentVolumeClaim:
+      claimName: sftpgo-users-home
   - name: vol01
     persistentVolumeClaim:
       claimName: sftpgo-vol01
@@ -527,6 +530,8 @@ volumes:
 # -- Additional [volume mounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/).
 # See the [API reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#volumes-1) for details.
 volumeMounts:
+  - name: home
+    mountPath: /storage/home
   - name: vol01
     mountPath: /storage/vol01
   - name: vol02

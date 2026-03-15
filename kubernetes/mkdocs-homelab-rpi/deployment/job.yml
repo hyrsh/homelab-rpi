@@ -40,3 +40,5 @@ spec:
           persistentVolumeClaim:
             claimName: mkdocs-homelab-rpi-data
       restartPolicy: Never
+      nodeSelector:
+        type: worker
