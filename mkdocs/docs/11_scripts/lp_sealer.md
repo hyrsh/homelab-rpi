@@ -7,6 +7,7 @@ The sealer script does make use of the ["age" binary](https://github.com/FiloSot
 ## Workflow
 
 The script:
+
 - checks the age binary on its version (currently tested v1.3.1)
 - looks for an identity file
     - if it is not found it will create one for you (you have to enter a password since the file itself will be encrypted)
