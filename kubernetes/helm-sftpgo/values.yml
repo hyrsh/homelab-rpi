@@ -543,9 +543,9 @@ envFrom: []
 
 # -- Additional environment variables passed directly to containers.
 # See the [API reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#environment-variables) for details.
-envVars: []
-  # - name: SOME_ENV_VAR
-  #   value: SOME_VALUE
+envVars:
+  - name: SFTPGO_LOG_LEVEL
+    value: "info"
   # - name: SOME_ENV_VAR2
   #   valueFrom:
   #     secretKeyRef:
@@ -730,6 +730,12 @@ ui:
       nginx.ingress.kubernetes.io/cors-allow-methods: GET, PUT, POST, DELETE, UPDATE, OPTIONS
       nginx.ingress.kubernetes.io/cors-allow-origin: https://sftp-ui.hyrsh.io, https://sftp-ui.m0rpheus.ch
       nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: "120"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-max-temp-file-size: "4096m"
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
 
@@ -789,7 +795,7 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 2
-    memory: 1Gi
+    memory: 4Gi
   requests:
     cpu: 100m
     memory: 256Mi

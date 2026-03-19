@@ -93,6 +93,11 @@ backend be_{{DO.domain}}
 
 {% for HDB in vault.haproxy.hidden_domains %}
 backend be_h_{{HDB.domain}}
+{% if HDB.extra == "yes" %}
+{% for OPT in HDB.extraOptions %}
+  {{ OPT }}
+{% endfor %}
+{% endif %}
   mode http
 {% if HDB.chk == "httpchk-200" %}
   option httpchk
