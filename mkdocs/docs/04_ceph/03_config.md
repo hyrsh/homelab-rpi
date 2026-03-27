@@ -214,3 +214,22 @@ rgw.rgw01.hl-ceph-04.dlnykt   hl-ceph-04  *:1337            running (2d)
 ```
 
 <hr>
+
+## Changing runtime configuration
+
+Since the cluster gets used a bit more and storage usage is increasing we have to be able to adjust our system according to these needs.
+
+<hr>
+
+### Adjusting pool quotas
+
+To increase/decrease pool quotas we can use the "set-quota" command in our cephadm shell:
+
+`Enter cephadm shell`
+```shell
+ceph osd pool set-quota k8s_data max_bytes 999000000000
+```
+
+Since I set a quota on bytes and not objects I increased the main data pool for my Kubernetes volumes (k8s_data) to 999Gi. The sum of all maximum quota values of all PVCs combined should stay below this max_bytes entry. Otherwise there will be a write lock on the first volume that would exceed this overall boundary.
+
+<hr>
