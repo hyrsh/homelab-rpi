@@ -60,6 +60,19 @@
     - op_mode == "install-ingress"
     - ansible_host == setupinfos.k3s.master.registration_host
 
+- name: apply kubernetes settins of cilium
+  shell: "kubectl apply -f /tmp/cilium-k8s/{{ item }}"
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "install-ingress"
+    - ansible_host == setupinfos.k3s.master.registration_host
+  with_items:
+    - cilium-ip-pool.yml
+    - cilium-l2-announcement.yml
+
 - name: cleanup tmp dir for values and resources
   file:
     path: /tmp/cilium-k8s

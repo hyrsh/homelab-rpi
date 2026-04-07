@@ -4,17 +4,17 @@ k8sServicePort: 6443
 kubeProxyReplacement: true
 
 l2announcements:
-  enabled: false
+  enabled: true
 
 externalIPs:
-  enabled: false
+  enabled: true
 
 k8sClientRateLimit:
   qps: 50
   burst: 200
 
 operator:
-  replicas: 2
+  replicas: 3
   rollOutPods: true
   nodeSelector:
     type: worker
