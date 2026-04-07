@@ -1,0 +1,7 @@
+helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
+
+kubectl create namespace cattle-system
+
+kubectl create -f wildcard-hyrsh.io.yml
+
+helm install rancher rancher-stable/rancher --namespace cattle-system --set hostname=rancher.hyrsh.io -f values.yaml

@@ -30,3 +30,24 @@
   args:
     executable: /bin/bash
   when: op_mode == "install-certs" or op_mode == "install"
+
+- name: delete chain beforehand
+  shell: kubectl -n kube-system delete secret hyrsh-io-private-chain --ignore-not-found
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "deploy"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: deploy private certificate chain
+  shell: kubectl -n kube-system create secret generic hyrsh-io-private-chain --from-file=cacerts.pem="/usr/local/share/ca-certificates/private-ca-bundle.crt"
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "deploy"
+    - ansible_host == setupinfos.k3s.master.registration_host
+
