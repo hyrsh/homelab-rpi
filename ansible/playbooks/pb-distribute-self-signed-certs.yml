@@ -1,4 +1,4 @@
-- hosts: hl_ceph
+- hosts: hl_master
   gather_facts: False
   become: True
   become_method: sudo
