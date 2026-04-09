@@ -32,6 +32,8 @@ spec:
             mountPath: /docs
       securityContext:
         fsGroup: 2000
+      nodeSelector:
+        type: worker
       volumes:
         - name: data
           persistentVolumeClaim:

@@ -4,4 +4,8 @@ kubectl create namespace cattle-system
 
 kubectl create -f wildcard-hyrsh.io.yml
 
+kubectl -n kube-system get secret hyrsh-io-private-chain -o yaml > tls-ca.yml
+
+kubectl create -f tls-ca.yml
+
 helm install rancher rancher-stable/rancher --namespace cattle-system --set hostname=rancher.hyrsh.io -f values.yaml

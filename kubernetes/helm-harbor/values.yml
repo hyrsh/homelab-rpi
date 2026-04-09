@@ -513,7 +513,8 @@ nginx:
   #    memory: 256Mi
   #    cpu: 100m
   extraEnvVars: []
-  nodeSelector: {}
+  nodeSelector:
+    type: worker
   tolerations: []
   affinity: {}
   # Spread Pods across failure-domains like regions, availability zones or nodes
@@ -547,7 +548,8 @@ portal:
       memory: 1024Mi
       cpu: "1"
   extraEnvVars: []
-  nodeSelector: {}
+  nodeSelector:
+    type: worker
   tolerations: []
   affinity: {}
   # Spread Pods across failure-domains like regions, availability zones or nodes
@@ -594,7 +596,8 @@ core:
       memory: 2Gi
       cpu: "1"
   extraEnvVars: []
-  nodeSelector: {}
+  nodeSelector:
+    type: worker
   tolerations: []
   affinity: {}
   # Spread Pods across failure-domains like regions, availability zones or nodes
@@ -682,7 +685,8 @@ jobservice:
       memory: 512Mi
       cpu: 500m
   extraEnvVars: []
-  nodeSelector: {}
+  nodeSelector:
+    type: worker
   tolerations: []
   affinity: {}
   # Spread Pods across failure-domains like regions, availability zones or nodes
@@ -760,7 +764,8 @@ registry:
   automountServiceAccountToken: false
   replicas: 1
   revisionHistoryLimit: 10
-  nodeSelector: {}
+  nodeSelector:
+    type: worker
   tolerations: []
   affinity: {}
   # Spread Pods across failure-domains like regions, availability zones or nodes
@@ -844,7 +849,8 @@ trivy:
       cpu: 1
       memory: 1Gi
   extraEnvVars: []
-  nodeSelector: {}
+  nodeSelector:
+    type: worker
   tolerations: []
   affinity: {}
   # Spread Pods across failure-domains like regions, availability zones or nodes
@@ -952,7 +958,8 @@ database:
     readinessProbe:
       timeoutSeconds: 1
     extraEnvVars: []
-    nodeSelector: {}
+    nodeSelector:
+      type: worker
     tolerations: []
     affinity: {}
     ## The priority class to run the pod as
@@ -1029,7 +1036,8 @@ redis:
         memory: 1Gi
         cpu: 800m
     extraEnvVars: []
-    nodeSelector: {}
+    nodeSelector:
+      type: worker
     tolerations: []
     affinity: {}
     ## The priority class to run the pod as
@@ -1106,7 +1114,8 @@ exporter:
   podAnnotations: {}
   ## Additional deployment labels
   podLabels: {}
-  nodeSelector: {}
+  nodeSelector:
+    type: worker
   tolerations: []
   affinity: {}
   # Spread Pods across failure-domains like regions, availability zones or nodes

@@ -75,7 +75,7 @@ ingress:
   # If set to false, ingress will not be created
   # Defaults to true
   # options: true, false
-  enabled: true
+  enabled: false
   includeDefaultExtraAnnotations: true
   extraAnnotations: {}
   ingressClassName: "nginx"
@@ -244,14 +244,13 @@ extraTolerations: {}
 #    values:
 #      - us-north-42
 extraNodeSelectorTerms:
-  - matchExpressions:
-    - key: az
-      operator: In
-      values:
-      - "1"
-      - "2"
-      - "3"
-      - "4"
+  - key: az
+    operator: In
+    values:
+    - "1"
+    - "2"
+    - "3"
+    - "4"
 
 livenessProbe:
   timeoutSeconds: 5
