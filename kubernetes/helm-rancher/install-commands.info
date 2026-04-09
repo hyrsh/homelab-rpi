@@ -9,3 +9,10 @@ kubectl -n kube-system get secret hyrsh-io-private-chain -o yaml > tls-ca.yml
 kubectl create -f tls-ca.yml
 
 helm install rancher rancher-stable/rancher --namespace cattle-system --set hostname=rancher.hyrsh.io -f values.yaml
+
+---------------
+INFO:
+---------------
+
+Watch out for the nodeSelectors. They are not all configurable in the default Helm Chart so I had to do it by hand for some deployments.
+This must be repeated after every "helm upgrade --install"

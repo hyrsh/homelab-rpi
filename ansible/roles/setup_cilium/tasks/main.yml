@@ -82,7 +82,7 @@
     - ansible_host == setupinfos.k3s.master.registration_host
 
 - name: deploy cilium to k8s
-  shell: "cilium install --set k8sServiceHost={{ setupinfos.lb_vip }} --set k8sServicePort=6443 --set kubeProxyReplacement=true"
+  shell: "cilium upgrade --reuse-values --set k8sServiceHost={{ setupinfos.lb_vip }} --set k8sServicePort=6443 --set kubeProxyReplacement=true --set gatewayAPI.enabled=true"
   args:
     executable: /bin/bash
   environment:
