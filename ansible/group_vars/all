@@ -61,6 +61,7 @@ setupinfos:
     - {domain: "sftp-ui", ip: [ "sftp-ui.hyrsh.io:443" ], info: "SFTPGo WebUI", state: "up", extra: "yes", extraOptions: ["timeout client 120000","timeout server 120000","timeout connect 120000"]}
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
+  cronjob_dir: "/opt/central_cronjobs"
   k3s:
     cilium_version: "v0.18.8"
     cilium_arch: "arm64"

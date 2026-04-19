@@ -1,0 +1,23 @@
+- name: create cronjob dir
+  file:
+    path: "{{ setupinfos.cronjob_dir }}"
+    state: directory
+
+- name: cronjob scripts to dir
+  copy:
+    src: "templates/{{ item }}"
+    dest: "{{ setupinfos.cronjob_dir }}/{{ item }}"
+    mode: '0755'
+  with_items:
+    - k3s_restart.sh
+
+- name: create k3s restart cronjob
+  cron:
+    name: Restart k3s to prevent memory exhaustion
+    weekday: "{{ cronid }}"
+    minute: "55"
+    hour: "23"
+    user: root
+    job: "{{ setupinfos.cronjob_dir }}/k3s_restart.sh"
+  vars:
+    cronid: "{{ ansible_host | replace('hl-master-0','') }}"
