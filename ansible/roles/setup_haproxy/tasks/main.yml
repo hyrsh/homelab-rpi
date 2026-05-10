@@ -55,7 +55,7 @@
     mode: '0644'
     owner: haproxy
     group: haproxy
-  when: op_mode == "install"
+  when: op_mode == "install" or op_mode == "update-certs"
 
 # contains the public server key
 - name: copy public server key to destination
@@ -148,6 +148,7 @@
   shell: update-ca-certificates
   args:
     executable: /bin/bash
+  notify: "h-restart-haproxy"
   when: op_mode == "install" or op_mode == "update-certs"
 
 - name: get config template to directory
