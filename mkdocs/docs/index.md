@@ -4,7 +4,7 @@ _Changes were made at 2026-05-10_
 
 <hr>
 
-_Overall uptime: %_
+_Overall uptime: 99.99984%_
 
 <hr>
 
