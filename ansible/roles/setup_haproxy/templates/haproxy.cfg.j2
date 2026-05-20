@@ -127,6 +127,6 @@ backend be_k8s_api
   mode tcp
   tcp-check set-var(check.port) int(6443)
   tcp-check connect port var(check.port)
-{% for HOST in groups["hl_master"] %}
-  server m{{loop.index0}} {{HOST}}:6443 check resolvers internal
-{% endfor %}
+  server m1 192.168.1.42:6443 check resolvers internal
+  server m2 192.168.1.70:6443 check resolvers internal 
+  server m3 192.168.1.35:6443 check resolvers internal
