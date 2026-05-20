@@ -5,7 +5,7 @@
 |1|2025-12-08 22:15|5min|Blackout of 2x PoE switches|PoE power supply went blank on 2x devices for unknown reason|34d|
 |2|2026-02-26 15:10|10min|DNS names not resolvable|Router (Home) disconnected and lost DNS names|114d|
 |3|2026-04-07 18:00|30min|Hosts not reachable|Internal IP restructuring|154d|
-|4|2026-05-20 10:55|10min|Hosts not reachable|Router lost device DNS names after restart|154d|
+|4|2026-05-20 10:55|10min|Hosts not reachable|Router lost device DNS names after restart|196d|
 
 ## Havoc statistics
 
