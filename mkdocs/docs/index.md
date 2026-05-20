@@ -1,10 +1,10 @@
 # Homelab with RPI 5
 
-_Changes were made at 2026-05-16_
+_Changes were made at 2026-05-20_
 
 <hr>
 
-_Overall uptime: 99.99984%_
+_Overall uptime: %_
 
 <hr>
 

@@ -67,6 +67,7 @@ setupinfos:
     cilium_arch: "arm64"
     ingress_cert: "wildcard-hyrsh-io"
     ingress_nodes: [ "hl-worker-05", "hl-worker-10" ]
+    ingress_nodes_ip: [ "192.168.1.104", "192.168.1.109" ]
     haproxy_ingress_nodes: [ "hl-worker-04", "hl-worker-09" ]
     ingress_instances: 2
     helm_version: "v3.19.0"
