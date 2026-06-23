@@ -4,7 +4,8 @@ _Changes were made at 2026-06-23_
 
 <hr>
 
-_Overall uptime: 99.99984%_ of 231d
+_Cluster uptime: 231d_
+_Availability: 99.99984%_
 
 <hr>
 
