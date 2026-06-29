@@ -50,12 +50,11 @@ setupinfos:
   ceph_monitor: [ "192.168.1.30", "192.168.1.31", "192.168.1.34" ]
   internal_domain: "hyrsh.io"
   external_domain: "m0rpheus.ch"
-  gen_infos: "CCTV is down until authorization is active."
+  gen_infos: "All services operational."
   haproxy_domains:
     - {domain: "homelab-rpi", ip: [ "homelab-rpi.hyrsh.io:443" ], info: "Homelab Landing Page", state: "up", extra: "no", extraOptions: []}
     - {domain: "grafana", ip: [ "grafana.hyrsh.io:443" ], info: "Metric Visualization", state: "up", extra: "no", extraOptions: []}
     - {domain: "cs2", ip: [ "cs2.hyrsh.io:443" ], info: "Counter-Strike 2 Guides", state: "up", extra: "no", extraOptions: []}
-    - {domain: "cctv", ip: [ "cctv.hyrsh.io:443" ], info: "Watch the Cloud via CCTV", state: "down", extra: "no", extraOptions: []}
     - {domain: "jellyfin", ip: [ "jellyfin.hyrsh.io:443" ], info: "Home Cinema (friends only)", state: "up", extra: "no", extraOptions: []}
     - {domain: "ceph", ip: [ "ceph.hyrsh.io:443" ], info: "Ceph Dashboard", state: "up", extra: "no", extraOptions: []}
     - {domain: "sftp-ui", ip: [ "sftp-ui.hyrsh.io:443" ], info: "SFTPGo WebUI", state: "up", extra: "yes", extraOptions: ["timeout client 120000","timeout server 120000","timeout connect 120000"]}
