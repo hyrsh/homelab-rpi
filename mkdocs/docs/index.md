@@ -1,13 +1,13 @@
 # Homelab with RPI 5
 
-_Changes were made at 2026-06-29_
+_Changes were made at 2026-08-28_
 
 <hr>
 
-_Cluster uptime: 237d_
+_Cluster uptime: _
 
 
-_Availability: 99.99984%_
+_Availability: %_
 
 <hr>
 

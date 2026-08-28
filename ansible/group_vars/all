@@ -58,6 +58,7 @@ setupinfos:
     - {domain: "jellyfin", ip: [ "jellyfin.hyrsh.io:443" ], info: "Home Cinema (friends only)", state: "up", extra: "no", extraOptions: []}
     - {domain: "ceph", ip: [ "ceph.hyrsh.io:443" ], info: "Ceph Dashboard", state: "up", extra: "no", extraOptions: []}
     - {domain: "sftp-ui", ip: [ "sftp-ui.hyrsh.io:443" ], info: "SFTPGo WebUI", state: "up", extra: "yes", extraOptions: ["timeout client 120000","timeout server 120000","timeout connect 120000"]}
+    - {domain: "cairn", ip: [ "cairn.hyrsh.io:443" ], info: "Cairn Instance", state: "up", extra: "no", extraOptions: []}
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
   cronjob_dir: "/opt/central_cronjobs"
