@@ -4,10 +4,10 @@ _Changes were made at 2026-08-28_
 
 <hr>
 
-_Cluster uptime: _
+_Cluster uptime: 297d_
 
 
-_Availability: %_
+_Availability: 99.99988%_
 
 <hr>
 
