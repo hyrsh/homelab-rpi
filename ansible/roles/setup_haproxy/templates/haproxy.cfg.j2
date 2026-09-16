@@ -89,7 +89,11 @@ backend be_{{DO.domain}}
   mode http
   http-request set-header Host {{DO.domain}}.{{setupinfos.internal_domain}}
 {% for DBI in DO.ip %}
+{% if DO.type == "gw-api" %}
+  server srv{{loop.index0}} {{DBI}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-ca-bundle.crt sni str({{DO.domain}}.{{setupinfos.internal_domain}}) check-sni {{DO.domain}}.{{setupinfos.internal_domain}} check
+{% else %}
   server srv{{loop.index0}} {{DBI}} ssl verify required ca-file {{setupinfos.lb_cert_dir}}/private-ca-bundle.crt check resolvers internal
+{% endif %}
 {% endfor %}
 {% endfor %}
 
