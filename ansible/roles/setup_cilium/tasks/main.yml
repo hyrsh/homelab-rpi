@@ -1,6 +1,6 @@
 - name: get the cilium archive
   unarchive:
-    src: "https://github.com/cilium/cilium-cli/releases/download/{{ setupinfos.k3s.cilium_version }}/cilium-linux-{{ setupinfos.k3s.cilium_arch }}.tar.gz"
+    src: "https://github.com/cilium/cilium-cli/releases/download/{{ setupinfos.k3s.cilium_cli_version }}/cilium-linux-{{ setupinfos.k3s.cilium_arch }}.tar.gz"
     dest: /tmp
     remote_src: yes
     mode: '0755'
@@ -50,14 +50,14 @@
     - cilium-l2-announcement.yml
     - values.yml
 
-- name: upgrade cilium with ingress settings
+- name: update cilium from values.yml
   shell: cilium upgrade -f /tmp/cilium-k8s/values.yml
   args:
     executable: /bin/bash
   environment:
     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
   when:
-    - op_mode == "install-ingress"
+    - op_mode == "install-ingress" or op_mode == "update"
     - ansible_host == setupinfos.k3s.master.registration_host
 
 - name: apply kubernetes settins of cilium
@@ -90,3 +90,14 @@
   when:
     - op_mode == "deploy"
     - ansible_host == setupinfos.k3s.master.registration_host
+
+- name: upgrade cilium version
+  shell: "cilium upgrade --reuse-values --version {{ setupinfos.k3s.cilium_version }}"
+  args:
+    executable: /bin/bash
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - op_mode == "upgrade"
+    - ansible_host == setupinfos.k3s.master.registration_host
+

@@ -7,6 +7,7 @@ global
         user haproxy
         group haproxy
         daemon
+        tune.bufsize 262144
 
         # Default SSL material locations & please copy your self-signed ca.crt's to /usr/local/share/ca-certificates
         ca-base /etc/ssl/certs
@@ -48,6 +49,7 @@ frontend gateway_01
   http-request deny deny_status 429 if { sc_http_req_rate(0) gt 120 }
   maxconn {{ setupinfos.max_connections_haproxy }}
   timeout client 120000
+  use_backend maintenance_page if {{setupinfos.maintenance}}
 {% for DOM in setupinfos.haproxy_domains %}
 {% if DOM.state == "down" %}
   #acl acl_{{DOM.domain}} hdr(host) -i {{DOM.domain}}.{{setupinfos.external_domain}} #state:{{DOM.state}}
@@ -130,3 +132,6 @@ backend be_k8s_api
   server m1 192.168.1.42:6443 check resolvers internal
   server m2 192.168.1.70:6443 check resolvers internal 
   server m3 192.168.1.35:6443 check resolvers internal
+
+backend maintenance_page
+  http-request return status 503 content-type "text/html" lf-file /etc/haproxy/errorpages/err_503.http

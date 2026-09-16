@@ -46,6 +46,7 @@ setupinfos:
   lb_master: [ "hl-lb-01" ]
   lb_vip: "192.168.1.13"
   lb_cert_dir: "/etc/haproxy/own-certs"
+  maintenance: "TRUE"
   ceph_master: [ "hl-ceph-01", "hl-ceph-05" ]
   ceph_monitor: [ "192.168.1.30", "192.168.1.31", "192.168.1.34" ]
   internal_domain: "hyrsh.io"
@@ -63,7 +64,8 @@ setupinfos:
   local_dns: "192.168.1.1"
   cronjob_dir: "/opt/central_cronjobs"
   k3s:
-    cilium_version: "v0.18.8"
+    cilium_cli_version: "v0.20.0"
+    cilim_version: "1.20.2"
     cilium_arch: "arm64"
     ingress_cert: "wildcard-hyrsh-io"
     ingress_nodes: [ "hl-worker-05", "hl-worker-10" ]

@@ -202,6 +202,7 @@
   when: op_mode == "install" or op_mode == "update-config"
   with_items:
     - "err_429.http"
+    - "err_503.http"
 
 - name: deinstall packages
   package:
