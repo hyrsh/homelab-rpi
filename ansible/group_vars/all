@@ -59,7 +59,7 @@ setupinfos:
     - {domain: "jellyfin", ip: [ "jellyfin.hyrsh.io:443" ], info: "Home Cinema (friends only)", state: "up", extra: "no", extraOptions: [], type: "default"}
     - {domain: "ceph", ip: [ "ceph.hyrsh.io:443" ], info: "Ceph Dashboard", state: "up", extra: "no", extraOptions: [], type: "default"}
     - {domain: "sftp-ui", ip: [ "sftp-ui.hyrsh.io:443" ], info: "SFTPGo WebUI", state: "up", extra: "yes", extraOptions: ["timeout client 120000","timeout server 120000","timeout connect 120000"], type: "default"}
-    - {domain: "cairn", ip: [ "cairn.hyrsh.io:443" ], info: "Cairn Instance", state: "up", extra: "no", extraOptions: [], type: "default"}
+    - {domain: "alpinefiles", ip: [ "192.168.13.2:443" ], info: "AlpineFiles Instance", state: "up", extra: "no", extraOptions: [], type: "gw-api"}
     - {domain: "rancher", ip: [ "192.168.13.2:443" ], info: "Rancher Dashboard", state: "down", extra: "yes", extraOptions: ["http-request set-header Origin https://rancher.hyrsh.io", "http-request set-header Access-Control-Allow-Origin '*'" ], type: "gw-api"}
   max_connections_haproxy: "100"
   local_dns: "192.168.1.1"
