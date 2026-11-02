@@ -5,7 +5,7 @@
 update_url="https://raw.githubusercontent.com/hyrsh/homelab-rpi/refs/heads/main/scripts/sealer/sealer.sh"
 update_path=$0
 # current sealer version
-sealer_version="v1.3.1"
+sealer_version="v1.3.2"
 # tested age version
 tested_version="v1.3.1"
 # path to age ident file (e.g. you can generate one with age-keygen | age -p > age-ident)
@@ -57,6 +57,7 @@ help() {
   echo -e "Info:"
   echo -e "-----"
   echo -e " - if you do not have an ident file it will be created on first use (don't lose it)"
+  echo -e " - you can set the env variable AGEIDENTF to you identfile path to set it as default"
 
   echo -en "${c_clear}"
   exit 0
@@ -202,7 +203,8 @@ sealDir() {
       parrot "encrypted file $F to ${F}.age"
       rm $F
     else
-      echo -e "${c_red}[!] Error on encryption attempt!${c_clear}"
+      echo -e "${c_red}[!] Error on encryption attempt! (maybe a typo?)${c_clear}"
+      rm ${F}.age
       exit 1
     fi
   done
@@ -237,9 +239,12 @@ unsealDir() {
       parrot "decrypted file ${d}$F to ${d}${fname}"
       rm $d/$F
     else
-      echo -e "${c_red}[!] Error on decryption attempt!${c_clear}"
+      echo -e "${c_red}[!] Error on decryption attempt! (maybe a typo?)${c_clear}"
       if [ -f $idf ]; then
         rm $idf
+      fi
+      if [ -f $d/$fname ]; then
+        rm $d/$fname
       fi
       exit 1
     fi

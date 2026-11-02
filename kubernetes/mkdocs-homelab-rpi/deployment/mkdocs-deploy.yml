@@ -30,6 +30,8 @@ spec:
         volumeMounts:
           - name: data
             mountPath: /docs
+      nodeSelector:
+        type: worker
       securityContext:
         fsGroup: 2000
       volumes:
